@@ -1,0 +1,35 @@
+{
+  "canisters": {
+    "kawak": {
+      "main": "src/kawak/main.mo",
+      "type": "motoko"
+    },
+    "kawak_assets": {
+      "dependencies": [
+        "kawak"
+      ],
+      "frontend": {
+        "entrypoint": "src/kawak_assets/src/index.html"
+      },
+      "source": [
+        "src/kawak_assets/assets",
+        "dist/kawak_assets/"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "dfx": "0.10.1",
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
+    }
+  },
+  "version": 1
+}
