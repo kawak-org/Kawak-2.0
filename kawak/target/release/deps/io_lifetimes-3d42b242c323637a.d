@@ -1,0 +1,12 @@
+/Users/ola/Documents/Github/Kawak-2.0/kawak/target/release/deps/io_lifetimes-3d42b242c323637a.rmeta: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/portability.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/traits.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/example_ffi.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/raw.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/views.rs
+
+/Users/ola/Documents/Github/Kawak-2.0/kawak/target/release/deps/libio_lifetimes-3d42b242c323637a.rlib: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/portability.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/traits.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/example_ffi.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/raw.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/views.rs
+
+/Users/ola/Documents/Github/Kawak-2.0/kawak/target/release/deps/io_lifetimes-3d42b242c323637a.d: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/portability.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/traits.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/example_ffi.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/raw.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/views.rs
+
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/lib.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/portability.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/traits.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/example_ffi.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/raw.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/io-lifetimes-1.0.9/src/views.rs:
