@@ -4,7 +4,6 @@ import { AuthClient } from "@dfinity/auth-client";
 import { canisterId, createActor } from "../../declarations/kawak";
 import { useLocation, useNavigate } from "react-router-dom";
 import { _SERVICE } from "../../declarations/kawak/kawak.did";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { ShepherdTourContext } from "react-shepherd";
 import { useMatomo } from "@datapunt/matomo-tracker-react";
 // import Onboarding from "../pages/Onboard/Onboarding";
@@ -13,7 +12,6 @@ export const UserContext = React.createContext<{
 	Auth: any;
 	actor: ActorSubclass<_SERVICE> | undefined;
 	setActor: any;
-	storedActor: ActorSubclass<_SERVICE> | undefined;
 	iiAuth: boolean;
 	setIIAuth: any;
 	changeAuthStatus: any;
@@ -30,8 +28,6 @@ export const UserContext = React.createContext<{
 	Auth: undefined,
 	actor: undefined,
 	setActor: undefined,
-
-	storedActor: undefined,
 	iiAuth: false,
 	setIIAuth: false,
 	changeAuthStatus: undefined,
@@ -50,7 +46,6 @@ export const UserProvider = ({ children }) => {
 	const tour_ = useContext(ShepherdTourContext);
 	const [actor, setActor] = useState<ActorSubclass<_SERVICE>>();
 	const [iiAuth, setIIAuth] = useState(false);
-	const [storedActor, setValue] = useLocalStorage("stored-actor", actor);
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [tour, setTour] = useState(null);
@@ -121,7 +116,6 @@ export const UserProvider = ({ children }) => {
 			},
 		});
 		setActor(whoami_actor);
-		setValue(whoami_actor);
 		setTour(tour_);
 
 		// Invalidate identity then render login when user goes idle
@@ -138,7 +132,6 @@ export const UserProvider = ({ children }) => {
 		<UserContext.Provider
 			value={{
 				Auth,
-				storedActor,
 				actor,
 				setActor,
 				iiAuth,
