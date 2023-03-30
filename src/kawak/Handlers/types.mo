@@ -24,7 +24,7 @@ module {
         aid : Principal;
         owner : Text;
         title : Text;
-        topic : Text;
+        topic : [Text];
         //createdAt : Time;
         wordCount : Nat;
         reviewTimes : Nat32;

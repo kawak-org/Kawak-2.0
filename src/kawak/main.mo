@@ -60,7 +60,7 @@ shared (msg) actor class Kawak() {
       drafts = stableDrafts;
     });
 
-    public shared ({caller}) func createEssay(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<(Nat, Text), Text> {
+    public shared ({caller}) func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<(Nat, Text), Text> {
       _Essays.createEssay(title, topic, essay_word_count, essayCost, text, caller);
     };
 

@@ -34,25 +34,25 @@ module {
         };
 
         func makeEssay(
-            id : Nat,
-            aid : Principal,
-            owner : Text,
-            title : Text,
-            topic : Text,
-            wordCount : Nat,
-            reviewTimes : Nat32,
-            reviewed : Bool,
-            essayCost : Nat,
-            submittedAt : Int,
-            text : Text,
-        ) : EssayEntry {
+                id : Nat,
+                aid : Principal,
+                owner : Text,
+                title : Text,
+                topic : [Text],
+                wordCount : Nat,
+                reviewTimes : Nat32,
+                reviewed : Bool,
+                essayCost : Nat,
+                submittedAt : Int,
+                text : Text,
+            ) : EssayEntry {
             {
                 id : Nat;
                 aid : Principal;
                 owner : Text;
                 title : Text;
-                topic : Text;
-                //createdAt : Time;
+                topic : [Text];
+                // createdAt : Time;
                 wordCount : Nat;
                 reviewTimes : Nat32;
                 reviewed : Bool;
@@ -62,11 +62,11 @@ module {
             };
         };
 
-        private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : Text, wordCount : Nat, essayCost : Nat, text : Text) {
+        private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text) {
             essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text));
         };
 
-        public func createEssays(title : Text, caller : Principal, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : Nat {
+        public func createEssays(title : Text, caller : Principal, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text) : Nat {
             var user = state._Users.getUser(caller);
             switch(user){
                 case(null){
@@ -83,7 +83,7 @@ module {
             essayPK;
         };
 
-        public func createEssay(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text, caller : Principal) : Result.Result<(Nat, Text), Text> {
+        public func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text, caller : Principal) : Result.Result<(Nat, Text), Text> {
             var user = state._Users.getUser(caller);
             switch (user){
                 case(null){};
