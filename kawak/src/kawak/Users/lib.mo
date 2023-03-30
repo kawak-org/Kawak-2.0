@@ -51,6 +51,19 @@ module {
             unique;
         };
 
+        public func logIn(caller : Principal) : Bool {
+            var result = profileHashMap.get(caller);
+
+            switch (result) {
+                case null {
+                    return false;
+                };
+                case (?(_)) {
+                    return true;
+                };
+            };
+        };
+
         public func getUser(caller : Principal) : ?Types.UserEntry {
             profileHashMap.get(caller);
         };
