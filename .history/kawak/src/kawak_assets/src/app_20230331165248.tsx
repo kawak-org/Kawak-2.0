@@ -9,12 +9,10 @@ import { steps, tourOptions } from "../constants/shepard/index";
 import { ShepherdTour } from "react-shepherd";
 import Loader from "../components/Loaders/Loader";
 
-
 const Onboarding = lazy(() => import("../pages/Onboard/Onboarding"));
 const Onboarding1 = lazy(() => import("../pages/Onboard/Onboarding1"));
 const Onboarding2 = lazy(() => import("../pages/Onboard/Onboarding2"));
 const Onboarding3 = lazy(() => import("../pages/Onboard/Onboarding3"));
-const CraftEssay = lazy(() => import("../pages/CraftEssay"));
 
 export default function App() {
     const location = useLocation();
@@ -82,7 +80,7 @@ export default function App() {
 								path='marketplace-essay-view/:id'
 								element={<MarketplaceEssayView />}
 							/> */}
-							<Route path='craft' element={<CraftEssay />} />
+							{/* <Route path='craft' element={<CraftEssay />} /> */}
 							<Route path='onboarding' element={<Onboarding />} />
 							{/* <Route path='aadjf0afu8au38afu380b0' element={<Admin />} /> */}
 							{/* <Route path='adminloginpage' element={<AdminLoginPage />} /> */}
