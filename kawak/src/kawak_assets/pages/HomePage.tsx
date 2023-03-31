@@ -16,7 +16,7 @@ import { BsChatSquareText } from "react-icons/bs";
 import { IoIosMenu } from "react-icons/io";
 import { gsap } from 'gsap';
 import { ScrollTrigger } from "gsap/all";
-import SplitType from 'split-type';
+// import SplitType from 'split-type';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -326,34 +326,34 @@ export default function Page() {
 
 
 
-    const login_ = () => {
-        actor
-            ?.logIn()
-            .then((d) => {
-                if (d === true) {
-                    changeAuthStatus();
-                    navigate("/forge");
-                    navigate(0);
-                    // window.location.reload();
+    // const login_ = () => {
+    //     actor
+    //         ?.logIn()
+    //         .then((d) => {
+    //             if (d === true) {
+    //                 changeAuthStatus();
+    //                 navigate("/forge");
+    //                 navigate(0);
+    //                 // window.location.reload();
 
-                    toast.success("signed in");
-                    return;
-                }
-                changeAuthStatus();
-                navigate("/onboarding1");
-                navigate(0);
-                // window.location.reload();
-                // setIamNew(true);
-            })
-            .catch((err) => {
-                ErrorHandler(err);
-                // console.log(err);
-                // alert(err);
-            });
-    };
-    if (iiAuth) {
-        login_();
-    }
+    //                 toast.success("signed in");
+    //                 return;
+    //             }
+    //             changeAuthStatus();
+    //             navigate("/onboarding1");
+    //             navigate(0);
+    //             // window.location.reload();
+    //             // setIamNew(true);
+    //         })
+    //         .catch((err) => {
+    //             ErrorHandler(err);
+    //             // console.log(err);
+    //             // alert(err);
+    //         });
+    // };
+    // if (iiAuth) {
+    //     login_();
+    // }
 
     const handleNavbar = () => {
         if (window.scrollY >= 100) {

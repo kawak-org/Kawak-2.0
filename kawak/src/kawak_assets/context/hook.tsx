@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { AuthClient } from "@dfinity/auth-client";
 import { UserContext } from "./userContext";
 import { Actor, Identity } from "@dfinity/agent";
-import { canisterId, createActor } from "../../declarations/Contract";
+import { canisterId, createActor } from "../../declarations/kawak";
 
 const HandleAuthenticated_ = async (authClient: AuthClient) => {
 	const { setActor } = useContext(UserContext);
