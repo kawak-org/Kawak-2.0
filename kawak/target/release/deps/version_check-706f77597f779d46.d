@@ -1,0 +1,10 @@
+/Users/deonorla/Documents/Github/Kawak-2.0/kawak/target/release/deps/version_check-706f77597f779d46.rmeta: /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/lib.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/version.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/channel.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/date.rs
+
+/Users/deonorla/Documents/Github/Kawak-2.0/kawak/target/release/deps/libversion_check-706f77597f779d46.rlib: /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/lib.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/version.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/channel.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/date.rs
+
+/Users/deonorla/Documents/Github/Kawak-2.0/kawak/target/release/deps/version_check-706f77597f779d46.d: /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/lib.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/version.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/channel.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/date.rs
+
+/Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/lib.rs:
+/Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/version.rs:
+/Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/channel.rs:
+/Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/version_check-0.9.4/src/date.rs:
