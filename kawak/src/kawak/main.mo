@@ -35,6 +35,10 @@ shared (msg) actor class Kawak() {
         _Users.createprofile(userName, avatar, caller);
     };
 
+    public shared ({caller}) func logIn() : async Bool{
+      _Users.logIn(caller);
+    };
+
 
     let _Admins = Admins.Admins({
       admins = stableAdmins;

@@ -1,0 +1,33 @@
+type Result_1 = 
+ variant {
+   err: text;
+   ok: record {
+         nat;
+         text;
+       };
+ };
+type Result = 
+ variant {
+   err: text;
+   ok: text;
+ };
+type Kawak = 
+ service {
+   addAdmin: (principal) -> ();
+   createEssay: (text, text, nat, nat, text) -> (Result_1);
+   createProfile: (text, text) -> (Result);
+   deleteDraft: (nat) -> ();
+   draftEssay: (text, text) -> (nat);
+   editDraft: (nat, text, text) -> () oneway;
+   getAdmins: () -> (vec principal);
+   getMyDrafts: (text) -> (opt vec DraftEntry);
+ };
+type DraftEntry = 
+ record {
+   draftedAT: int;
+   id: nat;
+   owner: text;
+   "text": text;
+   title: text;
+ };
+service : () -> Kawak

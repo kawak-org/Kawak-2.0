@@ -1,0 +1,3 @@
+cargo:rerun-if-changed=build/main.rs
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/Users/deonorla/Documents/Github/Kawak-2.0/kawak/target/release/build/typenum-bac64351afc10d40/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/Users/deonorla/Documents/Github/Kawak-2.0/kawak/target/release/build/typenum-bac64351afc10d40/out/op.rs
