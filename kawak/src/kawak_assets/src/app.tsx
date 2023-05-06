@@ -15,6 +15,7 @@ const Onboarding1 = lazy(() => import("../pages/Onboard/Onboarding1"));
 const Onboarding2 = lazy(() => import("../pages/Onboard/Onboarding2"));
 const Onboarding3 = lazy(() => import("../pages/Onboard/Onboarding3"));
 const CraftEssay = lazy(() => import("../pages/CraftEssay"));
+const Dashboard = lazy(() => import("../pages/Dashboard"));
 
 export default function App() {
     const location = useLocation();
@@ -60,7 +61,7 @@ export default function App() {
                     >
                         <Routes>
                             <Route path='/' element={<HomePage />} />
-                            {/* <Route path='forge/*' element={<Dashboard />} /> */}
+                            <Route path='forge/*' element={<Dashboard />} />
 							{/* <Route path='forge/:id' element={<EssayDetails />} /> */}
 							{/* <Route path='profile' element={<Profile />} /> */}
 							{/* <Route path='my-essay' element={<MyEssays />}> */}
