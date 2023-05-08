@@ -1,0 +1,10 @@
+/Users/deonorla/Documents/Github/Kawak-2.0/kawak/target/release/deps/serde_tokenstream-bcd12a64478866f6.rmeta: /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/lib.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/ibidem.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/ordered_map.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/serde_tokenstream.rs
+
+/Users/deonorla/Documents/Github/Kawak-2.0/kawak/target/release/deps/libserde_tokenstream-bcd12a64478866f6.rlib: /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/lib.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/ibidem.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/ordered_map.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/serde_tokenstream.rs
+
+/Users/deonorla/Documents/Github/Kawak-2.0/kawak/target/release/deps/serde_tokenstream-bcd12a64478866f6.d: /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/lib.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/ibidem.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/ordered_map.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/serde_tokenstream.rs
+
+/Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/lib.rs:
+/Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/ibidem.rs:
+/Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/ordered_map.rs:
+/Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_tokenstream-0.1.7/src/serde_tokenstream.rs:

@@ -1,0 +1,11 @@
+/Users/deonorla/Documents/Github/Kawak-2.0/kawak/target/wasm32-unknown-unknown/release/deps/serde_bytes-d0670e9e6734256b.rmeta: /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/lib.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/bytes.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/de.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/ser.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/bytebuf.rs
+
+/Users/deonorla/Documents/Github/Kawak-2.0/kawak/target/wasm32-unknown-unknown/release/deps/libserde_bytes-d0670e9e6734256b.rlib: /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/lib.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/bytes.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/de.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/ser.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/bytebuf.rs
+
+/Users/deonorla/Documents/Github/Kawak-2.0/kawak/target/wasm32-unknown-unknown/release/deps/serde_bytes-d0670e9e6734256b.d: /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/lib.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/bytes.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/de.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/ser.rs /Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/bytebuf.rs
+
+/Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/lib.rs:
+/Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/bytes.rs:
+/Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/de.rs:
+/Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/ser.rs:
+/Users/deonorla/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_bytes-0.11.9/src/bytebuf.rs:
