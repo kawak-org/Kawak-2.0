@@ -5,7 +5,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
 const LOCAL_II_CANISTER =
-  "http://localhost:8000/?canisterId=rrkah-fqaaa-aaaaa-aaaaq-cai";
+  "http://127.0.0.1:4943/?canisterId=bw4dl-smaaa-aaaaa-qaacq-cai";
 
 const network =
   process.env.DFX_NETWORK ||
@@ -140,7 +140,8 @@ module.exports = {
   devServer: {
     proxy: {
       "/api": {
-        target: "http://localhost:8000",
+        // target: "http://localhost:8000",
+        target: "http://127.0.0.1:4943",
         changeOrigin: true,
         pathRewrite: {
           "^/api": "/api",
