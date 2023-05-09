@@ -4,11 +4,7 @@
       "main": "src/kawak/main.mo",
       "type": "motoko"
     },
-    "rust_hello": {
-      "candid": "src/rust_hello/rust_hello.did",
-      "package": "rust_hello",
-      "type": "rust"
-    },
+
     "kawak_assets": {
       "dependencies": [
         "kawak"
@@ -29,7 +25,7 @@
       "packtool": ""
     }
   },
-  "dfx": "0.10.1",
+  "dfx": "0.14.0",
   "networks": {
     "local": {
       "bind": "127.0.0.1:8000",
