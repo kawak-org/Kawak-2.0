@@ -54,6 +54,7 @@ export default function App() {
                 // setTour(tour_);
                 handleAuthenticated(authClient);
                 if (location.pathname === "/") {
+                    console.log("kawak", location.pathname);
                     navigate("/forge");
                 }
                 setIIAuth(true);
