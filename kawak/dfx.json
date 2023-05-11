@@ -4,6 +4,7 @@
       "main": "src/kawak/main.mo",
       "type": "motoko"
     },
+
     "kawak_assets": {
       "dependencies": [
         "kawak"
@@ -24,5 +25,11 @@
     }
   },
   "dfx": "0.14.0",
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
+    }
+  },
   "version": 1
 }
