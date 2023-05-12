@@ -9,6 +9,7 @@ import DipTypes "Dip/types";
 
 import Error "mo:base/Error";
 import Result "mo:base/Result";
+import Principal "mo:base/Principal";
 
 shared (msg) actor class Kawak(
   caller : Principal
@@ -49,6 +50,14 @@ shared (msg) actor class Kawak(
 
     public shared ({caller}) func updateOnboarding(onBoarding : Bool) : async ?() {
       _Users.updateOnboarding(onBoarding, caller);
+    };
+
+    public shared ({caller}) func updateUserProfile(userEntry : UsersTypes.UserEntry) : async ?UsersTypes.UserEntry {
+      _Users._updateUserProfile(caller, userEntry);
+    };
+
+    public shared ({caller}) func makeUserAdmin(accountId : Principal) : async () {
+      _Users.makeUserAdmin(accountId);
     };
 
 
