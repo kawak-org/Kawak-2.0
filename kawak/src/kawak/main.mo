@@ -43,6 +43,14 @@ shared (msg) actor class Kawak(
       _Users.logIn(caller);
     };
 
+    public shared ({caller}) func getUser() : async ?UsersTypes.UserEntry{
+      _Users.getUser(caller);
+    };
+
+    public shared ({caller}) func updateOnboarding(onBoarding : Bool) : async ?() {
+      _Users.updateOnboarding(onBoarding, caller);
+    };
+
 
     let _Admins = Admins.Admins({
       admins = stableAdmins;

@@ -72,7 +72,7 @@ module {
             
         // };
 
-        public func updateOnboarding(onBoarding : Bool, caller : Principal) : async ?() {
+        public func updateOnboarding(onBoarding : Bool, caller : Principal) : ?() {
             do ? {
                 let user = getUser(caller)!;
                 // let life = await mint(msg.caller);
