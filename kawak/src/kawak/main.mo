@@ -141,6 +141,8 @@ shared (msg) actor class Kawak(
       _Brew.NftOwnerTokenMetadata(caller);
     };
 
-    // public shared ({caller}) func mint(title, content)
+    public shared ({caller}) func mint(title : Text, content : Text) : async Nat {
+      _Brew.MintNFT(title, content, caller);
+    };
 
 };
