@@ -8,6 +8,7 @@ import Nat "mo:base/Nat";
 import Principal "mo:base/Principal";
 import Time "mo:base/Time";
 import UsersTypes "../Users/types";
+import DIP "../Dip";
 
 module {
 
