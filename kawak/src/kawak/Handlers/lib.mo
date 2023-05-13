@@ -181,6 +181,7 @@ module {
                 myEssays = user.myEssays;
                 myDrafts = Array.append(user.myDrafts, [id]);
                 createdAt = user.createdAt;
+                role = user.role;
                 reviewingEssay = user.reviewingEssay;
                 pastRatedFeedbacks = user.pastRatedFeedbacks;
                 onBoarding = user.onBoarding;
@@ -254,6 +255,7 @@ module {
                     };
                     var updatedUser = {
                         userName = user.userName;
+                        role = user.role;
                         token_balance = user.token_balance;
                         avatar = user.avatar;
                         userRating = user.userRating;
