@@ -10,7 +10,7 @@ module {
         myEssays : [Nat];
         myDrafts : [Nat];
         createdAt : Int;
-        // role     : Text;
+        role     : ?Text;
         avatar      : Text;
         reviewingEssay : Nat;
         pastRatedFeedbacks : [Nat];
