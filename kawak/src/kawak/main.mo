@@ -86,12 +86,24 @@ shared (msg) actor class Kawak(
     _Essays.createEssay(title, topic, essay_word_count, essayCost, text, caller);
   };
 
-  // public shared ({caller}) func createEssays(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Nat {
-  //   if (essay_word_count < 100){
-  //     throw Error.reject(" $ Oooops! Minimum number of words should be 100. # ");
-  //   };
-  //   if (essayCost)
-  // }
+    public shared ({caller}) func getAllEssays() : async [HandlersTypes.EssayEntry] {
+      _Essays.GetAllEssays();
+    };
+
+    public shared ({caller}) func getUserEssays(userName : Text) : async ?[HandlersTypes.EssayEntry] {
+      _Essays.GetUserEssays(userName);
+    };
+
+    public func getessay(id : Nat) : async HandlersTypes.EssayEntry {
+      _Essays.GetEssay(id);
+    };
+
+    // public shared ({caller}) func createEssays(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Nat {
+    //   if (essay_word_count < 100){
+    //     throw Error.reject(" $ Oooops! Minimum number of words should be 100. # ");
+    //   };
+    //   if (essayCost)
+    // }
 
   let _Drafts = Handlers.Drafts({
     _Admins;
@@ -141,5 +153,12 @@ shared (msg) actor class Kawak(
   public shared ({ caller }) func mint(title : Text, content : Text) : async Nat {
     _Brew.MintNFT(title, content, caller);
   };
+
+    public shared ({caller}) func transferTo(to : Principal, tokenId : Nat) : async Result.Result<Nat, DipTypes.NftError> {
+      _Brew.TransferNFTto(to, caller, tokenId);
+    };
+
+    // public shared ({caller}) func listNFT(tokenId : Nat, meta : DipTypes.TokenMetadata) 
+
 
 };

@@ -107,6 +107,40 @@ module {
             return #ok(essayPK, "You have successfully created an Essay!");
         };
 
+        // public func getUserEssay(userName : Text) : ?[EssayEntry] {
+        //     do ? {
+        //         var b = Buffer.Buffer<EssayEntry>(0);
+        //         for ((x, v) in essayHashMap.entries()) {
+        //             if (v.owner == userName) {
+        //                 b.add(v);
+        //             };
+        //         };
+        //         b.toArray();
+        //     };
+        // };
+
+        public func GetAllEssays() : [Types.EssayEntry] {
+            essays.toArray();
+        };
+
+        public func GetUserEssays(userName : Text) : ?[Types.EssayEntry] {
+            do ? {
+                var temp = Buffer.Buffer<Types.EssayEntry>(0);
+                for (i in essays.vals()) {
+                    if (i.owner == userName) {
+                        temp.add(i);
+                    };
+                };
+                temp.toArray();
+            };
+        };
+
+        public func GetEssay(id : Nat) : Types.EssayEntry {
+            essays.get(id);
+        };
+
+
+
 
         // public shared ({ caller }) func createEssay(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<Text, Text> {
         //     var user = state._Users.getUser(caller);
