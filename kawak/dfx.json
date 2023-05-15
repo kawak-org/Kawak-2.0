@@ -4,6 +4,7 @@
       "main": "src/kawak/main.mo",
       "type": "motoko"
     },
+
     "kawak_assets": {
       "dependencies": [
         "kawak"
@@ -12,12 +13,11 @@
         "entrypoint": "src/kawak_assets/src/index.html"
       },
       "source": [
-        "src/kawak_assets/assets",
         "dist/kawak_assets/"
       ],
       "type": "assets"
     }
-  },
+  }, 
   "defaults": {
     "build": {
       "args": "",

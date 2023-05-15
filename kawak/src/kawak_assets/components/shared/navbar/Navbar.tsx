@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-// import { useFetchProfile } from "../../../functions/contract";
+import { useFetchProfile } from "../../../functions/contract";
 import { useAppSelector } from "../../../redux/hooks";
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
@@ -39,10 +39,10 @@ const Navbar = () => {
   //   }
   // }, []);
 
-  // const { handleFetch } = useFetchProfile();
-  // useEffect(() => {
-  //   handleFetch();
-  // }, []);
+  const { handleFetch } = useFetchProfile();
+  useEffect(() => {
+    handleFetch();
+  }, []);
 
   // const handleSetActivePage = (number: number) => {
   //   setActivePage(number);
