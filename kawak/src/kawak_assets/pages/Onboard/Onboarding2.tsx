@@ -36,7 +36,7 @@ const Onboarding2 = () => {
 	}, []);
 
 	function refreshPage() {
-		navigate("/onboarding");
+		navigate("/onboarding3");
 		// window.location.reload();
 	}
 

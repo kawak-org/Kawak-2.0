@@ -76,55 +76,55 @@ const CraftEssay = () => {
 	};
 
 	const handleSubmit = async () => {
-		// if (essayWords < 100) {
-		// 	toast.error("essay can't be lesser than a 100 words");
-		// 	return;
-		// } else if (title.length < 2) {
-		// 	toast.error("Please add a title to your essay");
-		// 	return;
-		// } else {
-		// 	setIsLoading(true);
-		// 	if (user.onboarding === false && user.noOfEssays === 0) {
-		// 		actor.updateOnboarding(true).then(() => {
-		// 			dispatch(setOnboarding(true));
-		// 		});
-		// 	}
-		// 	actor
-		// 		.createEssay(
-		// 			essayEntry.title,
-		// 			essayEntry.topic,
-		// 			BigInt(essayWords),
-		// 			essayEntry.essayCost,
-		// 			essayEntry.text
-		// 		)
-		// 		.then((d) => {
-		// 			if (d) {
-		// 				// Track Create Essay Event
-		// 				trackEvent({
-		// 					category: "Post",
-		// 					action: `Created an Essay with id ${Number(d)} `,
-		// 					documentTitle: "Create Essay Page",
-		// 					href: window.location.href,
-		// 				});
-		// 				handleRemoveFromDraft();
-		// 				setIsLoading(false);
-		// 				dispatch(setTokenBalance(essayCost));
-		// 				dispatch(setnoOfEssays());
-		// 				dispatch(addToForge({ ...dispatchField, id: Number(d) - 1 }));
-		// 				dispatch(addToMyEssay({ ...dispatchField, id: Number(d) - 1 }));
-		// 				// set essay editor content to initial
-		// 				setStateEmpty();
-		// 				toast.success("Essay Created");
-		// 				dispatch(resetCount());
-		// 				localStorage.removeItem("last_essay");
-		// 				navigate(`/forge`);
-		// 			}
-		// 		})
-		// 		.catch((err) => {
-		// 			setIsLoading(false);
-		// 			ErrorHandler(err);
-		// 		});
-		// }
+		if (essayWords < 100) {
+			toast.error("essay can't be lesser than a 100 words");
+			return;
+		} else if (title.length < 2) {
+			toast.error("Please add a title to your essay");
+			return;
+		} else {
+			setIsLoading(true);
+			if (user.onboarding === false && user.noOfEssays === 0) {
+				actor.updateOnboarding(true).then(() => {
+					dispatch(setOnboarding(true));
+				});
+			}
+			actor
+				.createEssay(
+					essayEntry.title,
+					essayEntry.topic,
+					BigInt(essayWords),
+					essayEntry.essayCost,
+					essayEntry.text
+				)
+				.then((d) => {
+					if (d) {
+						// Track Create Essay Event
+						trackEvent({
+							category: "Post",
+							action: `Created an Essay with id ${Number(d)} `,
+							documentTitle: "Create Essay Page",
+							href: window.location.href,
+						});
+						handleRemoveFromDraft();
+						setIsLoading(false);
+						dispatch(setTokenBalance(essayCost));
+						dispatch(setnoOfEssays());
+						dispatch(addToForge({ ...dispatchField, id: Number(d) - 1 }));
+						dispatch(addToMyEssay({ ...dispatchField, id: Number(d) - 1 }));
+						// set essay editor content to initial
+						setStateEmpty();
+						toast.success("Essay Created");
+						dispatch(resetCount());
+						localStorage.removeItem("last_essay");
+						navigate(`/forge`);
+					}
+				})
+				.catch((err) => {
+					setIsLoading(false);
+					ErrorHandler(err);
+				});
+		}
 	};
 
 	const countWordsAndSetToken = () => {

@@ -42,11 +42,6 @@ shared (msg) actor class Kawak(
     _Users.logIn(caller);
   };
 
-  let _Admins = Admins.Admins({
-    admins = stableAdmins;
-    _Users;
-  });
-
   public shared ({ caller }) func getUser() : async ?UsersTypes.UserEntry {
     _Users.getUser(caller);
   };
@@ -61,6 +56,15 @@ shared (msg) actor class Kawak(
 
   public shared ({ caller }) func makeUserAdmin(accountId : Principal) : async () {
     _Users.makeUserAdmin(accountId);
+  };
+
+  let _Admins = Admins.Admins({
+    admins = stableAdmins;
+    _Users;
+  });
+
+  public shared ({ caller }) func addAdmin(principal : Principal) : async () {
+    _Admins.addAdmin(caller, principal);
   };
 
   public shared ({ caller }) func getAdmins() : async [Principal] {
@@ -134,11 +138,8 @@ shared (msg) actor class Kawak(
     _Brew.NftOwnerTokenMetadata(caller);
   };
 
-  // public shared ({caller}) func mint(title, content)
-
-  public shared ({ caller }) func nftOwnerTokenMetadata() : async Result.Result<[DipTypes.TokenMetadata], DipTypes.NftError> {
-    _Brew.NftOwnerTokenMetadata(caller);
+  public shared ({ caller }) func mint(title : Text, content : Text) : async Nat {
+    _Brew.MintNFT(title, content, caller);
   };
-};
 
 };

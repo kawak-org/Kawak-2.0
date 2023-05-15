@@ -43,7 +43,7 @@ export const useFetchProfile = () => {
 	const dispatch = useAppDispatch();
 	try {
 		const handleFetch = () => {
-			actor?.getUserEntrybyPrincipal().then((profile) => {
+			actor?.getUser().then((profile) => {
 				if (!profile) {
 					return toast.error("cannot find user");
 				} else {
