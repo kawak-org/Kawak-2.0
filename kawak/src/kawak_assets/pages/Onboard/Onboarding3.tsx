@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
 import { useAppSelector } from "../../redux/hooks";
 import { useNavigate } from 'react-router-dom';
-// import { useFetchProfile } from '../../functions/contract';
+import { useFetchProfile } from '../../functions/contract';
 const Onboarding3 = () => {
     const user = useAppSelector((state) => state.profile);
     const navigate = useNavigate();
 
-    // const handleOnboarding =() => {
-    //     navigate('/forge')
-    // }
-    // const { handleFetch } = useFetchProfile();
-	// useEffect(() => {
-	// 	handleFetch();
-	// }, []);
+    const handleOnboarding =() => {
+        navigate('/forge')
+    }
+    const { handleFetch } = useFetchProfile();
+	useEffect(() => {
+		handleFetch();
+	}, []);
 
     return(
         <div className="md:mx-16 mx-6 mt-[3rem]">
@@ -36,7 +36,7 @@ const Onboarding3 = () => {
                         </p>
 
                         <button
-                            // onClick={handleOnboarding} 
+                            onClick={handleOnboarding} 
                             className="bg-[#08172E] w-full sm:w-[24rem] md:w-[27rem] text-white mt-7 sm:px-[7rem] px-[4rem] py-3 text-xs ">
                                 Launch Kawak
                         </button>

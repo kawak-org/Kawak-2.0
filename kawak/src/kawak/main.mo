@@ -91,14 +91,6 @@ shared (msg) actor class Kawak(
     _Drafts.getMyDrafts(userName);
   };
 
-  // public shared ({ caller }) func editDraft(id : Nat, newTitle : Text, newText : Text) : () {
-  //   _Drafts.editDraft(id, newTitle, newText);
-  // };
-
-  // public shared ({ caller }) func deleteDraft(id : Nat) : async () {
-  //   _Drafts.deleteDraft(id, caller);
-  // };
-
   public shared ({ caller }) func editDraft(id : Nat, newTitle : Text, newText : Text) : () {
     _Drafts.editDraft(id, newTitle, newText);
   };
@@ -107,28 +99,28 @@ shared (msg) actor class Kawak(
     _Drafts.deleteDraft(id, caller);
   };
 
-    let _Brew = Dip.Brew_DIP721({
-      _Admins;
-      _Users;
-      caller;
-    });
+  let _Brew = Dip.Brew_DIP721({
+    _Admins;
+    _Users;
+    caller;
+  });
 
-    public shared query ({caller}) func totalSupplyofNFT() : async Nat{
-      _Brew.TotalSupplyofNFT();
-    };
+  public shared query ({ caller }) func totalSupplyofNFT() : async Nat {
+    _Brew.TotalSupplyofNFT();
+  };
 
-    public shared ({caller}) func balanceOfNFTs() : async Nat {
-      _Brew.BalanceOfNFTs(caller);
-    };
+  public shared ({ caller }) func balanceOfNFTs() : async Nat {
+    _Brew.BalanceOfNFTs(caller);
+  };
 
-    public shared ({caller}) func ownerOfNFTs(tokenId : Nat) : async Result.Result<?Principal, DipTypes.NftError> {
-      _Brew.OwnerOfNFT(tokenId);
-    };
+  public shared ({ caller }) func ownerOfNFTs(tokenId : Nat) : async Result.Result<?Principal, DipTypes.NftError> {
+    _Brew.OwnerOfNFT(tokenId);
+  };
 
-    public shared ({caller}) func nftOwnerTokenMetadata() : async Result.Result<[DipTypes.TokenMetadata], DipTypes.NftError> {
-      _Brew.NftOwnerTokenMetadata(caller);
-    };
+  public shared ({ caller }) func nftOwnerTokenMetadata() : async Result.Result<[DipTypes.TokenMetadata], DipTypes.NftError> {
+    _Brew.NftOwnerTokenMetadata(caller);
+  };
 
-    // public shared ({caller}) func mint(title, content)
+  // public shared ({caller}) func mint(title, content)
 
 };
