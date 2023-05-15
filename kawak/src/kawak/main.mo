@@ -9,6 +9,7 @@ import DipTypes "Dip/types";
 
 import Error "mo:base/Error";
 import Result "mo:base/Result";
+import Principal "mo:base/Principal";
 
 shared (msg) actor class Kawak(
   caller : Principal
@@ -46,8 +47,20 @@ shared (msg) actor class Kawak(
     _Users;
   });
 
-  public shared ({ caller }) func addAdmin(principal : Principal) : async () {
-    _Admins.addAdmin(caller, principal);
+  public shared ({ caller }) func getUser() : async ?UsersTypes.UserEntry {
+    _Users.getUser(caller);
+  };
+
+  public shared ({ caller }) func updateOnboarding(onBoarding : Bool) : async ?() {
+    _Users.updateOnboarding(onBoarding, caller);
+  };
+
+  public shared ({ caller }) func updateUserProfile(userEntry : UsersTypes.UserEntry) : async ?UsersTypes.UserEntry {
+    _Users._updateUserProfile(caller, userEntry);
+  };
+
+  public shared ({ caller }) func makeUserAdmin(accountId : Principal) : async () {
+    _Users.makeUserAdmin(accountId);
   };
 
   public shared ({ caller }) func getAdmins() : async [Principal] {
@@ -122,5 +135,10 @@ shared (msg) actor class Kawak(
   };
 
   // public shared ({caller}) func mint(title, content)
+
+  public shared ({ caller }) func nftOwnerTokenMetadata() : async Result.Result<[DipTypes.TokenMetadata], DipTypes.NftError> {
+    _Brew.NftOwnerTokenMetadata(caller);
+  };
+};
 
 };
