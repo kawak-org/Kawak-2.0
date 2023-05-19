@@ -2,9 +2,11 @@ import Types "types";
 import HashMap "mo:base/HashMap";
 import Array "mo:base/Array";
 import Hash "mo:base/Hash";
+import Order "mo:base/Order";
 import Buffer "mo:base/Buffer";
 import Result "mo:base/Result";
 import Nat "mo:base/Nat";
+import Prim "mo:⛔";
 import Principal "mo:base/Principal";
 import Time "mo:base/Time";
 import UsersTypes "../Users/types";
@@ -131,6 +133,10 @@ module {
                         temp.add(i);
                     };
                 };
+                // Prim.Array_tabulate<EssayEntry>(
+                //     essayPK,
+                //     func(i : Nat) : EssayEntry { get i }
+                // )
                 temp.toArray();
             };
         };
@@ -138,6 +144,10 @@ module {
         public func GetEssay(id : Nat) : Types.EssayEntry {
             essays.get(id);
         };
+
+        public func DeleteEssay(id : Nat) : () {
+
+        }
 
 
 

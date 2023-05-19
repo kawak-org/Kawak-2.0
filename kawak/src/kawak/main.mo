@@ -98,6 +98,10 @@ shared (msg) actor class Kawak(
       _Essays.GetEssay(id);
     };
 
+    public shared func deleteEssay(id : Nat) : async Result.Result<Text, Text> {
+      _Essays.DeleteEssay(id, caller);
+    };
+
     // public shared ({caller}) func createEssays(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Nat {
     //   if (essay_word_count < 100){
     //     throw Error.reject(" $ Oooops! Minimum number of words should be 100. # ");
@@ -128,35 +132,37 @@ shared (msg) actor class Kawak(
     _Drafts.deleteDraft(id, caller);
   };
 
-  let _Brew = Dip.Brew_DIP721({
+  let _Brew_DIP721 = Dip.Brew_DIP721({
     _Admins;
     _Users;
     caller;
   });
 
   public shared query ({ caller }) func totalSupplyofNFT() : async Nat {
-    _Brew.TotalSupplyofNFT();
+    _Brew_DIP721.TotalSupplyofNFT();
   };
 
   public shared ({ caller }) func balanceOfNFTs() : async Nat {
-    _Brew.BalanceOfNFTs(caller);
+    _Brew_DIP721.BalanceOfNFTs(caller);
   };
 
   public shared ({ caller }) func ownerOfNFTs(tokenId : Nat) : async Result.Result<?Principal, DipTypes.NftError> {
-    _Brew.OwnerOfNFT(tokenId);
+    _Brew_DIP721.OwnerOfNFT(tokenId);
   };
 
   public shared ({ caller }) func nftOwnerTokenMetadata() : async Result.Result<[DipTypes.TokenMetadata], DipTypes.NftError> {
-    _Brew.NftOwnerTokenMetadata(caller);
+    _Brew_DIP721.NftOwnerTokenMetadata(caller);
   };
 
   public shared ({ caller }) func mint(title : Text, content : Text) : async Nat {
-    _Brew.MintNFT(title, content, caller);
+    _Brew_DIP721.MintNFT(title, content, caller);
   };
 
-    public shared ({caller}) func transferTo(to : Principal, tokenId : Nat) : async Result.Result<Nat, DipTypes.NftError> {
-      _Brew.TransferNFTto(to, caller, tokenId);
-    };
+  public shared ({caller}) func transferTo(to : Principal, tokenId : Nat) : async Result.Result<Nat, DipTypes.NftError> {
+    _Brew_DIP721.TransferNFTto(to, caller, tokenId);
+  };
+
+  
 
     // public shared ({caller}) func listNFT(tokenId : Nat, meta : DipTypes.TokenMetadata) 
 

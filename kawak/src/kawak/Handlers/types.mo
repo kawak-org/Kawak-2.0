@@ -34,7 +34,7 @@ module {
         text : Text;
     };
 
-    public type annotation = {
+    public type AnnotationEntry = {
         user : Principal;
         comments : Text;
         quote : Text;
