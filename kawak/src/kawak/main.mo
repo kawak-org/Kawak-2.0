@@ -158,9 +158,21 @@ shared (msg) actor class Kawak(
     _Brew_DIP721.MintNFT(title, content, caller);
   };
 
-  public shared ({caller}) func transferTo(to : Principal, tokenId : Nat) : async Result.Result<Nat, DipTypes.NftError> {
+  public shared ({caller}) func transferNFTto(to : Principal, tokenId : Nat) : async Result.Result<Nat, DipTypes.NftError> {
     _Brew_DIP721.TransferNFTto(to, caller, tokenId);
   };
+
+  let _Brew_DIP20 = Dip.Brew_DIP20({
+    _Admins;
+    _Users;
+    caller;
+  });
+
+  public shared ({caller}) func transferTokenTo(to : Principal, value : Nat) : async DipTypes.TxReceipt {
+    _Brew_DIP20.transfer(caller, to, value);
+  };
+
+  
 
   
 

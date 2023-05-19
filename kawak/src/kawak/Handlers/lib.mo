@@ -125,6 +125,18 @@ module {
             essays.toArray();
         };
 
+        public func IsEssayOwner(id : Nat, caller : Principal) : Bool {
+            var decision = false;
+            for (essay in essays.vals()) {
+                if (essay.id == id) {
+                    if ( essay.aid == caller){
+                        decision := true;
+                    };
+                };
+            };
+            return decision;
+        };
+
         public func GetUserEssays(userName : Text) : ?[Types.EssayEntry] {
             do ? {
                 var temp = Buffer.Buffer<Types.EssayEntry>(0);
@@ -145,9 +157,22 @@ module {
             essays.get(id);
         };
 
-        public func DeleteEssay(id : Nat) : () {
-
-        }
+        public func DeleteEssay(id : Nat, caller : Principal) : Result.Result<Text, Text> {
+            if (IsEssayOwner(id, caller) == false){
+                return #err("You are not the owner of this essay")
+            };
+            let newEssays = Array.filter(
+                essays.toArray(),
+                func ( a : Types.EssayEntry) : Bool {
+                    a != GetEssay(id);
+                },
+            );
+            essays.clear();
+            for (essay in newEssays.vals()) {
+                essays.add(essay)
+            };
+            return #ok("You have successfully deleted the essay")
+        };
 
 
 
@@ -177,6 +202,10 @@ module {
 
 
 
+    };
+
+    public class Annotations(state : Types.State) {
+        
     };
 
     public class Drafts(state : Types.State) {
