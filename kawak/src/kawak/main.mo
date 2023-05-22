@@ -135,6 +135,18 @@ shared (msg) actor class Kawak(
     _Drafts.deleteDraft(id, caller);
   };
 
+  let _Annotations = Handlers.Annotations({
+    _Admins;
+    _Users;
+    essays = stableEssays;
+    drafts = stableDrafts;
+    annotations = stableAnnotations;
+  });
+
+  public shared ({caller}) func addAnnotation(id : Nat, comments : Text, quote : Text) : async () {
+    _Annotations.AddAnnotation(id, caller, comments, quote);
+  };
+
   let _Brew_DIP721 = Dip.Brew_DIP721({
     _Admins;
     _Users;
