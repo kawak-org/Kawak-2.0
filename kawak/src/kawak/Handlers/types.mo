@@ -8,7 +8,8 @@ module {
         _Admins : Admins.Admins;
         _Users  : Users.User;
         essays  : [EssayEntry];
-        drafts  : [DraftEntry]
+        drafts  : [DraftEntry];
+        annotations : [AnnotationEntry];
     };
 
     public type DraftEntry = {
@@ -35,6 +36,7 @@ module {
     };
 
     public type AnnotationEntry = {
+        id : Nat;
         user : Principal;
         comments : Text;
         quote : Text;

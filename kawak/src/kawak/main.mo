@@ -18,6 +18,7 @@ shared (msg) actor class Kawak(
   private stable var stableAdmins : [Principal] = [];
   private stable var stableEssays : [HandlersTypes.EssayEntry] = [];
   private stable var stableDrafts : [HandlersTypes.DraftEntry] = [];
+  private stable var stableAnnotations : [HandlersTypes.AnnotationEntry] = [];
 
   system func preupgrade() {
     // Preserve admins
@@ -80,13 +81,14 @@ shared (msg) actor class Kawak(
     _Users;
     essays = stableEssays;
     drafts = stableDrafts;
+    annotations = stableAnnotations;
   });
 
   public shared ({ caller }) func createEssay(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<(Nat, Text), Text> {
     _Essays.createEssay(title, topic, essay_word_count, essayCost, text, caller);
   };
 
-    public shared ({caller}) func getAllEssays() : async [HandlersTypes.EssayEntry] {
+    public shared ({caller}) func getAllEssays() : async ([(Nat, HandlersTypes.EssayEntry)]) {
       _Essays.GetAllEssays();
     };
 
@@ -94,7 +96,7 @@ shared (msg) actor class Kawak(
       _Essays.GetUserEssays(userName);
     };
 
-    public func getessay(id : Nat) : async HandlersTypes.EssayEntry {
+    public func getessay(id : Nat) : async ?HandlersTypes.EssayEntry {
       _Essays.GetEssay(id);
     };
 
@@ -114,6 +116,7 @@ shared (msg) actor class Kawak(
     _Users;
     drafts = stableDrafts;
     essays = stableEssays;
+    annotations = stableAnnotations;
   });
 
   public shared ({ caller }) func draftEssay(title : Text, text : Text) : async Nat {
