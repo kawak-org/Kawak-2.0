@@ -50,6 +50,7 @@ module {
             essayCost : Nat,
             submittedAt : Int,
             text : Text,
+            userDetails : UsersTypes.UserEntry
         ) : EssayEntry {
             {
                 id : Nat;
@@ -64,16 +65,17 @@ module {
                 essayCost : Nat;
                 submittedAt : Int;
                 text : Text;
+                userDetails;
             };
         };
 
-        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : Text, wordCount : Nat, essayCost : Nat, text : Text) {
-            essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text));
+        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : Text, wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
+            essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
         };
 
-        private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : Text, wordCount : Nat, essayCost : Nat, text : Text) {
-            EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text));
-            UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text) );
+        private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : Text, wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
+            EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
+            UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
         };
 
 
@@ -100,18 +102,10 @@ module {
                 case(null){};
                 case(?user){
                     let username = user.userName;
-                    if (essay_word_count < 100) {
-                        return #err("The essay is less than 100, minimun essay should be 100")
-                    };
-                    if ((essayCost < user.token_balance) and (essayCost >= (essay_word_count / 100))){
-                        createOneEssay(caller, essayPK, username, title, topic, essay_word_count, essayCost, text);
+                        createOneEssay(caller, essayPK, username, title, topic, essay_word_count, essayCost, text, user);
                         essayPK += 1;
                         var updated = state._Users.updateUserBoolTokenBalance(user, essayCost, true, essayPK);
                         var _updated = state._Users._updateUserProfile(caller, updated);
-                    } else {
-                        return #err("Something wrong happended, you maybe out of tokens. Contact us for advice!!! ")
-                    };
-
                 };
             };
             return #ok(essayPK, "You have successfully created an Essay!");
@@ -279,6 +273,7 @@ module {
                                 essayCost = essay.essayCost;
                                 submittedAt = essay.submittedAt;
                                 text = essay.text;
+                                userDetails = essay.userDetails;
                             };
                             var updated = Essays(state).UpdateEssay(id, update);
                         };
@@ -287,6 +282,8 @@ module {
             }
 
         };
+
+        
 
     };
 

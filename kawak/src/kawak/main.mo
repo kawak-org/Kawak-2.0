@@ -85,7 +85,16 @@ shared (msg) actor class Kawak(
   });
 
   public shared ({ caller }) func createEssay(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<(Nat, Text), Text> {
-    _Essays.createEssay(title, topic, essay_word_count, essayCost, text, caller);
+    if (essay_word_count < 100) {
+      throw Error.reject("$ Oooops! Minimum number of words should be 100. # ");
+    };
+    if (essayCost < _Users.getUserTokenBalance(caller) and (essayCost >= (essay_word_count / 100))){
+      _Essays.createEssay(title, topic, essay_word_count, essayCost, text, caller);
+    }
+    else {
+      throw Error.reject("$ Awwwww!! Something went wrong, please make sure have enough tokens or contact us for advice # ");
+    };
+    
   };
 
     public shared ({caller}) func getAllEssays() : async ([(Nat, HandlersTypes.EssayEntry)]) {

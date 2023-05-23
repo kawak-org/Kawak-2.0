@@ -1,6 +1,7 @@
 import Int "mo:base/Int";
 import Admins "../Admins";
 import Users "../Users";
+import UsersTypes "../Users/types";
 
 module {
 
@@ -33,6 +34,7 @@ module {
         essayCost : Nat;
         submittedAt : Int;
         text : Text;
+        userDetails : UsersTypes.UserEntry;
     };
 
     public type AnnotationEntry = {

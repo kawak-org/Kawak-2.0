@@ -73,6 +73,19 @@ module {
             
         // };
 
+        public func getUserTokenBalance(caller : Principal) : Nat {
+            var temp = 0;
+            
+                let user = getUser(caller);
+                switch(user){
+                    case(null){
+                    }; case (?user) {
+                        temp := user.token_balance;
+                    };
+                };
+                temp; 
+        };
+
         public func updateOnboarding(onBoarding : Bool, caller : Principal) : ?() {
             do ? {
                 let user = getUser(caller)!;
@@ -102,7 +115,7 @@ module {
 
         public func createprofile(userName : Text, avatar : Text, caller : Principal ) : Result.Result<Text, Text> {
             // call the balnce function to get and set the balance of newly registered users
-            let balance = 0;
+            let balance = 10;
             let checkUsername = usernameChecker(userName);
             if (checkUsername == false) {
                 #err("This username exist! Please enter another")
