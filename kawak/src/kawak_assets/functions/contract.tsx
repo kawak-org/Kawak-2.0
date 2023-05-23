@@ -79,3 +79,39 @@ export const useFetchProfile = () => {
 		ErrorHandler(err);
 	}
 };
+
+export const useGetAllEssays = () => {
+	const [loading, setLoading] = useState(false);
+	const { actor } = useContext(UserContext);
+	const dispatch = useAppDispatch();
+	try {
+		const fetchData = async () => {
+			setLoading(true);
+			const data = await actor?.getAllEssays();
+			if (data) {
+				for (let i = 0; i < data.length; i++) {
+					const val = data[i][1];
+					var val_: EssayType = {
+						id: Number(val.id),
+						essayCost: Number(val.essayCost),
+						wordCount: Number(val.wordCount),
+						owner: val.owner,
+						avatar: "" /* val.userDetails.avatar */,
+						reviewed: val.reviewed,
+						text: val.text,
+						title: val.title,
+						reviewTimes: Number(val.reviewTimes),
+					};
+					dispatch(addToForge(val_));
+				}
+				setLoading(false);
+			}
+			setLoading(false);
+		};
+		return { fetchData, loading };
+	} catch (err) {
+		toast.error("something went wrong");
+		setLoading(false);
+		console.log(err);
+	}
+};
