@@ -79,3 +79,211 @@ export const useFetchProfile = () => {
 		ErrorHandler(err);
 	}
 };
+
+export const useGetAllEssays = () => {
+	const [loading, setLoading] = useState(false);
+	const { actor } = useContext(UserContext);
+	const dispatch = useAppDispatch();
+	try {
+		const fetchData = async () => {
+			setLoading(true);
+			const data = await actor?.getAllEssays();
+			if (data) {
+				for (let i = 0; i < data.length; i++) {
+					const val = data[i][1];
+					var val_: EssayType = {
+						id: Number(val.id),
+						essayCost: Number(val.essayCost),
+						wordCount: Number(val.wordCount),
+						owner: val.owner,
+						avatar: val.userDetails.avatar,
+						reviewed: val.reviewed,
+						text: val.text,
+						title: val.title,
+						reviewTimes: Number(val.reviewTimes),
+					};
+					dispatch(addToForge(val_));
+				}
+				setLoading(false);
+			}
+			setLoading(false);
+		};
+		return { fetchData, loading };
+	} catch (err) {
+		toast.error("something went wrong");
+		setLoading(false);
+		console.log(err);
+	}
+};
+
+export const useGetRecentForge = () => {
+	const [loading, setLoading] = useState(false);
+	const { actor } = useContext(UserContext);
+	const dispatch = useAppDispatch();
+	const array: EssayType[] = [];
+	const newEssays: EssayType[] = [];
+	const forge = useAppSelector((state) => state.forge);
+	try {
+		const fetchData = async () => {
+			setLoading(true);
+			const data = await actor?.getAllEssays();
+			if (data) {
+				for (let i = 0; i < data.length; i++) {
+					const val = data[i][1];
+					var val_: EssayType = {
+						id: Number(val.id),
+						essayCost: Number(val.essayCost),
+						wordCount: Number(val.wordCount),
+						owner: val.owner,
+						reviewed: val.reviewed,
+						avatar: val.userDetails.avatar,
+						text: val.text,
+						title: val.title,
+						reviewTimes: Number(val.reviewTimes),
+					};
+					array.push(val_);
+				}
+
+				dispatch(clearForge());
+				array.forEach((d) => {
+					dispatch(addToForge(d));
+				});
+
+				setLoading(false);
+			}
+			setLoading(false);
+		};
+		return { fetchData, loading };
+	} catch (err) {
+		toast.error("something went wrong");
+		setLoading(false);
+		console.log(err);
+	}
+};
+
+export const useGetMyDrafts = () => {
+	const [loading, setLoading] = useState(false);
+	const { actor } = useContext(UserContext);
+	const dispatch = useAppDispatch();
+	try {
+		const fetchData = async () => {
+			setLoading(true);
+			const username = localStorage.getItem("username");
+			const data = await actor?.getMyDrafts(username);
+			if (data) {
+				for (let i = 0; i < data[0].length; i++) {
+					const val = data[0][i];
+					if (!val) {
+						setLoading(false);
+						return;
+					}
+					var val_: DraftType = {
+						id: Number(val.id),
+						text: val.text,
+						title: val.title,
+					};
+					dispatch(addToMyDraft(val_));
+				}
+				setLoading(false);
+			}
+			setLoading(false);
+		};
+		return { fetchData, loading };
+	} catch (err) {
+		toast.error("something went wrong");
+		setLoading(false);
+		console.log(err);
+	}
+};
+
+export const useGetMyEssays = () => {
+	const [loading, setLoading] = useState(false);
+	const { actor } = useContext(UserContext);
+	const dispatch = useAppDispatch();
+	try {
+		const fetchData = async () => {
+			setLoading(true);
+			const username = localStorage.getItem("username");
+			const data = await actor?.getUserEssays(username);
+			if (data) {
+				for (let i = 0; i < data[0].length; i++) {
+					const val = data[0][i];
+					if (!val) {
+						setLoading(false);
+						return;
+					}
+					var val_: EssayType_ = {
+						id: Number(val.id),
+						essayCost: Number(val.essayCost),
+						wordCount: Number(val.wordCount),
+						owner: val.owner,
+						avatar: val.userDetails.avatar,
+						reviewed: val.reviewed,
+						text: val.text,
+						title: val.title,
+						reviewTimes: Number(val.reviewTimes),
+					};
+					dispatch(addToMyEssay(val_));
+				}
+				setLoading(false);
+			}
+			setLoading(false);
+		};
+		return { fetchData, loading };
+	} catch (err) {
+		toast.error("something went wrong");
+		setLoading(false);
+		console.log(err);
+	}
+};
+
+// export const useGetAllNFTs = () => {
+// 	const { actor } = useContext(UserContext);
+// 	const [loading, setLoading] = useState(false);
+// 	const dispatch = useAppDispatch();
+
+// 	try {
+// 		const handleGetNFTs = () => {
+// 			setLoading(true);
+// 			actor
+// 				?.whoami()
+// 				.then((d: any) => {
+// 					actor
+// 						?.nftOwnerTokenMetadata(d)
+// 						.then((nfts: any) => {
+// 							if (nfts) {
+// 								const nfts_ = nfts["ok"];
+// 								const data_ = [];
+// 								nfts_.map((nft: TokenMetadata) => {
+// 									const { title, token_identifier: id, content } = nft;
+// 									const data = {
+// 										title,
+// 										id: Number(id),
+// 										content,
+// 									};
+// 									data_.push(data);
+// 								});
+// 								dispatch(addAllNFTs(data_));
+// 								setLoading(false);
+// 							}
+// 						})
+// 						.catch((err) => {
+// 							setLoading(false);
+// 							ErrorHandler(err);
+// 							console.log(err);
+// 						});
+// 				})
+// 				.catch((err) => {
+// 					console.log(err);
+// 					setLoading(false);
+// 					ErrorHandler(err);
+// 					// toast.error("error getting your principal");
+// 				});
+// 		};
+
+// 		return { handleGetNFTs, loading };
+// 	} catch (err) {
+// 		console.log(err);
+// 		toast.error(err || err.message);
+// 	}
+// };

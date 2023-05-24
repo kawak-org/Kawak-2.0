@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { useAppSelector } from "../../redux/hooks";
-// import { useGetMyEssays } from "../../functions/contract";
+import { useGetMyEssays } from "../../functions/contract";
 import { Link } from "react-router-dom";
 import EssayCard from "./EssayCard";
 import { EssayType } from "../../redux/slice/forgeEssaySlice";
@@ -10,24 +10,24 @@ import { UserContext } from "../../context/userContext";
 const ReviewedEssay = () => {
 	const essays = useAppSelector((state) => state.myEssays);
 	const { checkedEssayPage, setCheckedEssayPage } = useContext(UserContext);
-	// const { fetchData, loading } = useGetMyEssays();
+	const { fetchData, loading } = useGetMyEssays();
 
 	const reviewed = essays?.filter(
 		(essay: EssayType) => essay.reviewed === true
 	);
 
 	useEffect(() => {
-		// if (essays.length < 1) {
-		// 	fetchData();
-		// 	setTimeout(() => {
-		// 		setCheckedEssayPage(true);
-		// 	}, 4000);
-		// }
+		if (essays.length < 1) {
+			fetchData();
+			setTimeout(() => {
+				setCheckedEssayPage(true);
+			}, 4000);
+		}
 	}, []);
 
 	return (
 		<div>
-			{/* {loading ? (
+			 {loading ? (
 				<>
 					{!checkedEssayPage ? (
 						<div className=' w-full h-full flex justify-center items-center mt-[-5rem] '>
@@ -83,7 +83,7 @@ const ReviewedEssay = () => {
 						))}
 					</div>
 				</div>
-			)} */}
+			)} 
 		</div>
 	);
 };

@@ -30,7 +30,7 @@ const AdminDashboard = lazy(() => import("../pages/Admin/AdminDashboard"));
 const AllUser = lazy(() => import("../pages/Admin/AllUser"));
 const EssayDetails = lazy(() => import("../components/essay/EssayDetails"));
 const Profile = lazy(() => import("../pages/User/Profile"));
-// const Draft = lazy(() => import("../components/essay/Draft/Draft"));
+const Draft = lazy(() => import("../components/essay/Draft/Draft"));
 const DraftDetails  = lazy(() => import("../components/essay/Draft/DraftDetails"));
 const AllMintedEssays = lazy(() => import("../pages/User/MintedEssays/AllMintedEssays"));
 const MarketPlace = lazy(() => import("../pages/MarketPlace"));
@@ -92,7 +92,7 @@ export default function App() {
 									path='not-reviewed-essay'
 									element={<NotReviewedEssay />}
 								/>
-								{/* <Route path='draft' element={<Draft />} /> */}
+								<Route path='draft' element={<Draft />} />
 							</Route>
 							<Route path='my-essay/:id' element={<MyEssayDetails />} />
 							<Route path='my-essay/draft/:id' element={<DraftDetails />} />

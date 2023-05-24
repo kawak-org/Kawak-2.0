@@ -27,33 +27,33 @@ function MintEssayModal<Props>({ Modal, title, body }) {
 	// const { principal } = useContext(UserContext);
 	// console.log(principal);
 	const handleMint = () => {
-		// setLoading(true);
-		// actor
-		// 	.mintNFT(title, text)
-		// 	.then((d) => {
-		// 		Modal(false);
-		// 		setLoading(false);
-		// 		toast.success("Essay minted successfully");
-		// 		// Track Mint Essay Event
-		// 		trackEvent({
-		// 			category: "Nfts",
-		// 			action: `Minted an Essay with id ${Number(d)} `,
-		// 			documentTitle: "Mint NFT Modal",
-		// 			href: window.location.href,
-		// 		});
-		// 		navigate("/my-NFTs");
-		// 		var data = {
-		// 			id: Number(d),
-		// 			title,
-		// 			content: text,
-		// 		};
-		// 		dispatch(addNFT(data));
-		// 		return;
-		// 	})
-		// 	.catch((err) => {
-		// 		toast.error(err);
-		// 		return;
-		// 	});
+		setLoading(true);
+		actor
+			.mint(title, text)
+			.then((d) => {
+				Modal(false);
+				setLoading(false);
+				toast.success("Essay minted successfully");
+				// Track Mint Essay Event
+				trackEvent({
+					category: "Nfts",
+					action: `Minted an Essay with id ${Number(d)} `,
+					documentTitle: "Mint NFT Modal",
+					href: window.location.href,
+				});
+				navigate("/my-NFTs");
+				var data = {
+					id: Number(d),
+					title,
+					content: text,
+				};
+				dispatch(addNFT(data));
+				return;
+			})
+			.catch((err) => {
+				toast.error(err);
+				return;
+			});
 	};
 	return (
 		<div>
