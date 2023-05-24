@@ -31,6 +31,10 @@ shared (msg) actor class Kawak(
     stableDrafts := _Drafts.toStable();
   };
 
+  public shared ({caller}) func whoami() : async Principal {
+    caller;
+  };
+
   let _Users = Users.User({
 
   });
@@ -134,6 +138,10 @@ shared (msg) actor class Kawak(
 
   public shared ({ caller }) func getMyDrafts(userName : Text) : async ?[HandlersTypes.DraftEntry] {
     _Drafts.getMyDrafts(userName);
+  };
+
+  public shared ({ caller }) func getDraft(id : Nat) : async ?HandlersTypes.DraftEntry {
+    _Drafts.getDraft(id);
   };
 
   public shared ({ caller }) func editDraft(id : Nat, newTitle : Text, newText : Text) : () {
