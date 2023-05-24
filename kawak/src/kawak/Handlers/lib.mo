@@ -166,6 +166,18 @@ module {
             EssayHashMap.get(id);
         };
 
+        public func GetFilteredEssays(topics : [Text]) : [Types.EssayEntry] {
+            var filteredEssays : [Types.EssayEntry] = [];
+            for ((i, j) in EssayHashMap.entries()) {
+                for (topic in topics.vals()) {
+                    if (j.topic == topic) {
+                        filteredEssays := Array.append(filteredEssays, [j]);
+                    };
+                };
+            };
+            return filteredEssays;  
+        };
+
         public func UpdateEssay(id : Nat, update : Types.EssayEntry) : ?Types.EssayEntry {
             EssayHashMap.replace(id, update);
         };
@@ -283,7 +295,7 @@ module {
 
         };
 
-        
+
 
 
 
@@ -345,6 +357,8 @@ module {
             };
         };
 
+        
+
         public func draftEssay(title : Text, text : Text, caller : Principal) :  Nat {
 
             var paid = false;
@@ -362,6 +376,8 @@ module {
             };
             return _essayPK;
         };
+
+
 
         public func getMyDrafts(userName : Text) : ?[Types.DraftEntry] {
             do ? {
