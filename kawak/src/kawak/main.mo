@@ -105,6 +105,10 @@ shared (msg) actor class Kawak(
       _Essays.GetAllEssays();
     };
 
+    public shared ({caller}) func getFilteredEssays(topics : [Text]) : async [HandlersTypes.EssayEntry] {
+      _Essays.GetFilteredEssays(topics);
+    };
+
     public shared ({caller}) func getUserEssays(userName : Text) : async ?[HandlersTypes.EssayEntry] {
       _Essays.GetUserEssays(userName);
     };
