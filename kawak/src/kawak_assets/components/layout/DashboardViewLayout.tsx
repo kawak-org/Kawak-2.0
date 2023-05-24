@@ -4,7 +4,7 @@ import EssayCard from "../essay/EssayCard";
 import EssayBar from "../shared/essay/EssayBar";
 import { ShepherdTourContext } from "react-shepherd";
 import { useAppSelector } from "../../redux/hooks";
-import { useGetAllEssays,/*  useGetRecentForge */ } from "../../functions/contract";
+import { useGetAllEssays, useGetRecentForge } from "../../functions/contract";
 import ReactPaginate from "react-paginate";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -21,7 +21,7 @@ const DashboardViewLayout = ({ heading }: Props) => {
 	// const loading = false;
 
 	const { fetchData, loading } = useGetAllEssays();
-	// const { fetchData: updateData, loading: updating } = useGetRecentForge();
+	const { fetchData: updateData, loading: updating } = useGetRecentForge();
 	const [pageNumber, setPageNumber] = useState(0);
 	const essaysPerPage: number = 8;
 	const essaysViewed: number = pageNumber * essaysPerPage;
@@ -66,7 +66,7 @@ const DashboardViewLayout = ({ heading }: Props) => {
 			fetchData();
 			return;
 		}
-		// updateData();
+		updateData();
 	}, []);
 
 	//TODO: handle with state management
@@ -89,11 +89,11 @@ const DashboardViewLayout = ({ heading }: Props) => {
 				<EssayBar />
 			</div>
 
-			{/* {updating && (
+			{updating && (
 				<div className='text-gray.300 mt-4 w-full justify-center items-center text-sm text-blue-300'>
 					updating...
 				</div>
-			)} */}
+			)}
 			{loading ? (
 				<div className='className=" w-full h-screen flex m-auto justify-center items-center mt-[-5rem] '>
 					<Loader />

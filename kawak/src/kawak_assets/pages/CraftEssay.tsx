@@ -118,7 +118,6 @@ const CraftEssay = () => {
 						dispatch(resetCount());
 						localStorage.removeItem("last_essay");
 						navigate(`/forge`);
-						console.log(d)
 					}
 				})
 				.catch((err) => {

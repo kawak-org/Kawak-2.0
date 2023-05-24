@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { useAppSelector } from "../../redux/hooks";
-// import { useGetMyEssays } from "../../functions/contract";
+import { useGetMyEssays } from "../../functions/contract";
 import { Link, NavLink } from "react-router-dom";
 import EssayCard from "./EssayCard";
 import Loader from "../Loaders/Loader";
@@ -9,11 +9,11 @@ import { UserContext } from "../../context/userContext";
 const AllEssays = () => {
 	const essays = useAppSelector((state) => state.myEssays);
 	const { checkedEssayPage, setCheckedEssayPage } = useContext(UserContext);
-	// const { fetchData, loading } = useGetMyEssays();
+	const { fetchData, loading } = useGetMyEssays();
 
 	useEffect(() => {
 		if (essays.length < 1) {
-			// fetchData();
+			fetchData();
 			setTimeout(() => {
 				setCheckedEssayPage(true);
 			}, 4000);
@@ -21,7 +21,7 @@ const AllEssays = () => {
 	}, []);
 	return (
 		<div>
-			{/* {loading ? (
+			{loading ? (
 				<>
 					{!checkedEssayPage ? (
 						<div className=' w-full h-full flex justify-center items-center mt-[-5rem] '>
@@ -82,7 +82,7 @@ const AllEssays = () => {
 						))}
 					</div>
 				</div>
-			)} */}
+			)}
 		</div>
 	);
 };
