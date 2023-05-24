@@ -77,22 +77,22 @@ const DraftDetails = () => {
 
 	useEffect(() => {
 		const callOnMount = () => {
-			// actor
-			// 	.getDraft(BigInt(id))
-			// 	.then((d) => {
-			// 		if (d) {
-			// 			value.push(d[0]);
-			// 			setEssay(value);
-			// 			setIsLoading2(false);
-			// 			return;
-			// 		}
-			// 		setNoEssay(true);
-			// 		setIsLoading2(false);
-			// 		return null;
-			// 	})
-			// 	.catch(() => {
-			// 		toast.error("could not get an essay with this id");
-			// 	});
+			actor
+				.getDraft(BigInt(id))
+				.then((d) => {
+					if (d) {
+						value.push(d[0]);
+						setEssay(value);
+						setIsLoading2(false);
+						return;
+					}
+					setNoEssay(true);
+					setIsLoading2(false);
+					return null;
+				})
+				.catch(() => {
+					toast.error("could not get an essay with this id");
+				});
 		};
 		callOnMount();
 	}, []);
