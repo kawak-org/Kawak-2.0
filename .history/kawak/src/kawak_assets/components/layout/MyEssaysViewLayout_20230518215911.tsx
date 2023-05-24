@@ -18,7 +18,7 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
 
 	return (
 		<div className=' mx-4 sm:mx-8 mt-2 sm:mt-16'>
-			<div className='flex flex-row w-full justify-between items-center mt-16 sm:mt-28'>
+			<div className='flex flex-row w-full justify-between items-center mt-16 sm:mt-24'>
 				<h4 className='font-bold  text-xl sm:text-3xl dark:text-white'>{heading}</h4>
 			</div>
 

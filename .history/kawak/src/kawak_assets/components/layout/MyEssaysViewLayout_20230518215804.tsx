@@ -18,7 +18,7 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
 
 	return (
 		<div className=' mx-4 sm:mx-8 mt-2 sm:mt-16'>
-			<div className='flex flex-row w-full justify-between items-center mt-16 sm:mt-28'>
+			<div className='flex flex-row w-full justify-between items-center mt-16 sm:mt-24'>
 				<h4 className='font-bold  text-xl sm:text-3xl dark:text-white'>{heading}</h4>
 			</div>
 
@@ -44,7 +44,7 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
 						)}
 					</button>
 					{openSort && (
-						<div className='dark:bg-[#323f4b] bg-white absolute shadow-md right-6 top-11 flex z-20 flex-col rounded-[10px] py-4 pl-4 pr-8 w-[220px] '>
+						<div className='dark:bg-[#323f4b] bg-white absolute shadow-md right-6 top-10 flex z-20 flex-col rounded-[10px] py-4 pl-4 pr-8 w-[220px] '>
 							<div
 								onClick={() => {
 									setAll(1);

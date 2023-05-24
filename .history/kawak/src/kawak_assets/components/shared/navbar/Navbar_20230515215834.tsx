@@ -18,10 +18,8 @@ const Navbar = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const user = useAppSelector((state) => state.profile);
   const nfts = useAppSelector((state) => state.myNFT);
-
-  const [theme, setTheme] = useState(localStorage.theme);
-  const colorTheme = theme === "dark" ? "light" : "dark"
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(colorTheme === "light" ? true : false );
+  const [theme, setTheme] = useState("light");
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   useEffect(() => {
     if (theme === "dark") {
@@ -29,12 +27,10 @@ const Navbar = () => {
     } else {
       document.documentElement.classList.remove("dark");
     }
-    localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const handleThemeSwitch = (isDarkMode: any) => {
-    setTheme(colorTheme);
-    setIsDarkMode(isDarkMode)
+  const handleThemeSwitch = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   // const { handleGetNFTs } = useGetAllNFTs();
@@ -272,7 +268,7 @@ const Navbar = () => {
         )}
 
         {openProfile && (
-          <div className="dark:bg-[#323f4b] bg-white absolute top-[3.4rem] right-[-1.5rem] shadow-md  flex z-20 flex-col rounded-[5px] p-4  w-[13.75rem] h-[21rem] ">
+          <div className="dark:bg-[#323f4b] bg-white absolute top-[3.4rem] right-[-1.5rem] shadow-md  flex z-20 flex-col rounded-[5px] p-4  w-[13.75rem] h-[20rem] ">
             <div className=" flex flex-col  justify-between  ">
               <p className="text-gray-400 my-2 text-xs font-normal">
                 Signed in as
@@ -286,7 +282,7 @@ const Navbar = () => {
 
             <div className="flex flex-col">
               <p
-                className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 relative hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer"
+                className="text-gray-500 text-xs my-2  relative hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer"
                 onClick={() => setShowProfile(!showProfile)}
               >
                 My Profile
@@ -296,22 +292,22 @@ const Navbar = () => {
 							</p> */}
 
               <Link to="/terms-and-conditions">
-                <p className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer">
+                <p className="text-gray-500 text-xs my-2 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer">
                   Terms of Use
                 </p>
               </Link>
               <Link to="/privacy-policy">
-                <p className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer">
+                <p className="text-gray-500 text-xs my-2 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer">
                   Privacy Policy
                 </p>
               </Link>
               <div
-                className="flex items-center justify-between text-gray-500 text-xs my-2  p-1 hover:w-full font-normal c"
+                className="flex  text-gray-500 text-xs my-2  p-1 hover:w-full font-normal cursor-pointer"
+                onClick={handleThemeSwitch}
               >
                 <p> Toggle mode</p>
                 <DarkModeToggle
-                  className="cursor-pointer"
-                  onChange={handleThemeSwitch}
+                  onChange={setIsDarkMode}
                   isDarkMode={isDarkMode}
                   size={50}
                 />
@@ -321,7 +317,7 @@ const Navbar = () => {
             <div className="flex flex-row  ">
               <p
                 onClick={() => setModalIsOpen(true)}
-                className="text-[#EF4444] font-medium dark:hover:bg-white/10 hover:bg-gray-200 p-1 hover:w-full text-sm cursor-pointer"
+                className="text-[#EF4444] font-medium hover:bg-gray-200 p-1 hover:w-full text-sm cursor-pointer"
               >
                 Sign Out
               </p>

@@ -93,7 +93,7 @@ function EssayBar() {
 			<div className='flex ml-5'>
 				
 				<Link to='/craft'>
-					<button className=' dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white hidden sm:flex craft-Essay text-white bg-[#08172E] hover:bg-primary-light hover:text-black'>
+					<button className=' dark:bg-[#627D98] hidden sm:flex craft-Essay text-white bg-[#08172E] hover:bg-primary-light hover:text-black'>
 						Create an essay
 					</button>
 				</Link>

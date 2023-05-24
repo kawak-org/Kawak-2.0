@@ -18,14 +18,14 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
 
 	return (
 		<div className=' mx-4 sm:mx-8 mt-2 sm:mt-16'>
-			<div className='flex flex-row w-full justify-between items-center mt-16 sm:mt-28'>
+			<div className='flex flex-row w-full justify-between items-center mt-16 sm:mt-24'>
 				<h4 className='font-bold  text-xl sm:text-3xl dark:text-white'>{heading}</h4>
 			</div>
 
 			<div className='flex w-full justify-end mt-4 sm:hidden '>
 				<div className='flex relative '>
 					<button
-						className='flex relative justify-center items-center text-[#F98E2D]/70 bg-transparent px-2 ml-7 py-2 border border-solid dark:border-white border-[#08172E] text-sm  rounded-[4px]'
+						className='flex relative justify-center items-center text-[#F98E2D]/70 bg-transparent px-2 ml-7 py-2 border border-solid border-[#08172E] text-sm  rounded-[4px]'
 						onClick={() => setOpenSort(!openSort)}
 					>
 						{all == 1
@@ -38,13 +38,13 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
 							? "Draft"
 							: ""}
 						{openSort ? (
-							<IoIosArrowDown className='text-lg ml-2 dark:text-white text-black' />
+							<IoIosArrowDown className='text-lg ml-2 text-black' />
 						) : (
-							<IoIosArrowUp className='text-lg ml-2 dark:text-white text-black' />
+							<IoIosArrowUp className='text-lg ml-2 text-black' />
 						)}
 					</button>
 					{openSort && (
-						<div className='dark:bg-[#323f4b] bg-white absolute shadow-md right-6 top-11 flex z-20 flex-col rounded-[10px] py-4 pl-4 pr-8 w-[220px] '>
+						<div className='bg-white absolute shadow-md right-6 top-10 flex z-20 flex-col rounded-[10px] py-4 pl-4 pr-8 w-[220px] '>
 							<div
 								onClick={() => {
 									setAll(1);

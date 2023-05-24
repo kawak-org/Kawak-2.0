@@ -396,7 +396,7 @@ export default function Page() {
                 <div
                     className={
                         navBar
-                            ? "flex flex-row justify-between mt-4 items-center w-full top-[-1rem] z-10 py-4 dark:bg-[#323f4b] fixed bg-[#08172E]   "
+                            ? "flex flex-row justify-between mt-4 items-center w-full top-[-1rem] z-10 py-4 fixed bg-[#08172E]   "
                             : "flex flex-row justify-between mt-4 items-center mx-4 md:mx-16 "
                     }
                 >

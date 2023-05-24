@@ -272,7 +272,7 @@ const Navbar = () => {
         )}
 
         {openProfile && (
-          <div className="dark:bg-[#323f4b] bg-white absolute top-[3.4rem] right-[-1.5rem] shadow-md  flex z-20 flex-col rounded-[5px] p-4  w-[13.75rem] h-[21rem] ">
+          <div className="dark:bg-[#323f4b] bg-white absolute top-[3.4rem] right-[-1.5rem] shadow-md  flex z-20 flex-col rounded-[5px] p-4  w-[13.75rem] h-[20rem] ">
             <div className=" flex flex-col  justify-between  ">
               <p className="text-gray-400 my-2 text-xs font-normal">
                 Signed in as

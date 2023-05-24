@@ -19,6 +19,9 @@ module.exports = {
             }
         },
     },
-  
+    plugins: [
+        // require('@tailwindcss/forms'),
+            require('tailwindcss-dark-mode')()
+    ],
     variants: ['dark', 'dark-hover', 'dark-group-hover', 'dark-even', 'dark-odd',]
 }

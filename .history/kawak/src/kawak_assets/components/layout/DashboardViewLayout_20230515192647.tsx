@@ -102,7 +102,7 @@ const DashboardViewLayout = ({ heading }: Props) => {
 					{essays.length === 0 && loading === false && (
 						<div className=' flex w-full h-[70%] flex-col text-bold mt-16  justify-center items-center '>
 							<img src={"pana2.png"} alt='' />
-							<p className='text-[#141414]/60 my-4 dark:text-white text-center text-xl font-semibold max-w-[650px] '>
+							<p className='text-[#141414]/60 my-4 text-center text-xl font-semibold max-w-[650px] '>
 								Welcome to Kawak, create your first essay.
 							</p>
 						</div>

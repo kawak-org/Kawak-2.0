@@ -3,7 +3,7 @@ module.exports = {
     content: [
         "./src/**/*.{js,jsx,ts,tsx}",
     ],
-    darkMode: 'class',
+    darkMode: 'media',
     theme: {
 
         extend: {
@@ -19,6 +19,7 @@ module.exports = {
             }
         },
     },
-  
-    variants: ['dark', 'dark-hover', 'dark-group-hover', 'dark-even', 'dark-odd',]
+    plugins: [
+        // require('@tailwindcss/forms'),
+    ],
 }
