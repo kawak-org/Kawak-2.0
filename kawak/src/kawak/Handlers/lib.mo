@@ -295,6 +295,103 @@ module {
 
         };
 
+        public func GetAnnotator(id : Nat) : ?Principal{
+            var annotator = AnnotationHashMap.get(id);
+            switch(annotator){
+                case(null){null};
+                case(?annotator){
+                    ?annotator.user;
+                };
+            };
+        };
+
+        public func AddRating(id : Nat, rating : Nat, caller : Principal) : ?() {
+            var annotator = AnnotationHashMap.get(id);
+            switch(annotator){
+                case(null){
+                    null;
+                };case (?annotator){
+                    var user = state._Users.getUser(annotator.user);
+                    switch(user){
+                        case(null){
+                            null;
+                        }; case(?user){
+                            var updatedArray = Array.append(user.pastRatedFeedbacks, [rating]);
+                            var i = 0;
+                            var iterator = 0;
+                            for (x in updatedArray.vals()) {
+                                iterator := iterator + 1;
+                                i := i + x; 
+                            };
+                            var annotatorUpdate = {
+                                userName = user.userName;
+                                role = user.role;
+                                token_balance = user.token_balance;
+                                avatar = user.avatar;
+                                userRating = Nat.div(i, iterator);
+                                myEssays = user.myEssays;
+                                myDrafts = user.myDrafts;
+                                createdAt = user.createdAt;
+                                reviewingEssay = user.reviewingEssay;
+                                pastRatedFeedbacks = user.pastRatedFeedbacks;
+                                onBoarding = user.onBoarding;
+                                isAdmin =user.isAdmin;
+                            };
+                            // var userEssayDetails  = Essays(state).UpdateEssay(id, replace);
+                            var userEssayDetails = Essays(state).GetEssay(id);
+                            switch(userEssayDetails){
+                                case(null){null};
+                                case(?userEssayDetails) {
+                                    do ? {
+                                        var cost = userEssayDetails.essayCost;
+                                        var annotatorPrincipal = GetAnnotator(id)!;
+                                        var _annotation = state._Users.getUser(annotatorPrincipal)!;
+                                        var _annotatorUpdate = {
+                                            userName = _annotation.userName;
+                                            role = _annotation.role;
+                                            token_balance = _annotation.token_balance + cost;
+                                            avatar= _annotation.avatar;
+                                            userRating = _annotation.userRating;
+                                            myEssays = _annotation.myEssays;
+                                            myDrafts = _annotation.myDrafts;
+                                            createdAt = _annotation.createdAt;
+                                            reviewingEssay = _annotation.reviewingEssay;
+                                            pastRatedFeedbacks = _annotation.pastRatedFeedbacks;
+                                            onBoarding = _annotation.onBoarding;
+                                            isAdmin = _annotation.isAdmin;
+                                        };
+                                        var replaced = state._Users._updateUserProfile(annotator.user, annotatorUpdate);
+                                        var __replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
+                                        var transfer = state._Brew_DIP20.transfer(caller, annotatorPrincipal, cost);
+
+                                        var annotated = AnnotationHashMap.get(id);
+                                        switch(annotated){
+                                            case(null){
+                                               return null
+                                            }; case (?annotated) {
+                                                var update = {
+                                                    id = annotated.id;
+                                                    user = annotated.user;
+                                                    comments = annotated.comments;
+                                                    quote = annotated.quote;
+                                                    rated = true;
+                                                };
+                                                var updated = AnnotationHashMap.replace(id, update);
+                                            };
+                                        }
+
+
+
+                                    };
+                                };
+                            };
+
+                        };
+                    };
+                };
+            };
+        };
+
 
 
 

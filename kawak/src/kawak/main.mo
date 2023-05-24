@@ -76,6 +76,16 @@ shared (msg) actor class Kawak(
     _Admins.getAdmins();
   };
 
+   let _Brew_DIP20 = Dip.Brew_DIP20({
+    _Admins;
+    _Users;
+    caller;
+  });
+
+  public shared ({caller}) func transferTokenTo(to : Principal, value : Nat) : async DipTypes.TxReceipt {
+    _Brew_DIP20.transfer(caller, to, value);
+  };
+
   // public shared ({caller}) func removeAdmin(principal : Principal) : async {
   //   _Admins.removeAdmin(caller, principal);
   // };
@@ -83,6 +93,7 @@ shared (msg) actor class Kawak(
   let _Essays = Handlers.Essays({
     _Admins;
     _Users;
+    _Brew_DIP20;
     essays = stableEssays;
     drafts = stableDrafts;
     annotations = stableAnnotations;
@@ -131,6 +142,7 @@ shared (msg) actor class Kawak(
   let _Drafts = Handlers.Drafts({
     _Admins;
     _Users;
+    _Brew_DIP20;
     drafts = stableDrafts;
     essays = stableEssays;
     annotations = stableAnnotations;
@@ -159,6 +171,7 @@ shared (msg) actor class Kawak(
   let _Annotations = Handlers.Annotations({
     _Admins;
     _Users;
+    _Brew_DIP20;
     essays = stableEssays;
     drafts = stableDrafts;
     annotations = stableAnnotations;
@@ -198,15 +211,7 @@ shared (msg) actor class Kawak(
     _Brew_DIP721.TransferNFTto(to, caller, tokenId);
   };
 
-  let _Brew_DIP20 = Dip.Brew_DIP20({
-    _Admins;
-    _Users;
-    caller;
-  });
-
-  public shared ({caller}) func transferTokenTo(to : Principal, value : Nat) : async DipTypes.TxReceipt {
-    _Brew_DIP20.transfer(caller, to, value);
-  };
+ 
 
   
 
