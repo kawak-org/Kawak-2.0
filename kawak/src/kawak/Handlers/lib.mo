@@ -25,7 +25,7 @@ module {
 
         public var essayPK : Nat = 0;
 
-        var EssayHashMap = HashMap.HashMap<Nat, EssayEntry>(10, Nat.equal, Hash.hash);
+        var EssayHashMap = HashMap.HashMap<Nat, EssayEntry>(1, Nat.equal, Hash.hash);
         var UserEssayHashMap = HashMap.HashMap<Principal, EssayEntry>(10, Principal.equal, Principal.hash); 
     
         var essays : Buffer.Buffer<EssayEntry> = Buffer.Buffer(0);
@@ -43,7 +43,7 @@ module {
             aid : Principal,
             owner : Text,
             title : Text,
-            topic : Text,
+            topic : [Text],
             wordCount : Nat,
             reviewTimes : Nat32,
             reviewed : Bool,
@@ -57,7 +57,7 @@ module {
                 aid : Principal;
                 owner : Text;
                 title : Text;
-                topic : Text;
+                topic : [Text];
                 //createdAt : Time;
                 wordCount : Nat;
                 reviewTimes : Nat32;
@@ -69,11 +69,11 @@ module {
             };
         };
 
-        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : Text, wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
+        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
             essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
         };
 
-        private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : Text, wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
+        private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
             EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
             UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
         };
@@ -96,7 +96,7 @@ module {
         //     essayPK;
         // };
 
-        public func createEssay(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text, caller : Principal) : Result.Result<(Nat, Text), Text> {
+        public func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text, caller : Principal) : Result.Result<(Nat, Text), Text> {
             var user = state._Users.getUser(caller);
             switch (user){
                 case(null){};
@@ -240,7 +240,7 @@ module {
     public class Annotations(state : Types.State) {
         public type AnnotationEntry = Types.AnnotationEntry;
 
-        var AnnotationHashMap = HashMap.HashMap<Nat, AnnotationEntry>(10, Nat.equal, Hash.hash);
+        var AnnotationHashMap = HashMap.HashMap<Nat, AnnotationEntry>(1, Nat.equal, Hash.hash);
         var annotations : Buffer.Buffer<AnnotationEntry> = Buffer.Buffer(0);
 
         for (annotation in state.annotations.vals()) {
@@ -277,7 +277,7 @@ module {
                                 aid = essay.aid;
                                 owner = essay.owner;
                                 title = essay.title;
-                                topic = essay.title;
+                                topic = [essay.title];
                                 wordCount = essay.wordCount;
                                 //createdAt : Time;
                                 reviewTimes = essay.reviewTimes + 1;
@@ -407,7 +407,7 @@ module {
 
         private var draftEntries : [(Nat, Types.DraftEntry)] = [];
 
-        var DraftHashMap : HashMap.HashMap<Nat, Types.DraftEntry> = HashMap.fromIter<Nat, Types.DraftEntry>(draftEntries.vals(), 10, Nat.equal, Hash.hash);
+        var DraftHashMap : HashMap.HashMap<Nat, Types.DraftEntry> = HashMap.fromIter<Nat, Types.DraftEntry>(draftEntries.vals(), 1, Nat.equal, Hash.hash);
         
         var drafts : Buffer.Buffer<Types.DraftEntry> = Buffer.Buffer(0);
 

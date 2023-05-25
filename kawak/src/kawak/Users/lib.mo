@@ -11,7 +11,7 @@ module {
 
     public class User (state : Types.State) {
 
-        var profileHashMap = HashMap.HashMap<Principal, Types.UserEntry>(10, Principal.equal, Principal.hash);
+        var profileHashMap = HashMap.HashMap<Principal, Types.UserEntry>(1, Principal.equal, Principal.hash);
 
         func isEq (x : Principal, y : Principal) : Bool {
             x == y;
