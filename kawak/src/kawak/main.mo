@@ -99,7 +99,7 @@ shared (msg) actor class Kawak(
     annotations = stableAnnotations;
   });
 
-  public shared ({ caller }) func createEssay(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<(Nat, Text), Text> {
+  public shared ({ caller }) func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<(Nat, Text), Text> {
     if (essay_word_count < 100) {
       throw Error.reject("$ Oooops! Minimum number of words should be 100. # ");
     };
@@ -179,6 +179,14 @@ shared (msg) actor class Kawak(
 
   public shared ({caller}) func addAnnotation(id : Nat, comments : Text, quote : Text) : async () {
     _Annotations.AddAnnotation(id, caller, comments, quote);
+  };
+
+  public shared ({caller}) func getAnnotator(id : Nat) : async ?Principal {
+    _Annotations.GetAnnotator(id);
+  };
+
+  public shared ({caller}) func addRating(id : Nat, rating : Nat, caller : Principal) : async ?() {
+    _Annotations.AddRating(id, rating, caller);
   };
 
   let _Brew_DIP721 = Dip.Brew_DIP721({
