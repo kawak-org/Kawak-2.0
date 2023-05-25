@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { BsTags } from "react-icons/bs";
-const TagInput = () => {
-  const [tags, setTags] = useState<string[]>([]);
+
+interface Props {
+  textTags: any;
+  handleDataTags: (tagText: string[]) => void;
+}
+
+const TagInput = ({ textTags, handleDataTags }: Props) => {
   const [items, setItems] = useState([
     { id: 1, isBool: false, text: "Science" },
     { id: 2, isBool: false, text: "Technology" },
@@ -14,17 +19,17 @@ const TagInput = () => {
     const value = e.target.value;
 
     if (!value.trim()) return;
-    setTags([...tags, value]);
+    handleDataTags([...textTags, value]);
     e.target.value = "";
   };
   const removeTag = (index: any) => {
-    setTags(tags.filter((el, i) => i !== index));
+    handleDataTags(textTags.filter((el, i) => i !== index));
   };
 
   return (
     <div className=" flex flex-col gap-[.5em] flex-wrap  p-[.5em] rounded-[3px] w-full ">
       <div className="flex flex-row gap-[.5rem]">
-        {tags.map((tag, index) => (
+        {textTags.map((tag, index) => (
           <div
             key={index}
             className="bg-gray-400 w-[fit-content] inline-block py-[.5em] px-[.75em] rounded-[20px]"
@@ -49,7 +54,7 @@ const TagInput = () => {
             key={index}
             // disabled={item.isBool}
             onClick={() => {
-              setTags(tags.concat(item.text));
+              handleDataTags([...textTags, item.text]);
               setItems(items.filter((el, i) => i !== index));
             }}
             className="border  text-sm md:text-base cursor-pointer w-[fit-content] rounded-[9999px] border-gray-300 flex justify-center items-center px-4 py-2 "
