@@ -181,6 +181,14 @@ shared (msg) actor class Kawak(
     _Annotations.AddAnnotation(id, caller, comments, quote);
   };
 
+  public shared ({caller}) func getAnnotator(id : Nat) : async ?Principal {
+    _Annotations.GetAnnotator(id);
+  };
+
+  public shared ({caller}) func addRating(id : Nat, rating : Nat, caller : Principal) : async ?() {
+    _Annotations.AddRating(id, rating, caller);
+  };
+
   let _Brew_DIP721 = Dip.Brew_DIP721({
     _Admins;
     _Users;
