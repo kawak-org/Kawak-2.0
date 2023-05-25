@@ -9,7 +9,7 @@ import { UserContext } from "../../context/userContext";
 import { Principal } from "@dfinity/principal";
 import ReviewCommentEditor from "../../src/RichText/ReviewCommentEditor/ReviewCommentEditor";
 import { AiOutlineClose } from "react-icons/ai";
-// import MintEssayModal from "../mint/MintEssayModal";
+import MintEssayModal from "../mint/MintEssayModal";
 import Navbar from "../../components/shared/navbar/Navbar";
 import LexicalRichTextEditor from "../../src/RichText/LexicalRichTextEditor";
 import { BiArrowBack } from "react-icons/bi";
@@ -47,34 +47,34 @@ const MyEssayDetails = () => {
 
   // const { deleting, handleDelete } = deleteEssay(BigInt(id));
   const handleDelete = () => {
-    // setDeleting(true);
-    // actor
-    // 	.deleteEssay(BigInt(id))
-    // 	.then((d) => {
-    // 		setDeleting(false);
-    // 		toast.success("Essay Deleted");
-    // 		navigate("/my-essay");
-    // 	})
-    // 	.catch((err) => {
-    // 		toast.error("something went wrong, could not delete essay");
-    // 	});
+    setDeleting(true);
+    actor
+    	.deleteEssay(BigInt(id))
+    	.then((d) => {
+    		setDeleting(false);
+    		toast.success("Essay Deleted");
+    		navigate("/my-essay");
+    	})
+    	.catch((err) => {
+    		toast.error("something went wrong, could not delete essay");
+    	});
   };
   useEffect(() => {
-    // const callOnMount = () => {
-    // 	actor
-    // 		?.getEssay(BigInt(id))
-    // 		.then((d) => {
-    // 			if (d) {
-    // 				value.push(d[0]);
-    // 				setEssay(value);
-    // 				// console.log(value)
-    // 				setIsLoading2(false);
-    // 			}
-    // 		})
-    // 		.catch((err) => {
-    // 			toast.error("could not get an essay with this id");
-    // 		});
-    // };
+    const callOnMount = () => {
+    	actor
+    		?.getessay(BigInt(id))
+    		.then((d) => {
+    			if (d) {
+    				value.push(d[0]);
+    				setEssay(value);
+    				// console.log(value)
+    				setIsLoading2(false);
+    			}
+    		})
+    		.catch((err) => {
+    			toast.error("could not get an essay with this id");
+    		});
+    };
     // const getReviews = () => {
     // 	actor
     // 		.getReviewsFromEssay(BigInt(id))
@@ -96,7 +96,7 @@ const MyEssayDetails = () => {
     // 		});
     // };
     // getReviews();
-    // callOnMount();
+    callOnMount();
   }, []);
 
   const ratingChanged = (val: number) => {
@@ -411,13 +411,13 @@ const MyEssayDetails = () => {
                         Mint
                       </button>
 
-                      {/* {modalIsOpen && (
+                      {modalIsOpen && (
                         <MintEssayModal
                           body={convert(essay[0].text)}
                           title={essay[0].title}
                           Modal={setModalIsOpen}
                         />
-                      )} */}
+                      )}
                       <button
                         className="py-2 w-full text-sm text-center my-2 text-[#B91C1C]  "
                         onClick={handleDelete}
@@ -506,13 +506,13 @@ const MyEssayDetails = () => {
                       <></>
                     )}
 
-                    {/* {modalIsOpen && (
+                    {modalIsOpen && (
                       <MintEssayModal
                         body={convert(essay[0].text)}
                         title={essay[0].title}
                         Modal={setModalIsOpen}
                       />
-                    )} */}
+                    )}
 
                     {rateModal && (
                       <FeedbackModal
