@@ -92,7 +92,7 @@ const CraftEssay = () => {
 			actor
 				.createEssay(
 					essayEntry.title,
-					essayEntry.topic,
+					[essayEntry.topic],
 					BigInt(essayWords),
 					essayEntry.essayCost,
 					essayEntry.text

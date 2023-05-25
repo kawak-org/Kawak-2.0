@@ -368,9 +368,7 @@ const EssayDetails = () => {
 									<div className=' z-10 fixed bottom-[3rem] right-[7rem]'>
 										<button
 											className='py-1 px-7 text-sm text-center text-white bg-[#08172E] hover:bg-primary-light hover:text-black'
-											// onClick={() => {
-											// 	handleClick().then(handleSubmit);
-											// }}
+											onClick={handleSubmit}
 										>
 											{isLoading ? "submitting" : "Submit Review"}
 										</button>
