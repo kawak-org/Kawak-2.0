@@ -237,53 +237,45 @@ export const useGetMyEssays = () => {
 	}
 };
 
-// export const useGetAllNFTs = () => {
-// 	const { actor } = useContext(UserContext);
-// 	const [loading, setLoading] = useState(false);
-// 	const dispatch = useAppDispatch();
+export const useGetAllNFTs = () => {
+	const { actor } = useContext(UserContext);
+	const [loading, setLoading] = useState(false);
+	const dispatch = useAppDispatch();
 
-// 	try {
-// 		const handleGetNFTs = () => {
-// 			setLoading(true);
-// 			actor
-// 				?.whoami()
-// 				.then((d: any) => {
-// 					actor
-// 						?.nftOwnerTokenMetadata(d)
-// 						.then((nfts: any) => {
-// 							if (nfts) {
-// 								const nfts_ = nfts["ok"];
-// 								const data_ = [];
-// 								nfts_.map((nft: TokenMetadata) => {
-// 									const { title, token_identifier: id, content } = nft;
-// 									const data = {
-// 										title,
-// 										id: Number(id),
-// 										content,
-// 									};
-// 									data_.push(data);
-// 								});
-// 								dispatch(addAllNFTs(data_));
-// 								setLoading(false);
-// 							}
-// 						})
-// 						.catch((err) => {
-// 							setLoading(false);
-// 							ErrorHandler(err);
-// 							console.log(err);
-// 						});
-// 				})
-// 				.catch((err) => {
-// 					console.log(err);
-// 					setLoading(false);
-// 					ErrorHandler(err);
-// 					// toast.error("error getting your principal");
-// 				});
-// 		};
+	try {
+		const handleGetNFTs = () => {
+			setLoading(true);
+					actor
+						?.nftOwnerTokenMetadata()
+						.then((nfts: any) => {
+							if (nfts) {
+								const nfts_ = nfts["ok"];
+								const data_ = [];
+								nfts_.map((nft: TokenMetadata) => {
+									const { title, token_identifier: id, content } = nft;
+									const data = {
+										title,
+										id: Number(id),
+										content,
+									};
+									data_.push(data);
+								});
+								dispatch(addAllNFTs(data_));
+								setLoading(false);
+							}
+						})
+						.catch((err) => {
+							setLoading(false);
+							ErrorHandler(err);
+							console.log(err);
+						});
+				}
+				
+		
 
-// 		return { handleGetNFTs, loading };
-// 	} catch (err) {
-// 		console.log(err);
-// 		toast.error(err || err.message);
-// 	}
-// };
+		return { handleGetNFTs, loading };
+	} catch (err) {
+		console.log(err);
+		toast.error(err || err.message);
+	}
+};

@@ -1,9 +1,9 @@
 import React, { ClipboardEvent, useEffect, useState, useContext } from "react";
 import Popup from "../../../components/shared/Popup";
-// import {
-// 	useGetAllNFTs,
+import {
+	useGetAllNFTs,
 // 	useListNFTonMarketPlace,
-// } from "../../../functions/contract";
+} from "../../../functions/contract";
 import { useAppSelector } from "../../../redux/hooks";
 import toast from "react-hot-toast";
 import Navbar from "../../../components/shared/navbar/Navbar";
@@ -25,11 +25,11 @@ function AllMintedEssays() {
 	const { checkedNftPage, setCheckedNftPage } = useContext(UserContext);
 
 	const nfts = useAppSelector((state) => state.myNFT);
-	// const { handleGetNFTs, loading } = useGetAllNFTs();
+	const { handleGetNFTs, loading } = useGetAllNFTs();
 
 	useEffect(() => {
 		if (nfts.length < 1) {
-			// handleGetNFTs();
+			handleGetNFTs();
 			setTimeout(() => {
 				setCheckedNftPage(true);
 			}, 4000);
@@ -62,7 +62,7 @@ function AllMintedEssays() {
 					<h4 className='font-bold   text-3xl '>My Nfts</h4>
 				</div>
 
-				{/* {nfts.length === 0 && loading === false && ( */}
+				{nfts.length === 0 && loading === false && (
 					<div className=' flex w-full h-[70%] flex-col text-bold mt-16  justify-center items-center '>
 						<img src={"pana2.png"} alt='' />
 						<p className='text-[#141414]/60 my-4 text-center text-base max-w-[650px] '>
@@ -75,10 +75,10 @@ function AllMintedEssays() {
 							</button>
 						</Link>
 					</div>
-				{/* )} */}
+				)} 
 
 				<div>
-					{/* {loading ? ( */}
+					{loading ? (
 						<>
 							{!checkedNftPage ? (
 								<div className=' w-full h-full flex justify-center items-center mt-[-5rem] '>
@@ -103,7 +103,7 @@ function AllMintedEssays() {
 								</>
 							)}
 						</>
-					{/* ) : ( */}
+					 ) : ( 
 						<div
 							className='grid mt-6 md:grid-cols-2 
 						lg:grid-cols-3 gap-6'
@@ -180,7 +180,7 @@ function AllMintedEssays() {
 								</div>
 							))}
 						</div>
-					{/* )} */}
+					 )} 
 				</div>
 			</div>
 		</div>

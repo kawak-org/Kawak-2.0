@@ -25,7 +25,7 @@ module {
 
         public var essayPK : Nat = 0;
 
-        var EssayHashMap = HashMap.HashMap<Nat, EssayEntry>(10, Nat.equal, Hash.hash);
+        var EssayHashMap = HashMap.HashMap<Nat, EssayEntry>(1, Nat.equal, Hash.hash);
         var UserEssayHashMap = HashMap.HashMap<Principal, EssayEntry>(10, Principal.equal, Principal.hash); 
     
         var essays : Buffer.Buffer<EssayEntry> = Buffer.Buffer(0);
@@ -43,7 +43,7 @@ module {
             aid : Principal,
             owner : Text,
             title : Text,
-            topic : Text,
+            topic : [Text],
             wordCount : Nat,
             reviewTimes : Nat32,
             reviewed : Bool,
@@ -57,7 +57,7 @@ module {
                 aid : Principal;
                 owner : Text;
                 title : Text;
-                topic : Text;
+                topic : [Text];
                 //createdAt : Time;
                 wordCount : Nat;
                 reviewTimes : Nat32;
@@ -69,11 +69,11 @@ module {
             };
         };
 
-        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : Text, wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
+        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
             essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
         };
 
-        private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : Text, wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
+        private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
             EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
             UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
         };
@@ -96,7 +96,7 @@ module {
         //     essayPK;
         // };
 
-        public func createEssay(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text, caller : Principal) : Result.Result<(Nat, Text), Text> {
+        public func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text, caller : Principal) : Result.Result<(Nat, Text), Text> {
             var user = state._Users.getUser(caller);
             switch (user){
                 case(null){};
@@ -166,6 +166,18 @@ module {
             EssayHashMap.get(id);
         };
 
+        public func GetFilteredEssays(topics : [Text]) : [Types.EssayEntry] {
+            var filteredEssays : [Types.EssayEntry] = [];
+            for ((i, j) in EssayHashMap.entries()) {
+                for (topic in topics.vals()) {
+                    if (j.topic == topic) {
+                        filteredEssays := Array.append(filteredEssays, [j]);
+                    };
+                };
+            };
+            return filteredEssays;  
+        };
+
         public func UpdateEssay(id : Nat, update : Types.EssayEntry) : ?Types.EssayEntry {
             EssayHashMap.replace(id, update);
         };
@@ -228,7 +240,7 @@ module {
     public class Annotations(state : Types.State) {
         public type AnnotationEntry = Types.AnnotationEntry;
 
-        var AnnotationHashMap = HashMap.HashMap<Nat, AnnotationEntry>(10, Nat.equal, Hash.hash);
+        var AnnotationHashMap = HashMap.HashMap<Nat, AnnotationEntry>(1, Nat.equal, Hash.hash);
         var annotations : Buffer.Buffer<AnnotationEntry> = Buffer.Buffer(0);
 
         for (annotation in state.annotations.vals()) {
@@ -265,7 +277,7 @@ module {
                                 aid = essay.aid;
                                 owner = essay.owner;
                                 title = essay.title;
-                                topic = essay.title;
+                                topic = [essay.title];
                                 wordCount = essay.wordCount;
                                 //createdAt : Time;
                                 reviewTimes = essay.reviewTimes + 1;
@@ -283,7 +295,106 @@ module {
 
         };
 
-        
+        public func GetAnnotator(id : Nat) : ?Principal{
+            var annotator = AnnotationHashMap.get(id);
+            switch(annotator){
+                case(null){null};
+                case(?annotator){
+                    ?annotator.user;
+                };
+            };
+        };
+
+        public func AddRating(id : Nat, rating : Nat, caller : Principal) : ?() {
+            var annotator = AnnotationHashMap.get(id);
+            switch(annotator){
+                case(null){
+                    null;
+                };case (?annotator){
+                    var user = state._Users.getUser(annotator.user);
+                    switch(user){
+                        case(null){
+                            null;
+                        }; case(?user){
+                            var updatedArray = Array.append(user.pastRatedFeedbacks, [rating]);
+                            var i = 0;
+                            var iterator = 0;
+                            for (x in updatedArray.vals()) {
+                                iterator := iterator + 1;
+                                i := i + x; 
+                            };
+                            var annotatorUpdate = {
+                                userName = user.userName;
+                                role = user.role;
+                                token_balance = user.token_balance;
+                                avatar = user.avatar;
+                                userRating = Nat.div(i, iterator);
+                                myEssays = user.myEssays;
+                                myDrafts = user.myDrafts;
+                                createdAt = user.createdAt;
+                                reviewingEssay = user.reviewingEssay;
+                                pastRatedFeedbacks = user.pastRatedFeedbacks;
+                                onBoarding = user.onBoarding;
+                                isAdmin =user.isAdmin;
+                            };
+                            // var userEssayDetails  = Essays(state).UpdateEssay(id, replace);
+                            var userEssayDetails = Essays(state).GetEssay(id);
+                            switch(userEssayDetails){
+                                case(null){null};
+                                case(?userEssayDetails) {
+                                    do ? {
+                                        var cost = userEssayDetails.essayCost;
+                                        var annotatorPrincipal = GetAnnotator(id)!;
+                                        var _annotation = state._Users.getUser(annotatorPrincipal)!;
+                                        var _annotatorUpdate = {
+                                            userName = _annotation.userName;
+                                            role = _annotation.role;
+                                            token_balance = _annotation.token_balance + cost;
+                                            avatar= _annotation.avatar;
+                                            userRating = _annotation.userRating;
+                                            myEssays = _annotation.myEssays;
+                                            myDrafts = _annotation.myDrafts;
+                                            createdAt = _annotation.createdAt;
+                                            reviewingEssay = _annotation.reviewingEssay;
+                                            pastRatedFeedbacks = _annotation.pastRatedFeedbacks;
+                                            onBoarding = _annotation.onBoarding;
+                                            isAdmin = _annotation.isAdmin;
+                                        };
+                                        var replaced = state._Users._updateUserProfile(annotator.user, annotatorUpdate);
+                                        var __replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
+                                        var transfer = state._Brew_DIP20.transfer(caller, annotatorPrincipal, cost);
+
+                                        var annotated = AnnotationHashMap.get(id);
+                                        switch(annotated){
+                                            case(null){
+                                               return null
+                                            }; case (?annotated) {
+                                                var update = {
+                                                    id = annotated.id;
+                                                    user = annotated.user;
+                                                    comments = annotated.comments;
+                                                    quote = annotated.quote;
+                                                    rated = true;
+                                                };
+                                                var updated = AnnotationHashMap.replace(id, update);
+                                            };
+                                        }
+
+
+
+                                    };
+                                };
+                            };
+
+                        };
+                    };
+                };
+            };
+        };
+
+
+
+
 
     };
 
@@ -296,7 +407,7 @@ module {
 
         private var draftEntries : [(Nat, Types.DraftEntry)] = [];
 
-        var DraftHashMap : HashMap.HashMap<Nat, Types.DraftEntry> = HashMap.fromIter<Nat, Types.DraftEntry>(draftEntries.vals(), 10, Nat.equal, Hash.hash);
+        var DraftHashMap : HashMap.HashMap<Nat, Types.DraftEntry> = HashMap.fromIter<Nat, Types.DraftEntry>(draftEntries.vals(), 1, Nat.equal, Hash.hash);
         
         var drafts : Buffer.Buffer<Types.DraftEntry> = Buffer.Buffer(0);
 
@@ -343,6 +454,8 @@ module {
             };
         };
 
+        
+
         public func draftEssay(title : Text, text : Text, caller : Principal) :  Nat {
 
             var paid = false;
@@ -360,6 +473,8 @@ module {
             };
             return _essayPK;
         };
+
+
 
         public func getMyDrafts(userName : Text) : ?[Types.DraftEntry] {
             do ? {

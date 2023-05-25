@@ -1,6 +1,7 @@
 import Int "mo:base/Int";
 import Admins "../Admins";
 import Users "../Users";
+import Dip "../Dip";
 import UsersTypes "../Users/types";
 
 module {
@@ -8,6 +9,7 @@ module {
     public type State = {
         _Admins : Admins.Admins;
         _Users  : Users.User;
+        _Brew_DIP20    : Dip.Brew_DIP20;
         essays  : [EssayEntry];
         drafts  : [DraftEntry];
         annotations : [AnnotationEntry];
@@ -26,7 +28,7 @@ module {
         aid : Principal;
         owner : Text;
         title : Text;
-        topic : Text;
+        topic : [Text];
         //createdAt : Time;
         wordCount : Nat;
         reviewTimes : Nat32;

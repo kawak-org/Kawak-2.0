@@ -31,6 +31,10 @@ shared (msg) actor class Kawak(
     stableDrafts := _Drafts.toStable();
   };
 
+  public shared ({caller}) func whoami() : async Principal {
+    caller;
+  };
+
   let _Users = Users.User({
 
   });
@@ -72,6 +76,16 @@ shared (msg) actor class Kawak(
     _Admins.getAdmins();
   };
 
+   let _Brew_DIP20 = Dip.Brew_DIP20({
+    _Admins;
+    _Users;
+    caller;
+  });
+
+  public shared ({caller}) func transferTokenTo(to : Principal, value : Nat) : async DipTypes.TxReceipt {
+    _Brew_DIP20.transfer(caller, to, value);
+  };
+
   // public shared ({caller}) func removeAdmin(principal : Principal) : async {
   //   _Admins.removeAdmin(caller, principal);
   // };
@@ -79,12 +93,13 @@ shared (msg) actor class Kawak(
   let _Essays = Handlers.Essays({
     _Admins;
     _Users;
+    _Brew_DIP20;
     essays = stableEssays;
     drafts = stableDrafts;
     annotations = stableAnnotations;
   });
 
-  public shared ({ caller }) func createEssay(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<(Nat, Text), Text> {
+  public shared ({ caller }) func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<(Nat, Text), Text> {
     if (essay_word_count < 100) {
       throw Error.reject("$ Oooops! Minimum number of words should be 100. # ");
     };
@@ -99,6 +114,10 @@ shared (msg) actor class Kawak(
 
     public shared ({caller}) func getAllEssays() : async ([(Nat, HandlersTypes.EssayEntry)]) {
       _Essays.GetAllEssays();
+    };
+
+    public shared ({caller}) func getFilteredEssays(topics : [Text]) : async [HandlersTypes.EssayEntry] {
+      _Essays.GetFilteredEssays(topics);
     };
 
     public shared ({caller}) func getUserEssays(userName : Text) : async ?[HandlersTypes.EssayEntry] {
@@ -123,6 +142,7 @@ shared (msg) actor class Kawak(
   let _Drafts = Handlers.Drafts({
     _Admins;
     _Users;
+    _Brew_DIP20;
     drafts = stableDrafts;
     essays = stableEssays;
     annotations = stableAnnotations;
@@ -136,6 +156,10 @@ shared (msg) actor class Kawak(
     _Drafts.getMyDrafts(userName);
   };
 
+  public shared ({ caller }) func getDraft(id : Nat) : async ?HandlersTypes.DraftEntry {
+    _Drafts.getDraft(id);
+  };
+
   public shared ({ caller }) func editDraft(id : Nat, newTitle : Text, newText : Text) : () {
     _Drafts.editDraft(id, newTitle, newText);
   };
@@ -147,6 +171,7 @@ shared (msg) actor class Kawak(
   let _Annotations = Handlers.Annotations({
     _Admins;
     _Users;
+    _Brew_DIP20;
     essays = stableEssays;
     drafts = stableDrafts;
     annotations = stableAnnotations;
@@ -154,6 +179,14 @@ shared (msg) actor class Kawak(
 
   public shared ({caller}) func addAnnotation(id : Nat, comments : Text, quote : Text) : async () {
     _Annotations.AddAnnotation(id, caller, comments, quote);
+  };
+
+  public shared ({caller}) func getAnnotator(id : Nat) : async ?Principal {
+    _Annotations.GetAnnotator(id);
+  };
+
+  public shared ({caller}) func addRating(id : Nat, rating : Nat, caller : Principal) : async ?() {
+    _Annotations.AddRating(id, rating, caller);
   };
 
   let _Brew_DIP721 = Dip.Brew_DIP721({
@@ -186,15 +219,7 @@ shared (msg) actor class Kawak(
     _Brew_DIP721.TransferNFTto(to, caller, tokenId);
   };
 
-  let _Brew_DIP20 = Dip.Brew_DIP20({
-    _Admins;
-    _Users;
-    caller;
-  });
-
-  public shared ({caller}) func transferTokenTo(to : Principal, value : Nat) : async DipTypes.TxReceipt {
-    _Brew_DIP20.transfer(caller, to, value);
-  };
+ 
 
   
 
