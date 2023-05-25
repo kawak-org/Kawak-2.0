@@ -99,7 +99,7 @@ shared (msg) actor class Kawak(
     annotations = stableAnnotations;
   });
 
-  public shared ({ caller }) func createEssay(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<(Nat, Text), Text> {
+  public shared ({ caller }) func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<(Nat, Text), Text> {
     if (essay_word_count < 100) {
       throw Error.reject("$ Oooops! Minimum number of words should be 100. # ");
     };
