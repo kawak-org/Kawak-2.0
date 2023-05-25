@@ -83,7 +83,7 @@ const DashboardViewLayout = ({ heading }: Props) => {
 	return (
 		<div className='dark:bg-[#1f2933] mx-4 sm:mx-8 mb-6 mt-28'>
 			<div className='flex flex-row w-full justify-between items-center mt-10'>
-				<h4 className='font-bold text-2xl mt-[-5rem] sm:mt-0 md:text-4xl '>
+				<h4 className='dark:text-white font-bold text-2xl mt-[-5rem] sm:mt-0 md:text-4xl '>
 					{heading}
 				</h4>
 				<EssayBar />
@@ -103,7 +103,7 @@ const DashboardViewLayout = ({ heading }: Props) => {
 					{essays.length === 0 && loading === false && (
 						<div className=' flex w-full h-[70%] flex-col text-bold mt-16  justify-center items-center '>
 							<img src={"pana2.png"} alt='' />
-							<p className='text-[#141414]/60 my-4 text-center text-xl font-semibold max-w-[650px] '>
+							<p className='text-[#141414]/60 my-4 dark:text-white text-center text-xl font-semibold max-w-[650px] '>
 								Welcome to Kawak, create your first essay.
 							</p>
 						</div>

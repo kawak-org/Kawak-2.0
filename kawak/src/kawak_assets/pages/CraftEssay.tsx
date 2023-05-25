@@ -10,9 +10,9 @@ import { ShepherdTourContext } from "react-shepherd";
 // import MintEssayModal from "../components/mint/MintEssayModal";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import {
-	setnoOfEssays,
-	setOnboarding,
-	setTokenBalance,
+  setnoOfEssays,
+  setOnboarding,
+  setTokenBalance,
 } from "../redux/slice/profileSlice";
 import { resetCount, setEssayCount } from "../redux/slice/countSlice";
 import CraftEssayNavbar from "../components/shared/navbar/CraftEssayNavbar";
@@ -24,6 +24,7 @@ import PreviewEssay from "../components/essay/PreviewEssay";
 import { EssayEditorContext } from "../context/EssayEditorContext";
 // import CustomPrompt from "../utils/navigation-block/CustomPrompt";
 import { addToMyDraft, updateDraftItem } from "../redux/slice/draftSlice";
+import TagInput from "../components/Tag/TagInput";
 
 // const topics: SearchOptionProps[] = [
 // 	{ id: 1, name: "Select topic", disabled: true },
@@ -33,311 +34,331 @@ import { addToMyDraft, updateDraftItem } from "../redux/slice/draftSlice";
 // ];
 
 const CraftEssay = () => {
-	const navigate = useNavigate();
-	const { trackEvent, trackPageView } = useMatomo();
-	// const [step, setStep] = useState(1);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [draftLoading, setDraftLoading] = useState<boolean>(false);
-	const [minCost, setMinCost] = useState(0);
-	// const [modalIsOpen, setModalIsOpen] = useState(false);
-	const user = useAppSelector((state) => state.profile);
-	const dispatch = useAppDispatch();
-	const essayWords = useAppSelector((state) => state.essay.words);
-	const {
-		essay,
-		setEssay,
-		setStateEmpty,
-		step,
-		setStep,
-		title,
-		setTitle,
-		essayCost,
-		setEssayCost,
-		editingDraftId,
-		setEditingDraftId,
-	} = useContext(EssayEditorContext);
+  const navigate = useNavigate();
+  const { trackEvent, trackPageView } = useMatomo();
+  // const [step, setStep] = useState(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [draftLoading, setDraftLoading] = useState<boolean>(false);
+  const [minCost, setMinCost] = useState(0);
+  const [textTags, setTextTags] = useState([]);
 
-	const { actor } = useContext(UserContext);
-	const essayEntry = {
-		title,
-		topic: title,
-		essayCost: BigInt(essayCost),
-		text: localStorage.getItem("last_essay"),
-	};
-	const dispatchField = {
-		title,
-		essayCost,
-		text: localStorage.getItem("last_essay"),
-		wordCount: essayWords,
-		owner: user.username,
-		reviewed: false,
-		reviewTimes: 0,
-		avatar: user.avatar,
-	};
+  // const [modalIsOpen, setModalIsOpen] = useState(false);
+  const user = useAppSelector((state) => state.profile);
+  const dispatch = useAppDispatch();
+  const essayWords = useAppSelector((state) => state.essay.words);
 
-	const handleSubmit = async () => {
-		if (essayWords < 100) {
-			toast.error("essay can't be lesser than a 100 words");
-			return;
-		} else if (title.length < 2) {
-			toast.error("Please add a title to your essay");
-			return;
-		} else {
-			setIsLoading(true);
-			if (user.onboarding === false && user.noOfEssays === 0) {
-				actor.updateOnboarding(true).then(() => {
-					dispatch(setOnboarding(true));
-				});
-			}
-			actor
-				.createEssay(
-					essayEntry.title,
-					[essayEntry.topic],
-					BigInt(essayWords),
-					essayEntry.essayCost,
-					essayEntry.text
-				)
-				.then((d) => {
-					if (d) {
-						// Track Create Essay Event
-						trackEvent({
-							category: "Post",
-							action: `Created an Essay with id ${Number(d)} `,
-							documentTitle: "Create Essay Page",
-							href: window.location.href,
-						});
-						handleRemoveFromDraft();
-						setIsLoading(false);
-						dispatch(setTokenBalance(essayCost));
-						dispatch(setnoOfEssays());
-						dispatch(addToForge({ ...dispatchField, id: Number(d) - 1 }));
-						dispatch(addToMyEssay({ ...dispatchField, id: Number(d) - 1 }));
-						// set essay editor content to initial
-						setStateEmpty();
-						toast.success("Essay Created");
-						dispatch(resetCount());
-						localStorage.removeItem("last_essay");
-						navigate(`/forge`);
-					}
-				})
-				.catch((err) => {
-					setIsLoading(false);
-					ErrorHandler(err);
-				});
-		}
-	};
+  const {
+    essay,
+    setEssay,
+    setStateEmpty,
+    step,
+    setStep,
+    title,
+    tags,
+    setTags,
+    setTitle,
+    essayCost,
+    setEssayCost,
+    editingDraftId,
+    setEditingDraftId,
+  } = useContext(EssayEditorContext);
 
-	const countWordsAndSetToken = () => {
-		const text = useHTMLtoTextConverter(essay);
-		const noOfWords: number = text.split(" ").length;
-		const lowestToken = Math.round((noOfWords * 1) / 100);
-		setEssayCost(lowestToken);
-		setMinCost(lowestToken);
-	};
+  const { actor } = useContext(UserContext);
+  const essayEntry = {
+    title: title,
+    topic: tags,
+    essayCost: BigInt(essayCost),
+    text: localStorage.getItem("last_essay"),
+  };
 
-	// fetch is user is onboarded on page mount, if not, show tour
-	const tour = useContext(ShepherdTourContext);
-	// console.log(tour);
-	// if (step === 1 && essay == "" && user.onboarding === false) {
-	// 	tour?.show("intro2", true);
-	// } else if (step === 2 && title == "" && user.onboarding === false) {
-	// 	tour?.show("intro4", true);
-	// }
+  const dispatchField = {
+    title,
+    setTags,
+    essayCost,
+    text: localStorage.getItem("last_essay"),
+    wordCount: essayWords,
+    owner: user.username,
+    reviewed: false,
+    reviewTimes: 0,
+    avatar: user.avatar,
+  };
 
-	//DRAFT ENDPOINTS
+  const handleSubmit = async () => {
+    console.log(essayEntry);
+    if (essayWords < 100) {
+      toast.error("essay can't be lesser than a 100 words");
+      return;
+    } else if (title.length < 2) {
+      toast.error("Please add a title to your essay");
+      return;
+    } else {
+      setIsLoading(true);
+      if (user.onboarding === false && user.noOfEssays === 0) {
+        actor.updateOnboarding(true).then(() => {
+          dispatch(setOnboarding(true));
+        });
+      }
+      actor
+        .createEssay(
+          essayEntry.title,
+          essayEntry.topic,
+          BigInt(essayWords),
+          essayEntry.essayCost,
+          essayEntry.text
+        )
+        .then((d) => {
+          if (d) {
+            // Track Create Essay Event
+            trackEvent({
+              category: "Post",
+              action: `Created an Essay with id ${Number(d)} `,
+              documentTitle: "Create Essay Page",
+              href: window.location.href,
+            });
+            handleRemoveFromDraft();
+            setIsLoading(false);
+            dispatch(setTokenBalance(essayCost));
+            dispatch(setnoOfEssays());
+            dispatch(addToForge({ ...dispatchField, id: Number(d) - 1 }));
+            dispatch(addToMyEssay({ ...dispatchField, id: Number(d) - 1 }));
+            // set essay editor content to initial
+            setStateEmpty();
+            toast.success("Essay Created");
+            dispatch(resetCount());
+            localStorage.removeItem("last_essay");
+            navigate(`/forge`);
+          }
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          ErrorHandler(err);
+          console.log(err);
+        });
+    }
+  };
 
-	const text = localStorage.getItem("last_essay");
-	const handleSaveEditDraft = () => {
-		// edit a draft that has been created vbefore and save it again
-		setDraftLoading(true);
-		actor
-			.editDraft(BigInt(editingDraftId), title, text)
-			.then(() => {
-				dispatch(updateDraftItem({ id: editingDraftId, text, title }));
-				// Track Edit Draft Event
-				trackEvent({
-					category: "Essay",
-					action: "Edited A Drafted Content",
-					documentTitle: "Create Essay Page",
-					href: window.location.href,
-				});
-				setDraftLoading(false);
-				toast.success("Drafted Essay Updated");
-				navigate("/my-essay/draft");
-			})
-			.catch((err) => {
-				console.log(err);
-				setDraftLoading(false);
-				ErrorHandler(err);
-			});
-	};
+  const countWordsAndSetToken = () => {
+    const text = useHTMLtoTextConverter(essay);
+    const noOfWords: number = text.split(" ").length;
+    const lowestToken = Math.round((noOfWords * 1) / 100);
+    setEssayCost(lowestToken);
+    setMinCost(lowestToken);
+  };
 
-	const handleRemoveFromDraft = async () => {
-		if (editingDraftId) {
-			await actor.deleteDraft(BigInt(editingDraftId));
-			setEditingDraftId(null);
-			return;
-		}
-		return;
-	};
+  // fetch is user is onboarded on page mount, if not, show tour
+  const tour = useContext(ShepherdTourContext);
+  // console.log(tour);
+  // if (step === 1 && essay == "" && user.onboarding === false) {
+  // 	tour?.show("intro2", true);
+  // } else if (step === 2 && title == "" && user.onboarding === false) {
+  // 	tour?.show("intro4", true);
+  // }
 
-	const handleSaveToDraft = () => {
-		if (essayWords < 2) {
-			toast.error("Essay to save can't be empty");
-			return;
-		} else if (title.length < 2) {
-			toast.error("Please add a title to your essay");
-			return;
-		} else if (editingDraftId) {
-			handleSaveEditDraft();
-			return;
-		} else {
-			setDraftLoading(true);
+  //DRAFT ENDPOINTS
 
-			// const text = convertToRaw(editorState?.getCurrentContent());
-			// console.log(text)
-			actor
-				.draftEssay(title, text)
-				.then((d) => {
-					console.log(d);
-					setDraftLoading(false);
-					const payload = {
-						id: Number(d) - 1,
-						text,
-						title,
-					};
-					dispatch(addToMyDraft(payload));
-					toast.success("Added to Draft");
-					navigate("/my-essay/draft");
-				})
-				.catch((err) => {
-					setDraftLoading(false);
-					ErrorHandler(err);
-				});
-		}
-	};
-	//track page view
-	useEffect(() => {
-		const params = {
-			documentTitle: "Create Essay Page",
-			href: window.location.href,
-			customDimensions: false,
-		};
-		trackPageView(params);
-	}, []);
+  const text = localStorage.getItem("last_essay");
+  const handleSaveEditDraft = () => {
+    // edit a draft that has been created vbefore and save it again
+    setDraftLoading(true);
+    actor
+      .editDraft(BigInt(editingDraftId), title, text)
+      .then(() => {
+        dispatch(updateDraftItem({ id: editingDraftId, text, title }));
+        // Track Edit Draft Event
+        trackEvent({
+          category: "Essay",
+          action: "Edited A Drafted Content",
+          documentTitle: "Create Essay Page",
+          href: window.location.href,
+        });
+        setDraftLoading(false);
+        toast.success("Drafted Essay Updated");
+        navigate("/my-essay/draft");
+      })
+      .catch((err) => {
+        console.log(err);
+        setDraftLoading(false);
+        ErrorHandler(err);
+      });
+  };
 
-	return (
-		<div className=''>
-			{/* <CustomPrompt
+  const handleRemoveFromDraft = async () => {
+    if (editingDraftId) {
+      await actor.deleteDraft(BigInt(editingDraftId));
+      setEditingDraftId(null);
+      return;
+    }
+    return;
+  };
+
+  const handleSaveToDraft = () => {
+    if (essayWords < 2) {
+      toast.error("Essay to save can't be empty");
+      return;
+    } else if (title.length < 2) {
+      toast.error("Please add a title to your essay");
+      return;
+    } else if (editingDraftId) {
+      handleSaveEditDraft();
+      return;
+    } else {
+      setDraftLoading(true);
+
+      // const text = convertToRaw(editorState?.getCurrentContent());
+      // console.log(text)
+      actor
+        .draftEssay(title, text)
+        .then((d) => {
+          console.log(d);
+          setDraftLoading(false);
+          const payload = {
+            id: Number(d) - 1,
+            text,
+            title,
+          };
+          dispatch(addToMyDraft(payload));
+          toast.success("Added to Draft");
+          navigate("/my-essay/draft");
+        })
+        .catch((err) => {
+          setDraftLoading(false);
+          ErrorHandler(err);
+        });
+    }
+  };
+  //track page view
+  useEffect(() => {
+    const params = {
+      documentTitle: "Create Essay Page",
+      href: window.location.href,
+      customDimensions: false,
+    };
+    trackPageView(params);
+  }, []);
+
+  const handleDataTags = (tagText: any) => {
+    setTags(tagText);
+    console.log(tags);
+  };
+
+  return (
+    <div className="">
+      {/* <CustomPrompt
 				when={draftLoading || isLoading}
 				message='You gonna lose your data, are you sure?'
 			/> */}
-			<CraftEssayNavbar />
-			{/* <div></div> */}
-			<div className='flex flex-col items-center justify-center px-2 py-3 mt-20 '>
-				{step === 1 ? (
-					<>
-						{/* Title */}
-						<input
-							value={title}
-							onChange={(e: any) => setTitle(e.target.value)}
-							className='text-md py-4 px-5 text-red.500 rounded-md border-inherit border-2 placeholder:text-xl placeholder:font-bold placeholder:text-[#141414A6] w-[80%]'
-							placeholder='Enter title here......'
-						/>
-						{/* word count */}
-						<div className='flex place-content-end mt-10 w-[80%]'>
-							<div></div>
-							<p className=' text-white bg-[#08172E] italic rounded-lg border-inherit border-3 px-2 text-xs  py-1'>
-								{essayWords} words
-							</p>
-						</div>
-						{/* Text Editor */}
-						<div className='essay-editor-tour w-[80%]'>
-							<EssayEditor
-								handleEditorChange={(html) => {
-									localStorage.setItem("last_essay", html);
-									setEssay(html);
-									dispatch(setEssayCount());
-								}}
-							/>
-						</div>
-						{/* Footer Buttons */}
-						<div className='flex w-[80%] justify-end mt-10'>
-							<div className='flex items-center gap-3'>
-								<button
-									disabled={
-										essayWords < 2 && title.length < 2
-											? true
-											: false || draftLoading
-									}
-									onClick={handleSaveToDraft}
-									className=' continue-essay-btn-tour border-black border-1px rounded-sm bg-white text-[#08172E] disabled:bg-slate-300 '
-								>
-									{draftLoading ? "saving" : "Save to Draft"}
-								</button>
-								<button
-									disabled={
-										essayWords < 100 && title.length < 2
-											? true
-											: false || draftLoading
-									}
-									onClick={() => {
-										setStep(2), countWordsAndSetToken();
-									}}
-									className=' continue-essay-btn-tour rounded-sm text-white bg-[#08172E] disabled:bg-slate-300 '
-								>
-									Preview Essay
-								</button>
-							</div>
-						</div>
-					</>
-				) : (
-					/* Preview Essay */
-					/* title and token */
-					<>
-						<div className='flex justify-between items-center mt-5  w-[80%]'>
-							<p className='font-bold sm:3xl md:text-4xl '>{title}</p>
-							<div className='flex gap-4 items-center'>
-								Tokens
-								<input
-									className='py-1 px-1 w-12 h-6 rounded-sm border-[#141414A6] border-1'
-									type='number'
-									min={minCost}
-									value={essayCost}
-									name='essayCost'
-									onChange={(e: any) => setEssayCost(e.target.value)}
-								/>
-							</div>
-						</div>
-						<div className='bg-[#1414141A] h-1 w-[80%] my-10' />
-						{/* Preview Essay */}
-						<div className='w-[80%]'>
-							<PreviewEssay />
-						</div>
+      <CraftEssayNavbar />
+      {/* <div></div> */}
+      <div className="flex flex-col items-center justify-center px-2 py-3 mt-20 ">
+        {step === 1 ? (
+          <>
+            {/* Title */}
+            <div
+              className="flex p-2 flex-col border-inherit border-2 bg-white  w-[80%]
+			 "
+            >
+              <input
+                value={title}
+                onChange={(e: any) => setTitle(e.target.value)}
+                className="text-md py-4 px-5 outline-none border border-gray-200  text-red.500 rounded-md placeholder:text-xl placeholder:font-bold placeholder:text-[#141414A6] w-[100%]"
+                placeholder="Enter title here......"
+              />
+              <TagInput textTags={textTags} handleDataTags={handleDataTags} />
+            </div>
+            {/* word count */}
+            <div className="flex place-content-end mt-10 w-[80%]">
+              <div></div>
+              <p className=" text-white bg-[#08172E] italic rounded-lg border-inherit border-3 px-2 text-xs  py-1">
+                {essayWords} words
+              </p>
+            </div>
+            {/* Text Editor */}
+            <div className="essay-editor-tour w-[80%]">
+              <EssayEditor
+                handleEditorChange={(html) => {
+                  localStorage.setItem("last_essay", html);
+                  setEssay(html);
+                  dispatch(setEssayCount());
+                }}
+              />
+            </div>
+            {/* Footer Buttons */}
+            <div className="flex w-[80%] justify-end mt-10">
+              <div className="flex items-center gap-3">
+                <button
+                  disabled={
+                    essayWords < 2 && title.length < 2
+                      ? true
+                      : false || draftLoading
+                  }
+                  onClick={handleSaveToDraft}
+                  className=" continue-essay-btn-tour border-black border-1px rounded-sm bg-white text-[#08172E] disabled:bg-slate-300 "
+                >
+                  {draftLoading ? "saving" : "Save to Draft"}
+                </button>
+                <button
+                  disabled={
+                    essayWords < 100 && title.length < 2
+                      ? true
+                      : false || draftLoading
+                  }
+                  onClick={() => {
+                    setStep(2), countWordsAndSetToken();
+                  }}
+                  className=" continue-essay-btn-tour rounded-sm text-white bg-[#08172E] disabled:bg-slate-300 "
+                >
+                  Preview Essay
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          /* Preview Essay */
+          /* title and token */
+          <>
+            <div className="flex justify-between items-center mt-5  w-[80%]">
+              <p className="font-bold sm:3xl md:text-4xl ">{title}</p>
+              <div className="flex gap-4 items-center">
+                Tokens
+                <input
+                  className="py-1 px-1 w-12 h-6 rounded-sm border-[#141414A6] border-1"
+                  type="number"
+                  min={minCost}
+                  value={essayCost}
+                  name="essayCost"
+                  onChange={(e: any) => setEssayCost(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="bg-[#1414141A] h-1 w-[80%] my-10" />
+            {/* Preview Essay */}
+            <div className="w-[80%]">
+              <PreviewEssay />
+            </div>
 
-						<div className='flex w-[80%]  justify-end mt-10'>
-							{isLoading ? (
-								<button className='text-primary-dark'>submitting...</button>
-							) : (
-								<button
-									disabled={essayWords < 100 && title.length < 2 ? true : false}
-									onClick={handleSubmit}
-									className='continue-essay-btn-tour rounded-sm text-white bg-[#08172E] disabled:bg-slate-300'
-								>
-									Submit
-								</button>
-							)}
-						</div>
-					</>
-				)}
-			</div>
-		</div>
-	);
+            <div className="flex w-[80%]  justify-end mt-10">
+              {isLoading ? (
+                <button className="text-primary-dark">submitting...</button>
+              ) : (
+                <button
+                  disabled={essayWords < 100 && title.length < 2 ? true : false}
+                  onClick={handleSubmit}
+                  className="continue-essay-btn-tour rounded-sm text-white bg-[#08172E] disabled:bg-slate-300"
+                >
+                  Submit
+                </button>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
 };
 export default CraftEssay;
 
 {
-	/* 
+  /* 
 <div>
 			<CraftEssayNavbar />
 			<div className=' bg-[rgba(8, 23, 46, 0.05)] px-2 py-3 mt-20'>
