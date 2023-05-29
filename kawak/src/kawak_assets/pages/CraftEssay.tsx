@@ -40,10 +40,10 @@ const CraftEssay = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [draftLoading, setDraftLoading] = useState<boolean>(false);
   const [minCost, setMinCost] = useState(0);
-  const [textTags, setTextTags] = useState([]);
 
   // const [modalIsOpen, setModalIsOpen] = useState(false);
   const user = useAppSelector((state) => state.profile);
+  const tags = useAppSelector((state) => state.essayTags);
   const dispatch = useAppDispatch();
   const essayWords = useAppSelector((state) => state.essay.words);
 
@@ -54,8 +54,6 @@ const CraftEssay = () => {
     step,
     setStep,
     title,
-    tags,
-    setTags,
     setTitle,
     essayCost,
     setEssayCost,
@@ -66,14 +64,16 @@ const CraftEssay = () => {
   const { actor } = useContext(UserContext);
   const essayEntry = {
     title: title,
-    topic: tags,
+    topic: tags.map( tag => tag.text),
     essayCost: BigInt(essayCost),
     text: localStorage.getItem("last_essay"),
   };
 
+
+
   const dispatchField = {
     title,
-    setTags,
+    tags : tags.map( tag => tag.text),
     essayCost,
     text: localStorage.getItem("last_essay"),
     wordCount: essayWords,
@@ -236,10 +236,7 @@ const CraftEssay = () => {
     trackPageView(params);
   }, []);
 
-  const handleDataTags = (tagText: any) => {
-    setTags(tagText);
-    console.log(tags);
-  };
+
 
   return (
     <div className="">
@@ -263,7 +260,7 @@ const CraftEssay = () => {
                 className="text-md py-4 px-5 outline-none border border-gray-200  text-red.500 rounded-md placeholder:text-xl placeholder:font-bold placeholder:text-[#141414A6] w-[100%]"
                 placeholder="Enter title here......"
               />
-              <TagInput textTags={textTags} handleDataTags={handleDataTags} />
+              <TagInput />
             </div>
             {/* word count */}
             <div className="flex place-content-end mt-10 w-[80%]">
@@ -298,8 +295,8 @@ const CraftEssay = () => {
                 </button>
                 <button
                   disabled={
-                    essayWords < 100 && title.length < 2
-                      ? true
+                   ( (essayWords < 100 && title.length < 2 && tags.length < 1) || (tags.length < 1 && essayWords < 100 ) || (title.length < 2 && essayWords < 100 )  )
+                    ? true   
                       : false || draftLoading
                   }
                   onClick={() => {

@@ -10,8 +10,6 @@ export const EssayEditorContext = React.createContext<{
   step: number;
   setStep: any;
   title: string;
-  tags: any;
-  setTags: any;
   setTitle: any;
   essayCost: number;
   setEssayCost: any;
@@ -27,8 +25,6 @@ export const EssayEditorContext = React.createContext<{
   step: 1,
   setStep: undefined,
   title: undefined,
-  tags: undefined,
-  setTags: undefined,
   setTitle: undefined,
   essayCost: 0,
   setEssayCost: undefined,
@@ -45,8 +41,8 @@ export const EssayEditorProvider = ({ children }) => {
   const [title, setTitle] = useState("");
   const [essayCost, setEssayCost] = useState(0);
   const [essay, setEssay] = useState("");
-  const [tags, setTags] = useState<any>([]);
   const [editingDraftId, setEditingDraftId] = useState(null);
+
 
   const handleChange = (state: any) => {
     setEditorState(state);
@@ -81,8 +77,6 @@ export const EssayEditorProvider = ({ children }) => {
         setStep,
         title,
         setTitle,
-        tags,
-        setTags,
         essayCost,
         setEssayCost,
         editingDraftId,

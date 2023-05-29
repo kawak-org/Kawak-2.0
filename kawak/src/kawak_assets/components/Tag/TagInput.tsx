@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import { BsTags } from "react-icons/bs";
+import {addTag, removeTag} from "../../redux/slice/tagsSlice"
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 
-interface Props {
-  textTags: any;
-  handleDataTags: (tagText: string[]) => void;
-}
-
-const TagInput = ({ textTags, handleDataTags }: Props) => {
+const TagInput = () => {
   const [items, setItems] = useState([
     { id: 1, isBool: false, text: "Science" },
     { id: 2, isBool: false, text: "Technology" },
@@ -14,29 +11,50 @@ const TagInput = ({ textTags, handleDataTags }: Props) => {
   ]);
 
   const [showInputTag, setShowInputTag] = useState<boolean>(false);
+  const tags = useAppSelector((state) => state.essayTags)
+  const dispatch = useAppDispatch();
+
+  const handleAddTag = (text:string) => {
+    const lastId = tags.length + 2;
+    const data = {
+      id: (lastId + 2),
+      text
+    }
+    dispatch(addTag(data))
+
+
+  }
+
   const handleTags = (e) => {
     if (e.key !== "Enter") return;
     const value = e.target.value;
+     const lastId = tags.length + 2;
 
     if (!value.trim()) return;
-    handleDataTags([...textTags, value]);
+    const data = {
+      id: (lastId + 2),
+      text:value
+    }
+    dispatch(addTag(data))
     e.target.value = "";
   };
-  const removeTag = (index: any) => {
-    handleDataTags(textTags.filter((el, i) => i !== index));
+
+
+  const removeTagFn = (index: any) => {
+  dispatch(removeTag(index))
   };
 
   return (
     <div className=" flex flex-col gap-[.5em] flex-wrap  p-[.5em] rounded-[3px] w-full ">
       <div className="flex flex-row gap-[.5rem]">
-        {textTags.map((tag, index) => (
+        {tags.map((tag, index) => (
           <div
             key={index}
             className="bg-gray-400 w-[fit-content] inline-block py-[.5em] px-[.75em] rounded-[20px]"
           >
-            <span className="">{tag}</span>
+            <span className="">{tag.text}</span>
             <span
-              onClick={() => removeTag(index)}
+              onClick={() => removeTagFn(tag.id)}
               className="h-[1.25rem] w-[1.3rem] bg-gray-500 text-white rounded-[50%] inline-flex items-center cursor-pointer ml-[.5em] text-[1.125rem] justify-center"
             >
               &times;
@@ -54,7 +72,7 @@ const TagInput = ({ textTags, handleDataTags }: Props) => {
             key={index}
             // disabled={item.isBool}
             onClick={() => {
-              handleDataTags([...textTags, item.text]);
+              handleAddTag(item.text)
               setItems(items.filter((el, i) => i !== index));
             }}
             className="border  text-sm md:text-base cursor-pointer w-[fit-content] rounded-[9999px] border-gray-300 flex justify-center items-center px-4 py-2 "
