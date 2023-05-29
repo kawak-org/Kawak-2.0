@@ -92,29 +92,50 @@ const EssayDetails = () => {
 	// 		});
 	// };
 
+	const handleSubmit = () => {
+		setIsLoading(true)
+		actor.addAnnotation(BigInt(id), HighlightEssay, annotation).then((d) => {
+			// Track Annotation Event
+				trackEvent({
+					category: "Annotation",
+					action: `Submitted an Annotation for Essay with id ${id}`,
+					documentTitle: "Essay Details Page",
+					href: window.location.href,
+				});
+				setIsLoading(false);
+				dispatch(setEssayToReviewed(+id));
+				dispatch(setMyEssayToReviewed(+id));
+				toast.success("Annotation Submitted");
+				navigate(-1);
+		}).catch(err => {
+			setIsLoading(false);
+	// 			toast.error("something went wrong");
+		})
+	}
+
 	// console.log(essay);
 
-	// useEffect(() => {
-	// 	const callOnMount = () => {
-	// 		actor
-	// 			.getEssay(BigInt(id))
-	// 			.then((d) => {
-	// 				if (d) {
-	// 					value.push(d[0]);
-	// 					setEssay(value);
-	// 					setIsLoading2(false);
-	// 					return;
-	// 				}
-	// 				setNoEssay(true);
-	// 				setIsLoading2(false);
-	// 				return null;
-	// 			})
-	// 			.catch((err) => {
-	// 				toast.error("could not get an essay with this id");
-	// 			});
-	// 	};
-	// 	callOnMount();
-	// }, []);
+	useEffect(() => {
+		const callOnMount = () => {
+			actor
+				.getessay(BigInt(id))
+				.then((d) => {
+					if (d) {
+						value.push(d[0]);
+						setEssay(value);
+						setIsLoading2(false);
+						return;
+					}
+					setNoEssay(true);
+					setIsLoading2(false);
+					return null;
+				})
+				.catch((err) => {
+					toast.error("could not get an essay with this id");
+				});
+		};
+		callOnMount();
+	}, []);
 
 	if (isLoading2) {
 		return (
@@ -347,9 +368,7 @@ const EssayDetails = () => {
 									<div className=' z-10 fixed bottom-[3rem] right-[7rem]'>
 										<button
 											className='py-1 px-7 text-sm text-center text-white bg-[#08172E] hover:bg-primary-light hover:text-black'
-											// onClick={() => {
-											// 	handleClick().then(handleSubmit);
-											// }}
+											onClick={handleSubmit}
 										>
 											{isLoading ? "submitting" : "Submit Review"}
 										</button>

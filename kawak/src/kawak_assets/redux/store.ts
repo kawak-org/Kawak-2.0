@@ -8,6 +8,7 @@ import myDraftReducer from "./slice/draftSlice";
 import adminDashboardData from "./slice/adminSlice";
 import marketPlace from "./slice/marketPlace/marketPlaceSlice";
 import marketPlaceDetail from "./slice/marketPlace/nftDetailsMPSlice";
+import essayTags from "./slice/tagsSlice"
 
 export const store = configureStore({
 	reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
 		adminDashboardData,
 		marketPlace,
 		marketPlaceDetail,
+		essayTags
 	},
 });
 

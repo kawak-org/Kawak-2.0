@@ -1,14 +1,18 @@
 import Int "mo:base/Int";
 import Admins "../Admins";
 import Users "../Users";
+import Dip "../Dip";
+import UsersTypes "../Users/types";
 
 module {
 
     public type State = {
         _Admins : Admins.Admins;
         _Users  : Users.User;
+        _Brew_DIP20    : Dip.Brew_DIP20;
         essays  : [EssayEntry];
-        drafts  : [DraftEntry]
+        drafts  : [DraftEntry];
+        annotations : [AnnotationEntry];
     };
 
     public type DraftEntry = {
@@ -24,7 +28,7 @@ module {
         aid : Principal;
         owner : Text;
         title : Text;
-        topic : Text;
+        topic : [Text];
         //createdAt : Time;
         wordCount : Nat;
         reviewTimes : Nat32;
@@ -32,9 +36,11 @@ module {
         essayCost : Nat;
         submittedAt : Int;
         text : Text;
+        userDetails : UsersTypes.UserEntry;
     };
 
-    public type annotation = {
+    public type AnnotationEntry = {
+        id : Nat;
         user : Principal;
         comments : Text;
         quote : Text;

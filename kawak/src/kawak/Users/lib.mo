@@ -11,7 +11,7 @@ module {
 
     public class User (state : Types.State) {
 
-        var profileHashMap = HashMap.HashMap<Principal, Types.UserEntry>(10, Principal.equal, Principal.hash);
+        var profileHashMap = HashMap.HashMap<Principal, Types.UserEntry>(1, Principal.equal, Principal.hash);
 
         func isEq (x : Principal, y : Principal) : Bool {
             x == y;
@@ -21,7 +21,7 @@ module {
             x == y;
         };
 
-        func makeProfile(userName : Text, token_balance : Nat, avatar : Text, userRating : Nat, myEssays : [Nat], myDrafts : [Nat], createdAt : Int, reviewingEssay : Nat, pastRatedFeedbacks : [Nat], onBoarding : Bool, isAdmin : Bool) : Types.UserEntry {
+        func makeProfile(userName : Text, role : ?Text, token_balance : Nat, avatar : Text, userRating : Nat, myEssays : [Nat], myDrafts : [Nat], createdAt : Int, reviewingEssay : Nat, pastRatedFeedbacks : [Nat], onBoarding : Bool, isAdmin : Bool) : Types.UserEntry {
             {
                 userName : Text;
                 token_balance : Nat;
@@ -30,6 +30,7 @@ module {
                 myDrafts;
                 avatar;
                 createdAt : Int;
+                role;
                 reviewingEssay : Nat;
                 pastRatedFeedbacks : [Nat];
                 onBoarding : Bool;
@@ -38,7 +39,7 @@ module {
         };
 
         private func createOneProfile(caller : Principal, userName : Text, token_balance : Nat, avatar : Text) {
-            profileHashMap.put(caller, makeProfile(userName, token_balance, avatar, 0, [], [], Time.now(), 0, [], false, false));
+            profileHashMap.put(caller, makeProfile(userName, ?"regular", token_balance, avatar, 0, [], [], Time.now(), 0, [], false, false));
         };
 
         private func usernameChecker(username : Text) : Bool {
@@ -72,7 +73,20 @@ module {
             
         // };
 
-        public func updateOnboarding(onBoarding : Bool, caller : Principal) : async ?() {
+        public func getUserTokenBalance(caller : Principal) : Nat {
+            var temp = 0;
+            
+                let user = getUser(caller);
+                switch(user){
+                    case(null){
+                    }; case (?user) {
+                        temp := user.token_balance;
+                    };
+                };
+                temp; 
+        };
+
+        public func updateOnboarding(onBoarding : Bool, caller : Principal) : ?() {
             do ? {
                 let user = getUser(caller)!;
                 // let life = await mint(msg.caller);
@@ -81,6 +95,7 @@ module {
                     caller,
                     makeProfile(
                         user.userName,
+                        user.role,
                         user.token_balance,
                         user.avatar,
                         user.userRating,
@@ -100,7 +115,7 @@ module {
 
         public func createprofile(userName : Text, avatar : Text, caller : Principal ) : Result.Result<Text, Text> {
             // call the balnce function to get and set the balance of newly registered users
-            let balance = 0;
+            let balance = 10;
             let checkUsername = usernameChecker(userName);
             if (checkUsername == false) {
                 #err("This username exist! Please enter another")
@@ -125,6 +140,7 @@ module {
                 case (?user) {
                     var makeAdmin = {
                         userName = user.userName;
+                        role = ?"admin";
                         token_balance = user.token_balance;
                         avatar = user.avatar;
                         userRating = user.userRating;
@@ -145,6 +161,7 @@ module {
             if (status){
                 {
                     userName = user.userName;
+                    role = user.role;
                     token_balance = user.token_balance - amount;
                     avatar = user.avatar;
                     userRating = user.userRating;
@@ -159,6 +176,7 @@ module {
             } else {
                 {
                     userName = user.userName;
+                    role = user.role;
                     token_balance = user.token_balance;
                     avatar = user.avatar;
                     userRating = user.userRating;
