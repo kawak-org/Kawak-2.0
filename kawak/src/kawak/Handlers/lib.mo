@@ -295,6 +295,19 @@ module {
 
         };
 
+        public func GetAnnotations(id : Nat) : ?AnnotationEntry {
+            var hahs = AnnotationHashMap.get(id);
+
+            switch (hahs) {
+                case (null) {
+                    return null;
+                };
+                case (?hahs) {
+                    return ?hahs;
+                };
+            };
+        };
+
         public func GetAnnotator(id : Nat) : ?Principal{
             var annotator = AnnotationHashMap.get(id);
             switch(annotator){
