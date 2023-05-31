@@ -50,7 +50,8 @@ module {
             essayCost : Nat,
             submittedAt : Int,
             text : Text,
-            userDetails : UsersTypes.UserEntry
+            userDetails : UsersTypes.UserEntry,
+            reviews : [Types.AnnotationEntry]
         ) : EssayEntry {
             {
                 id : Nat;
@@ -66,16 +67,17 @@ module {
                 submittedAt : Int;
                 text : Text;
                 userDetails;
+                reviews;
             };
         };
 
-        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
-            essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
+        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry, reviews : [Types.AnnotationEntry]) {
+            essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, []));
         };
 
         private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
-            EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
-            UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
+            EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, []));
+            UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, []));
         };
 
 
@@ -102,7 +104,7 @@ module {
                 case(null){};
                 case(?user){
                     let username = user.userName;
-                        createOneEssay(caller, essayPK, username, title, topic, essay_word_count, essayCost, text, user);
+                        createOneEssay(caller, essayPK, username, title, topic, essay_word_count, essayCost, text, user, );
                         essayPK += 1;
                         var updated = state._Users.updateUserBoolTokenBalance(user, essayCost, true, essayPK);
                         var _updated = state._Users._updateUserProfile(caller, updated);
@@ -286,6 +288,7 @@ module {
                                 submittedAt = essay.submittedAt;
                                 text = essay.text;
                                 userDetails = essay.userDetails;
+                                reviews = essay.reviews;
                             };
                             var updated = Essays(state).UpdateEssay(id, update);
                         };
