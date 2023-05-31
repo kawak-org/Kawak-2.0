@@ -6,79 +6,81 @@ import { useAppSelector } from "../redux/hooks";
 // import { usePurchaseNFT } from "../functions/contract";
 
 const NftDetails = () => {
-	const [showModal, setShowModal] = useState<boolean>(false);
-	const navigate = useNavigate();
-	const nft = useAppSelector((state) => state.marketPlaceDetail);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const nft = useAppSelector((state) => state.marketPlaceDetail);
 
-	// const { purchaseNFT, loading } = usePurchaseNFT();
+  // const { purchaseNFT, loading } = usePurchaseNFT();
 
-	return (
-		<div className='flex flex-col m-4 sm:m-8 '>
-			<div
-				onClick={() => navigate(-1)}
-				className='flex flex-row items-center my-3 cursor-pointer'
-			>
-				<BiArrowBack className='text-sm' />
-				<p className='text-[#08172E] text-lg font-semibold ml-4 '>Back</p>
-			</div>
-			<div className='bg-[#F98E2D]/10 rounded-[10px] h-fit pt-8 px-4 mt-[1rem] '>
-				<div className='flex  flex-col'>
-					<div className='flex flex-row justify-between items-center '>
-						<div className='flex flex-row justify-center items-center'>
-							<img
-								className='cursor-pointer w-20 h-20 bg-white rounded-full py-1 px-1'
-								src={nft.avatar}
-								alt='avatar'
-							/>
-							<span className='ml-3 flex flex-col justify-between '>
-								<h2 className=' text-[#08172E] mb-2 font-semibold text-xl'>
-									{nft.owner}
-								</h2>
+  return (
+    <div className="flex flex-col m-4 sm:m-8 ">
+      <div
+        onClick={() => navigate(-1)}
+        className="flex flex-row items-center my-3 cursor-pointer"
+      >
+        <BiArrowBack className="text-sm" />
+        <p className="text-[#08172E] dark:text-white/90 text-lg font-semibold ml-4 ">
+          Back
+        </p>
+      </div>
+      <div className="bg-[#F98E2D]/10 rounded-[10px] h-fit pt-8 px-4 mt-[1rem] ">
+        <div className="flex  flex-col">
+          <div className="flex flex-row justify-between items-center ">
+            <div className="flex flex-row justify-center items-center">
+              <img
+                className="cursor-pointer w-20 h-20 bg-white rounded-full py-1 px-1"
+                src={nft.avatar}
+                alt="avatar"
+              />
+              <span className="ml-3 flex flex-col justify-between ">
+                <h2 className=" text-[#08172E] mb-2 font-semibold text-xl">
+                  {nft.owner}
+                </h2>
 
-								<p className='text-gray-400 text-xs'>Author</p>
-							</span>
-						</div>
-					</div>
+                <p className="text-gray-400 text-xs">Author</p>
+              </span>
+            </div>
+          </div>
 
-					<div className='border-b-2 bg-gray-400 my-2' />
+          <div className="border-b-2 bg-gray-400 my-2" />
 
-					<div className='flex flex-row justify-between items-center '>
-						<div className='flex flex-col'>
-							<p className='text-[#08172E]  font-medium'>Price</p>
+          <div className="flex flex-row justify-between items-center ">
+            <div className="flex flex-col">
+              <p className="text-[#08172E]  font-medium">Price</p>
 
-							<div className='flex flex-row justify-center items-center mt-3'>
-								<img src={`token-icon.png`} alt='token' />
-								<p className='text-[#2F6FED] ml-1 text-base'>{nft.price}</p>
+              <div className="flex flex-row justify-center items-center mt-3">
+                <img src={`token-icon.png`} alt="token" />
+                <p className="text-[#2F6FED] ml-1 text-base">{nft.price}</p>
 
-								{/* <p className='text-[#141414]/40 ml-4  text-xs font-semibold '>
+                {/* <p className='text-[#141414]/40 ml-4  text-xs font-semibold '>
 									( $20.10 )
 								</p> */}
-							</div>
-						</div>
+              </div>
+            </div>
 
-						<p className='text-[#08172E]  text-sm font-semibold '>#{nft.id}</p>
-					</div>
+            <p className="text-[#08172E]  text-sm font-semibold ">#{nft.id}</p>
+          </div>
 
-					<div className='w-full flex flex-row justify-center items-center my-4'>
-						<button
-							// onClick={() => purchaseNFT(nft.id)}
-							// disabled={loading}
-							className='flex relative justify-center items-center bg-transparent px-2 ml-7 py-2 border border-solid border-[#08172E] text-sm  rounded-[4px]'
-						>
-							{/* {loading ? "loading" : "Buy Now"} */}
-						</button>
+          <div className="w-full flex flex-row justify-center items-center my-4">
+            <button
+              // onClick={() => purchaseNFT(nft.id)}
+              // disabled={loading}
+              className="flex relative justify-center items-center bg-transparent px-2 ml-7 py-2 border border-solid border-[#08172E] text-sm  rounded-[4px]"
+            >
+              {/* {loading ? "loading" : "Buy Now"} */}
+            </button>
 
-						{/* <button
+            {/* <button
 							onClick={() => setShowModal(true)}
 							className=' craft-Essay text-white bg-[#08172E] hover:bg-primary-light hover:text-black ml-5'
 						>
 							Submit Offer
 						</button> */}
-					</div>
-				</div>
-			</div>
+          </div>
+        </div>
+      </div>
 
-			{/* <div className='bg-[#F98E2D]/10 rounded-[10px]  py-8 px-4 mt-[1rem] '>
+      {/* <div className='bg-[#F98E2D]/10 rounded-[10px]  py-8 px-4 mt-[1rem] '>
               <div className='flex justify-between items-center'>
               <p className=' text-lg lg:text-xl font-semibold text-[#08172E]'>Transactions Details</p>
           </div>
@@ -148,9 +150,9 @@ const NftDetails = () => {
             
           </div>                 
       </div> */}
-			{showModal && <SubmitOfferModal modal={setShowModal} />}
-		</div>
-	);
+      {showModal && <SubmitOfferModal modal={setShowModal} />}
+    </div>
+  );
 };
 
 export default NftDetails;

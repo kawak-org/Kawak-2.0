@@ -49,31 +49,31 @@ const MyEssayDetails = () => {
   const handleDelete = () => {
     setDeleting(true);
     actor
-    	.deleteEssay(BigInt(id))
-    	.then((d) => {
-    		setDeleting(false);
-    		toast.success("Essay Deleted");
-    		navigate("/my-essay");
-    	})
-    	.catch((err) => {
-    		toast.error("something went wrong, could not delete essay");
-    	});
+      .deleteEssay(BigInt(id))
+      .then((d) => {
+        setDeleting(false);
+        toast.success("Essay Deleted");
+        navigate("/my-essay");
+      })
+      .catch((err) => {
+        toast.error("something went wrong, could not delete essay");
+      });
   };
   useEffect(() => {
     const callOnMount = () => {
-    	actor
-    		?.getessay(BigInt(id))
-    		.then((d) => {
-    			if (d) {
-    				value.push(d[0]);
-    				setEssay(value);
-    				// console.log(value)
-    				setIsLoading2(false);
-    			}
-    		})
-    		.catch((err) => {
-    			toast.error("could not get an essay with this id");
-    		});
+      actor
+        ?.getessay(BigInt(id))
+        .then((d) => {
+          if (d) {
+            value.push(d[0]);
+            setEssay(value);
+            // console.log(value)
+            setIsLoading2(false);
+          }
+        })
+        .catch((err) => {
+          toast.error("could not get an essay with this id");
+        });
     };
     // const getReviews = () => {
     // 	actor
@@ -159,12 +159,12 @@ const MyEssayDetails = () => {
                     onClick={() => navigate(-1)}
                     className="flex flex-row absolute left-[-1.5rem] sm:left-[-3rem] top-[-.2rem] items-center cursor-pointer"
                   >
-                    <BiArrowBack className="text-sm" />
-                    <p className="text-[#08172E] text-lg font-semibold ml-4 ">
+                    <BiArrowBack className="text-sm dark:text-white" />
+                    <p className="text-[#08172E] dark:text-white text-lg font-semibold ml-4 ">
                       Back
                     </p>
                   </div>
-                  <h2 className="justify-center m-auto text-3xl font-bold mt-4">
+                  <h2 className="justify-center dark:text-white m-auto text-3xl font-bold mt-4">
                     {essay[0].title}
                   </h2>
                   <div className="border-b-[1px] bg-gray-400 mt-3 mb-7" />
@@ -172,7 +172,7 @@ const MyEssayDetails = () => {
                     <div>
                       <LexicalRichTextEditor essay={essay[0].text} />
                       <div className="w-full flex justify-center items-center">
-                        <p className="my-4 py-2 p-4 sm:p-4 w-fit  bg-[#08172E33]/20 text-[#08172E]">
+                        <p className="my-4 py-2 p-4 sm:p-4 w-fit dark:bg-[#323f4b] dark:text-white/80 bg-[#08172E33]/20 text-[#08172E]">
                           No one has annotated on your essay yet
                         </p>
                       </div>

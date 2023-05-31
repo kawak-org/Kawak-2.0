@@ -64,16 +64,14 @@ const CraftEssay = () => {
   const { actor } = useContext(UserContext);
   const essayEntry = {
     title: title,
-    topic: tags.map( tag => tag.text),
+    topic: tags.map((tag) => tag.text),
     essayCost: BigInt(essayCost),
     text: localStorage.getItem("last_essay"),
   };
 
-
-
   const dispatchField = {
     title,
-    tags : tags.map( tag => tag.text),
+    tags: tags.map((tag) => tag.text),
     essayCost,
     text: localStorage.getItem("last_essay"),
     wordCount: essayWords,
@@ -236,8 +234,6 @@ const CraftEssay = () => {
     trackPageView(params);
   }, []);
 
-
-
   return (
     <div className="">
       {/* <CustomPrompt
@@ -251,13 +247,13 @@ const CraftEssay = () => {
           <>
             {/* Title */}
             <div
-              className="flex p-2 flex-col border-inherit border-2 bg-white  w-[80%]
+              className="flex p-2 flex-col border-inherit border-2 dark:border-[#3e5060] bg-white dark:bg-[#323f4b]  w-[80%]
 			 "
             >
               <input
                 value={title}
                 onChange={(e: any) => setTitle(e.target.value)}
-                className="text-md py-4 px-5 outline-none border border-gray-200  text-red.500 rounded-md placeholder:text-xl placeholder:font-bold placeholder:text-[#141414A6] w-[100%]"
+                className="text-md py-4 px-5 outline-none border dark:bg-[#323f4b] dark:border-[#3e5060] border-gray-200  dark:text-white text-red.500 rounded-md placeholder:text-xl placeholder:font-bold dark:placeholder:text-white/70 placeholder:text-[#141414A6] w-[100%]"
                 placeholder="Enter title here......"
               />
               <TagInput />
@@ -295,14 +291,16 @@ const CraftEssay = () => {
                 </button>
                 <button
                   disabled={
-                   ( (essayWords < 100 && title.length < 2 && tags.length < 1) || (tags.length < 1 && essayWords < 100 ) || (title.length < 2 && essayWords < 100 )  )
-                    ? true   
+                    (essayWords < 100 && title.length < 2 && tags.length < 1) ||
+                    (tags.length < 1 && essayWords < 100) ||
+                    (title.length < 2 && essayWords < 100)
+                      ? true
                       : false || draftLoading
                   }
                   onClick={() => {
                     setStep(2), countWordsAndSetToken();
                   }}
-                  className=" continue-essay-btn-tour rounded-sm text-white bg-[#08172E] disabled:bg-slate-300 "
+                  className=" continue-essay-btn-tour rounded-sm dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white  text-white bg-[#08172E] disabled:bg-slate-300 "
                 >
                   Preview Essay
                 </button>
@@ -314,11 +312,13 @@ const CraftEssay = () => {
           /* title and token */
           <>
             <div className="flex justify-between items-center mt-5  w-[80%]">
-              <p className="font-bold sm:3xl md:text-4xl ">{title}</p>
-              <div className="flex gap-4 items-center">
+              <p className="font-bold sm:3xl md:text-4xl dark:text-white ">
+                {title}
+              </p>
+              <div className="flex gap-4 items-center dark:text-white">
                 Tokens
                 <input
-                  className="py-1 px-1 w-12 h-6 rounded-sm border-[#141414A6] border-1"
+                  className="py-1 px-1 w-12 h-6 rounded-sm dark:bg-[#323f4b] dark:text-white dark:border-[#3e5060] border-[#141414A6] border-1"
                   type="number"
                   min={minCost}
                   value={essayCost}
@@ -335,12 +335,14 @@ const CraftEssay = () => {
 
             <div className="flex w-[80%]  justify-end mt-10">
               {isLoading ? (
-                <button className="text-primary-dark">submitting...</button>
+                <button className="text-primary-dark dark:text-white/90 ">
+                  submitting...
+                </button>
               ) : (
                 <button
                   disabled={essayWords < 100 && title.length < 2 ? true : false}
                   onClick={handleSubmit}
-                  className="continue-essay-btn-tour rounded-sm text-white bg-[#08172E] disabled:bg-slate-300"
+                  className="continue-essay-btn-tour dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white  rounded-sm text-white bg-[#08172E] disabled:bg-slate-300"
                 >
                   Submit
                 </button>

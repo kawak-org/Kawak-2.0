@@ -20,8 +20,10 @@ const Navbar = () => {
   const nfts = useAppSelector((state) => state.myNFT);
 
   const [theme, setTheme] = useState(localStorage.theme);
-  const colorTheme = theme === "dark" ? "light" : "dark"
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(colorTheme === "light" ? true : false );
+  const colorTheme = theme === "dark" ? "light" : "dark";
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(
+    colorTheme === "light" ? true : false
+  );
 
   useEffect(() => {
     if (theme === "dark") {
@@ -29,12 +31,12 @@ const Navbar = () => {
     } else {
       document.documentElement.classList.remove("dark");
     }
-    localStorage.setItem('theme', theme);
+    localStorage.setItem("theme", theme);
   }, [theme]);
 
   const handleThemeSwitch = (isDarkMode: any) => {
     setTheme(colorTheme);
-    setIsDarkMode(isDarkMode)
+    setIsDarkMode(isDarkMode);
   };
 
   // const { handleGetNFTs } = useGetAllNFTs();
@@ -81,7 +83,7 @@ const Navbar = () => {
           onClick={() => setShowNavbar(true)}
         />
         {showNavbar && (
-          <div className="fixed h-screen flex flex-col w-[80%] p-4 right-0 top-0 bg-[#08172E]">
+          <div className="fixed h-screen flex flex-col w-[80%] p-4 right-0 top-0 dark:bg-[#303c48] bg-[#08172E]">
             <div className="flex w-full justify-end ">
               <AiOutlineClose
                 className=" text-white cursor-pointer"
@@ -94,7 +96,7 @@ const Navbar = () => {
               className="relative flex  items-center"
             >
               <img
-                className="cursor-pointer w-10 h-10 bg-white rounded-full py-1 px-1"
+                className="cursor-pointer w-10 h-10 dark:bg-[#303c48]  bg-white rounded-full py-1 px-1"
                 src={user.avatar}
                 alt=""
               />
@@ -105,19 +107,19 @@ const Navbar = () => {
               )}
 
               {openProfile && (
-                <div className="bg-white absolute top-[3.7rem] right-[.5rem] shadow-md  flex z-20 flex-col rounded-[5px] p-4  w-[200px] h-[290px] ">
+                <div className="dark:bg-[#364451] bg-white absolute top-[3.7rem] right-[.5rem] shadow-md  flex z-20 flex-col rounded-[5px] p-4  w-[200px] h-[290px] ">
                   <div className=" flex flex-col  justify-between  ">
                     <p className="text-gray-400 my-2 text-xs font-normal">
                       Signed in as
                     </p>
-                    <h2 className="text-[#141414] font-semibold text-sm">
+                    <h2 className="text-[#141414] dark:text-gray-400  font-semibold text-sm">
                       {user.username}
                     </h2>
                   </div>
                   <div className="border-b-[1px] bg-gray-400 my-3" />
                   <div className="flex flex-col">
                     <p
-                      className="text-gray-500 text-xs my-2  relative hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer"
+                      className="text-gray-500 text-xs my-2  relative dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer"
                       onClick={() => setShowProfile(!showProfile)}
                     >
                       My Profile
@@ -127,12 +129,12 @@ const Navbar = () => {
 									</p> */}
 
                     <Link to="/terms-and-conditions">
-                      <p className="text-gray-500 text-xs my-2 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer">
+                      <p className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer">
                         Terms of Use
                       </p>
                     </Link>
                     <Link to="/privacy-policy">
-                      <p className="text-gray-500 text-xs my-2 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer">
+                      <p className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer">
                         Privacy Policy
                       </p>
                     </Link>
@@ -141,7 +143,7 @@ const Navbar = () => {
                   <div className="flex flex-row  ">
                     <p
                       onClick={() => setModalIsOpen(true)}
-                      className="text-[#EF4444] font-medium hover:bg-gray-200 p-1 hover:w-full text-sm cursor-pointer"
+                      className="text-[#EF4444] font-medium dark:hover:bg-white/10 hover:bg-gray-200 p-1 hover:w-full text-sm cursor-pointer"
                     >
                       Sign Out
                     </p>
@@ -202,7 +204,7 @@ const Navbar = () => {
                 <div className="border-b-[1px] bg-gray-400 my-3 w-full" />
                 <p
                   onClick={() => setModalIsOpen(true)}
-                  className="text-[#EF4444]  font-medium p-1 text-sm cursor-pointer"
+                  className="text-[#EF4444] dark:hover:bg-white/10 font-medium p-1 text-sm cursor-pointer"
                 >
                   Sign Out
                 </p>
@@ -260,7 +262,7 @@ const Navbar = () => {
         onClick={() => setOpenProfile(!openProfile)}
       >
         <img
-          className="cursor-pointer w-10 h-10 bg-white rounded-full py-1 px-1"
+          className="cursor-pointer w-10 h-10 dark:bg-[#303c48] bg-white rounded-full py-1 px-1"
           // src={user.avatar ? user.avatar : ""}
           src={user.avatar}
           alt=""
@@ -305,9 +307,7 @@ const Navbar = () => {
                   Privacy Policy
                 </p>
               </Link>
-              <div
-                className="flex items-center justify-between text-gray-500 text-xs my-2  p-1 hover:w-full font-normal c"
-              >
+              <div className="flex items-center justify-between text-gray-500 text-xs my-2  p-1 hover:w-full font-normal c">
                 <p> Toggle mode</p>
                 <DarkModeToggle
                   className="cursor-pointer"
@@ -331,7 +331,7 @@ const Navbar = () => {
         )}
       </div>
       {showProfile && (
-        <div className="absolute bg-white z-10 right-[1rem] top-[5rem] shadow-lg p-2 sm:p-6 flex flex-col w-[70%] sm:w-[28rem] h-fit sm:h-[30rem] rounded-xl justify-center items-center ">
+        <div className="absolute dark:bg-[#364451] bg-white z-10 right-[1rem] top-[5rem] shadow-lg p-2 sm:p-6 flex flex-col w-[70%] sm:w-[28rem] h-fit sm:h-[30rem] rounded-xl justify-center items-center ">
           <AiOutlineClose
             onClick={() => setShowProfile(!showProfile)}
             className="absolute right-4 top-4 text-xl cursor-pointer"
@@ -342,7 +342,7 @@ const Navbar = () => {
               src={user.avatar}
               /* src={user.avatar ? user.avatar : ""} */ alt=""
             />
-            <h4 className="text-[#141414] font-semibold mt-2 text-base sm:text-lg">
+            <h4 className="text-[#141414] dark:text-white/60  font-semibold mt-2 text-base sm:text-lg">
               {user.username}
             </h4>
             {/* <p className='text-gray-400 text-xs my-1 font-normal cursor-pointer'>
@@ -352,61 +352,65 @@ const Navbar = () => {
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 mt-4">
             <Link to="/my-essay/all-essays">
               <div
-                className="bg-[#F98E2D]/30 h-[6rem] w-[6.2rem] sm:h-[7rem] sm:w-[7.2rem] rounded-[10px] cursor-pointer flex flex-col items-center
+                className="bg-[#F98E2D]/30 dark:bg-[#F98E2D]/40 h-[6rem] w-[6.2rem] sm:h-[7rem] sm:w-[7.2rem] rounded-[10px] cursor-pointer flex flex-col items-center
 															p-6"
               >
-                <h1 className="text-[#141414] font-bold text-lg sm:text-2xl">
+                <h1 className="text-[#141414] dark:text-white/60  font-bold text-lg sm:text-2xl">
                   {user.noOfEssays}
                 </h1>
-                <h1 className="text-[#141414] font-medium text-xs ">
+                <h1 className="text-[#141414] dark:text-white/60 font-medium text-xs ">
                   My Essays
                 </h1>
               </div>
             </Link>
             <div
-              className="bg-[#F98E2D]/30 h-[6rem] w-[6.2rem] sm:h-[7rem] sm:w-[7.2rem] rounded-[10px] flex flex-col items-center
+              className="bg-[#F98E2D]/30 dark:bg-[#F98E2D]/40 h-[6rem] w-[6.2rem] sm:h-[7rem] sm:w-[7.2rem] rounded-[10px] flex flex-col items-center
 														 p-6"
             >
-              <h1 className="text-[#141414] font-bold text-lg sm:text-2x">
+              <h1 className="text-[#141414] dark:text-white/60 font-bold text-lg sm:text-2x">
                 {user.reviewingEssay}
               </h1>
-              <h1 className="text-[#141414] font-medium text-xs text-center ">
+              <h1 className="text-[#141414] dark:text-white/60 font-medium text-xs text-center ">
                 Reviewing Essay
               </h1>
             </div>
             <Link to="/my-NFTs">
               <div
-                className="bg-[#F98E2D]/30 h-[6rem] w-[6.2rem] sm:h-[7rem] sm:w-[7.2rem] cursor-pointer rounded-[10px] flex flex-col items-center
+                className="bg-[#F98E2D]/30 dark:bg-[#F98E2D]/40 h-[6rem] w-[6.2rem] sm:h-[7rem] sm:w-[7.2rem] cursor-pointer rounded-[10px] flex flex-col items-center
 															p-6"
               >
-                <h1 className="text-[#141414] font-bold text-lg sm:text-2x">
+                <h1 className="text-[#141414] dark:text-white/60 font-bold text-lg sm:text-2x">
                   {nfts?.length}
                 </h1>
-                <h1 className="text-[#141414] font-medium text-xs ">My Nfts</h1>
+                <h1 className="text-[#141414] dark:text-white/60 font-medium text-xs ">
+                  My Nfts
+                </h1>
               </div>
             </Link>
             <Link to="/my-essay/draft">
               <div
-                className="bg-[#F98E2D]/30 h-[6rem] w-[6.2rem] sm:h-[7rem] sm:w-[7.2rem] cursor-pointer rounded-[10px] flex flex-col items-center
+                className="bg-[#F98E2D]/30 dark:bg-[#F98E2D]/40 h-[6rem] w-[6.2rem] sm:h-[7rem] sm:w-[7.2rem] cursor-pointer rounded-[10px] flex flex-col items-center
 															p-6"
               >
-                <h1 className="text-[#141414] font-bold text-lg sm:text-2x">
+                <h1 className="text-[#141414] dark:text-white/60 font-bold text-lg sm:text-2x">
                   {user?.noOfDrafts}
                 </h1>
-                <h1 className="text-[#141414] font-medium text-xs ">Drafts</h1>
+                <h1 className="text-[#141414] dark:text-white/60 font-medium text-xs ">
+                  Drafts
+                </h1>
               </div>
             </Link>
             <div
-              className="bg-[#F98E2D]/30 h-[6rem] w-[6.2rem] sm:h-[7rem] sm:w-[7.2rem] rounded-[10px] flex flex-col items-center
+              className="bg-[#F98E2D]/30 dark:bg-[#F98E2D]/40 h-[6rem] w-[6.2rem] sm:h-[7rem] sm:w-[7.2rem] rounded-[10px] flex flex-col items-center
 														 p-6"
             >
               <div className="flex ">
                 <img className="" src={`token2.png`} />
-                <h1 className="text-[#141414] font-bold text-lg sm:text-2x ml-2">
+                <h1 className="text-[#141414] dark:text-white/60 font-bold text-lg sm:text-2x ml-2">
                   {user.tokenBalance}
                 </h1>
               </div>
-              <h1 className="text-[#141414] font-medium text-xs mt-1 ">
+              <h1 className="text-[#141414] dark:text-white/60 font-medium text-xs mt-1 ">
                 Token Balance
               </h1>
             </div>
