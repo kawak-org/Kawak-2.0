@@ -263,6 +263,7 @@ module {
                 case(null) {
                 };
                 case (?user) {
+                    // var current = 
                     var reviewUpdate = {
                         id = id;
                         user = caller;
