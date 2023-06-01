@@ -1,0 +1,14 @@
+dfx start --clean // This is to force clean the .dfx folder
+dfx  start----
+              |---- dfx deploy
+dfx build-----
+
+dfx start --background // (something like an alternative for "dfx start")
+
+dfx canister create --all // creates all necessary assets.
+dfx canister create whatever // where 'whatever_assets' is the name of the asset
+
+dfx // More about dfx
+
+dfx --help // Taskete
+\\wsl$
