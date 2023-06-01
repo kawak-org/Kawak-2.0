@@ -184,6 +184,8 @@ module {
             EssayHashMap.replace(id, update);
         };
 
+        // public func UpdateEssayReview(id : Nat, update)
+
         // public func UpdateEssay(id : Nat, title : Text, caller : Principal, owner : Text, topic : Text, wordCount : Nat, reviewTimes : Nat32, reviewed : Bool, essayCost : Nat, submittedAt : Int, text : Text) : () {
         //     let status = IsEssayOwner(id, caller);
         //     if (status == true){             
@@ -261,14 +263,14 @@ module {
                 case(null) {
                 };
                 case (?user) {
-                    AnnotationHashMap.put(id, {
+                    var reviewUpdate = {
                         id = id;
                         user = caller;
                         comments = comments;
                         quote = quote;
                         rated = false;
-                        }, 
-                    );
+                    };
+                    AnnotationHashMap.put(id, reviewUpdate);
                     var essay = Essays(state).GetEssay(id);
                     switch(essay) {
                         case(null){
@@ -288,7 +290,7 @@ module {
                                 submittedAt = essay.submittedAt;
                                 text = essay.text;
                                 userDetails = essay.userDetails;
-                                reviews = essay.reviews;
+                                reviews = Array.append(essay.reviews, [reviewUpdate]);
                             };
                             var updated = Essays(state).UpdateEssay(id, update);
                         };

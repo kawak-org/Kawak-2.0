@@ -7,7 +7,7 @@ puzzle:
 	$(eval kawakCanisterID=$(shell dfx canister id kawak))
 	echo kawakCanisterID = $(kawakCanisterID)
 	dfx deploy kawak --argument="(principal \"$(kawakCanister)\") " 
-	# dfx deploy puzzle --argument="(
+	# dfx deploy kawak --argument="(
 	#     principal $(kawakCanisterID)
 	# )"
 	$(eval kawakCanisterID=$(shell dfx canister id kawak))
