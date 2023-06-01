@@ -37,6 +37,7 @@ module {
         submittedAt : Int;
         text : Text;
         userDetails : UsersTypes.UserEntry;
+        reviews : [AnnotationEntry];
     };
 
     public type AnnotationEntry = {

@@ -26,11 +26,13 @@ const Onboarding1 = () => {
 		navigate("/onboarding2");
 	};
 
+
 	return (
 		<div className=' my-4 mx-6 md:mx-6 lg:mx-16 mt-[3rem]'>
 			<div className=''>
 				<img className=' h-[25px]' src={`logo!.png`} alt='' />
 			</div>
+
 
 			<div className='w-full flex justify-center md:justify-between mt-20 items-center md:mt-32 lg:mt-8'>
 				<div className='flex flex-col '>

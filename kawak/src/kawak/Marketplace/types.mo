@@ -9,12 +9,13 @@ module {
     public type State = {
         _Admins : Admins.Admins;
         _Users  : Users.User;
-        _Brew_DIP721    : Dip.Brew_DIP721
+        _Brew_DIP721    : Dip.Brew_DIP721;
+        _Brew_DIP20     : Dip.Brew_DIP20;
     };
 
     public type LocalStableState = {
         items   : [Listing];
-        MarketListingEntries : [(Principal, Types.Listing)];
+        MarketListingEntries : [(Principal, Listing)];
     };
    
     public type Status = {
