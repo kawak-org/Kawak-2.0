@@ -4,6 +4,9 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
+const host = isProduction ? 'https://icp-api.io' : undefined;
+const agent = new HttpAgent({ host })
+
 const LOCAL_II_CANISTER =
   "http://127.0.0.1:4943/?canisterId=bkyz2-fmaaa-aaaaa-qaaaq-cai";
 
