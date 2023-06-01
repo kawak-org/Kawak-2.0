@@ -159,7 +159,7 @@ module {
         var fee : Nat = fee_;
         var balanceEntries : [(Principal, Nat)] = [];
         var allowanceEntries : [(Principal, [(Principal, Nat)])] = [];
-        var balances = HashMap.HashMap<Principal, Nat>(10, Principal.equal, Principal.hash);
+        var balances : HashMap.HashMap<Principal, Nat> = HashMap.fromIter<Principal, Nat>(balanceEntries.vals(), 10, Principal.equal, Principal.hash);
         var allowances = HashMap.HashMap<Principal, HashMap.HashMap<Principal, Nat>>(1, Principal.equal, Principal.hash);
         balances.put(owner_, totalSupply_);
         let genesis : Types.TxRecord = {

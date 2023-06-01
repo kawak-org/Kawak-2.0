@@ -9,6 +9,15 @@ module {
         _Admins : Admins.Admins;
         _Users  : Users.User; 
         caller  : Principal;
+        ledger  : [TokenMetadata];
+        balanceEntries : [(Principal, Nat)];
+        allowanceEntries : [(Principal, [(Principal, Nat)])];
+    };
+
+    public type LocalStableState = {
+        ledger : [TokenMetadata];
+        balanceEntries : [(Principal, Nat)];
+        allowanceEntries : [(Principal, [(Principal, Nat)])];
     };
 
     public type TokenMetadata = {

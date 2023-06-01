@@ -19,6 +19,9 @@ shared (msg) actor class Kawak(
   private stable var stableEssays : [HandlersTypes.EssayEntry] = [];
   private stable var stableDrafts : [HandlersTypes.DraftEntry] = [];
   private stable var stableAnnotations : [HandlersTypes.AnnotationEntry] = [];
+  private stable var stableLedger : [DipTypes.TokenMetadata] = [];
+  private stable var stableBalanceEntries : [(Principal, Nat)] = [];
+  private stable var stableAllowanceEntries : [(Principal, [(Principal, Nat)])] = [];
 
   system func preupgrade() {
     // Preserve admins
@@ -29,6 +32,11 @@ shared (msg) actor class Kawak(
 
     // Preserve Drafts
     stableDrafts := _Drafts.toStable();
+
+    // Preserve Dip
+    
+
+
   };
 
   public shared ({caller}) func whoami() : async Principal {
@@ -80,6 +88,9 @@ shared (msg) actor class Kawak(
     _Admins;
     _Users;
     caller;
+    ledger = stableLedger;
+    balanceEntries = stableBalanceEntries;
+    allowanceEntries = stableAllowanceEntries;
   });
 
   public shared ({caller}) func transferTokenTo(to : Principal, value : Nat) : async DipTypes.TxReceipt {
@@ -197,6 +208,10 @@ shared (msg) actor class Kawak(
     _Admins;
     _Users;
     caller;
+    ledger = stableLedger;
+    balanceEntries = stableBalanceEntries;
+    allowanceEntries = stableAllowanceEntries;
+
   });
 
   public shared query ({ caller }) func totalSupplyofNFT() : async Nat {
