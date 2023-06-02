@@ -33,9 +33,16 @@ shared (msg) actor class Kawak(
     // Preserve Drafts
     stableDrafts := _Drafts.toStable();
 
-    // Preserve Dip
-    
+    // Preserve Annotations
+    stableAnnotations := _Annotations.toStable();
 
+    // Preserve Dip_721
+    let { ledger; } = _Brew_DIP721.toStable();
+    stableLedger  := ledger;
+
+    let { balanceEntries; allowanceEntries; } = _Brew_DIP20.toStable();
+    stableBalanceEntries := balanceEntries;
+    stableAllowanceEntries := allowanceEntries;
 
   };
 

@@ -15,6 +15,12 @@ module {
         annotations : [AnnotationEntry];
     };
 
+    public type LocalStableState = {
+        essays  : [EssayEntry];
+        drafts  : [DraftEntry];
+        annotations : [AnnotationEntry];
+    };
+
     public type DraftEntry = {
         id : Nat;
         owner : Text;   // username

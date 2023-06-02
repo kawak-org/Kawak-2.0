@@ -20,6 +20,12 @@ module {
 
         var ledger : [var Types.TokenMetadata] = [var];
 
+        public func toStable() : Types.DIP721_LocalStableState {
+            {
+                ledger = Array.freeze(ledger);
+            }
+        };    
+
          /// Query methods
 
         // Function allows the canister to be queried
@@ -174,6 +180,13 @@ module {
             status = #succeeded;
         };
         private var ops : [Types.TxRecord] = [genesis];
+
+        public func toStable() : Types.DIP20_LocalStableState {
+            {
+                balanceEntries;
+                allowanceEntries;
+            }
+        };    
 
         private func _unwrap<T>(x : ?T) : T {
             switch x {

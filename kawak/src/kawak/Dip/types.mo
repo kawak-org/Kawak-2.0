@@ -14,8 +14,11 @@ module {
         allowanceEntries : [(Principal, [(Principal, Nat)])];
     };
 
-    public type LocalStableState = {
+    public type DIP721_LocalStableState = {
         ledger : [TokenMetadata];
+    };
+
+    public type DIP20_LocalStableState = {
         balanceEntries : [(Principal, Nat)];
         allowanceEntries : [(Principal, [(Principal, Nat)])];
     };

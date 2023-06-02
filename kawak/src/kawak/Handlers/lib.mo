@@ -25,6 +25,8 @@ module {
 
         public var essayPK : Nat = 0;
 
+        var balanceEntries : [(Principal, Nat)] = [];
+
         var EssayHashMap = HashMap.HashMap<Nat, EssayEntry>(1, Nat.equal, Hash.hash);
         var UserEssayHashMap = HashMap.HashMap<Principal, EssayEntry>(10, Principal.equal, Principal.hash); 
     
@@ -244,7 +246,9 @@ module {
     public class Annotations(state : Types.State) {
         public type AnnotationEntry = Types.AnnotationEntry;
 
-        var AnnotationHashMap = HashMap.HashMap<Nat, AnnotationEntry>(1, Nat.equal, Hash.hash);
+        var annotationEntries : [(Nat, AnnotationEntry)] = [];
+
+        var AnnotationHashMap : HashMap.HashMap<Nat, AnnotationEntry> = HashMap.fromIter(annotationEntries.vals(), 1, Nat.equal, Hash.hash);
         var annotations : Buffer.Buffer<AnnotationEntry> = Buffer.Buffer(0);
 
         for (annotation in state.annotations.vals()) {
