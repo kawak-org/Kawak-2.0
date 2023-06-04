@@ -1,6 +1,7 @@
 import Array "mo:base/Array";
 import HashMap "mo:base/HashMap";
 import Int "mo:base/Int";
+import Iter "mo:base/Iter";
 import Nat "mo:base/Nat";
 import Nat64 "mo:base/Nat64";
 import Option "mo:base/Option";
@@ -183,7 +184,7 @@ module {
 
         public func toStable() : Types.DIP20_LocalStableState {
             {
-                balanceEntries;
+                balanceEntries = Iter.toArray(balances.entries());
                 allowanceEntries;
             }
         };    

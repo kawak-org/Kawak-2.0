@@ -2,6 +2,7 @@ import Array "mo:base/Array";
 import Error "mo:base/Error";
 import HashMap "mo:base/HashMap";
 import Int "mo:base/Int";
+import Iter "mo:base/Iter";
 import Nat "mo:base/Nat";
 import Nat64 "mo:base/Nat64";
 import Principal "mo:base/Principal";
@@ -31,7 +32,7 @@ module {
         public func toStable() : Types.LocalStableState {
             {
             items = Array.freeze(item);
-            MarketListingEntries;
+            MarketListingEntries = Iter.toArray(marketListings.entries());
             };
         };
 
@@ -119,10 +120,11 @@ module {
         };
 
         // List Item to the marketplace
-        public shared ({caller}) func mp_ListItem(
+        public func mp_ListItem(
+            caller : Principal,
             tokenId : Nat,
             price : Nat64
-        ) : async Nat {
+        ) : Nat {
             // if (state._Brew_DIP721.ledger[tokenId].listed == true) {
             //     throw Error.reject("$ This NFT has already been listed #");
             // };

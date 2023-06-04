@@ -39,9 +39,9 @@ module {
 
         public func toStable () : Types.EssayLocalStableState {
             {
-                EssayEntries;
-                UserEssayEntries;
-                essayPK;
+                EssayEntries = Iter.toArray(EssayHashMap.entries());
+                UserEssayEntries = Iter.toArray(UserEssayHashMap.entries());
+                essayPK = essayPK;
             }
         };
 
@@ -189,7 +189,7 @@ module {
             var filteredEssays : [Types.EssayEntry] = [];
             for ((i, j) in EssayHashMap.entries()) {
                 for (topic in topics.vals()) {
-                    if (j.topic == topic) {
+                    if (j.topic == topics) {
                         filteredEssays := Array.append(filteredEssays, [j]);
                     };
                 };

@@ -69,6 +69,21 @@ shared (msg) actor class Kawak(
 
   };
 
+  system func postupgrade() {
+    stableAdmins := [];
+    stableEssayEntries := [];
+    stableUserEssayEntries := [];
+    stableEssayPK := 0;
+    stableDraftsEntries := [];
+    stableAnnotationEntries := [];
+    stableLedger := [];
+    stableBalanceEntries := [];
+    stableAllowanceEntries := [];
+    stableProfileEntries := [];
+    stableItems := [];
+    stableMarketListingEntries := [];
+  };
+
   public shared ({caller}) func whoami() : async Principal {
     caller;
   };
@@ -291,11 +306,14 @@ shared (msg) actor class Kawak(
   public shared ({caller}) func TotalListedNFT() : async Nat {
     _Market.mp_totalListed();
   };
-  
 
-  
+  public shared ({caller}) func ViewSellerListedNFTs() : async  Result.Result<[MarketplaceTypes.Listing], Text> {
+      _Market.mp_viewSellerListedNFTs(caller);
+  };
 
-    // public shared ({caller}) func listNFT(tokenId : Nat, meta : DipTypes.TokenMetadata) 
+  public shared ({caller}) func GetListedNFTPrice(itemId : Nat) : async Result.Result<Nat64, Text> {
+    _Market.mp_getListedNFTPrice(itemId);
+  };
 
 
 };

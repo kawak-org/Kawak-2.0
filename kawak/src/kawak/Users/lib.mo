@@ -1,6 +1,6 @@
 import HashMap "mo:base/HashMap";
 import Array "mo:base/Array";
-import iter "mo:base/Iter";
+import Iter "mo:base/Iter";
 import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Types "types";
@@ -11,13 +11,16 @@ module {
 
     public class User (state : Types.State) {
 
+        // Iter.toArray(map.entries())
+
         var ProfileEntries : [(Principal, Types.UserEntry)] = [];
 
         var ProfileHashMap : HashMap.HashMap<Principal, Types.UserEntry> = HashMap.fromIter<Principal, Types.UserEntry>(ProfileEntries.vals(), 10, Principal.equal, Principal.hash);
 
+        
         public func toStable() : Types.LocalStableState {
             {
-                ProfileEntries;
+                ProfileEntries = Iter.toArray(ProfileHashMap.entries());
             }
         };
 
