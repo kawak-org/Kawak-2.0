@@ -6,6 +6,8 @@ import Admins "Admins";
 import AdminsTypes "Admins/types";
 import Dip "Dip";
 import DipTypes "Dip/types";
+import Marketplace "Marketplace";
+import MarketplaceTypes "Marketplace/types";
 
 import Error "mo:base/Error";
 import Result "mo:base/Result";
@@ -26,6 +28,8 @@ shared (msg) actor class Kawak(
   private stable var stableLedger : [DipTypes.TokenMetadata] = [];
   private stable var stableBalanceEntries : [(Principal, Nat)] = [];
   private stable var stableAllowanceEntries : [(Principal, [(Principal, Nat)])] = [];
+  private stable var stableItems   : [MarketplaceTypes.Listing] = [];
+  private stable var stableMarketListingEntries : [(Principal, MarketplaceTypes.Listing)] = [];
 
   system func preupgrade() {
     // Preserve admins
@@ -57,6 +61,11 @@ shared (msg) actor class Kawak(
     // Preserve Users
     let { ProfileEntries; } = _Users.toStable();
     stableProfileEntries := ProfileEntries;
+
+    // Preserve MarketPlace
+    let { items; MarketListingEntries; } = _Market.toStable();
+    stableItems := items;
+    stableMarketListingEntries := MarketListingEntries;
 
   };
 
@@ -270,7 +279,18 @@ shared (msg) actor class Kawak(
   };
 
  
+  let _Market = Marketplace.Market({
+    _Admins;
+    _Users;
+    _Brew_DIP721;
+    _Brew_DIP20;
+    items = stableItems;
+    MarketListingEntries = stableMarketListingEntries;
+  });
 
+  public shared ({caller}) func TotalListedNFT() : async Nat {
+    _Market.mp_totalListed();
+  };
   
 
   

@@ -218,7 +218,7 @@ module {
             let newEssays = Array.filter(
                 essays.toArray(),
                 func ( a : Types.EssayEntry) : Bool {
-                    a != GetEssay(id);
+                    ?a != GetEssay(id);
                 },
             );
             essays.clear();
