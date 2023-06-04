@@ -15,7 +15,7 @@ import DIP "../Dip";
 
 module {
 
-    public type state = Types.State;
+    // public type state = Types.State;
     // var essayPK : Nat = 0;
 
 
@@ -25,20 +25,35 @@ module {
 
         public var essayPK : Nat = 0;
 
-        var balanceEntries : [(Principal, Nat)] = [];
+        var EssayEntries : [(Nat, EssayEntry)] = [];
+        var UserEssayEntries : [(Principal, EssayEntry)] = [];
 
-        var EssayHashMap = HashMap.HashMap<Nat, EssayEntry>(1, Nat.equal, Hash.hash);
-        var UserEssayHashMap = HashMap.HashMap<Principal, EssayEntry>(10, Principal.equal, Principal.hash); 
+        var EssayHashMap : HashMap.HashMap<Nat, EssayEntry> = HashMap.fromIter<Nat, EssayEntry>(EssayEntries.vals(), 1, Nat.equal, Hash.hash);
+        var UserEssayHashMap : HashMap.HashMap<Principal, EssayEntry> = HashMap.fromIter<Principal, EssayEntry>(UserEssayEntries.vals(), 10, Principal.equal, Principal.hash); 
     
         var essays : Buffer.Buffer<EssayEntry> = Buffer.Buffer(0);
 
-        for (essay in state.essays.vals()) {
-            essays.add(essay);
+        // for (essay in state.essays.vals()) {
+        //     essays.add(essay);
+        // };
+
+        public func toStable () : Types.EssayLocalStableState {
+            {
+                EssayEntries;
+                UserEssayEntries;
+                essayPK;
+            }
         };
 
-        public func toStable () : [EssayEntry] {
-            return essays.toArray();
+        // Restore local state from backup.
+        public func _restore(backup : Types.EssayLocalStableState) : () {
+            EssayEntries        := backup.EssayEntries;
+            UserEssayEntries    := backup.UserEssayEntries;   
+            essayPK             := backup.essayPK; 
         };
+
+        // Restore essay local state init.
+        _restore(state);
 
         func makeEssay(
             id : Nat,
@@ -246,20 +261,27 @@ module {
     public class Annotations(state : Types.State) {
         public type AnnotationEntry = Types.AnnotationEntry;
 
-        var annotationEntries : [(Nat, AnnotationEntry)] = [];
+        var AnnotationEntries : [(Nat, AnnotationEntry)] = [];
 
-        var AnnotationHashMap : HashMap.HashMap<Nat, AnnotationEntry> = HashMap.fromIter(annotationEntries.vals(), 1, Nat.equal, Hash.hash);
-        var annotations : Buffer.Buffer<AnnotationEntry> = Buffer.Buffer(0);
+        var AnnotationHashMap : HashMap.HashMap<Nat, AnnotationEntry> = HashMap.fromIter(AnnotationEntries.vals(), 1, Nat.equal, Hash.hash);
+        // var annotations : Buffer.Buffer<AnnotationEntry> = Buffer.Buffer(0);
 
-        for (annotation in state.annotations.vals()) {
-            annotations.add(annotation)
+        // for (annotation in state.annotations.vals()) {
+        //     annotations.add(annotation)
+        // };
+
+        public func toStable() : Types.AnnotationsLocalStableState {
+            {
+                AnnotationEntries;
+            }
         };
 
-        public func toStable() : [AnnotationEntry] {
-            return annotations.toArray();
+        public func _restore(backup : Types.AnnotationsLocalStableState) : () {
+            AnnotationEntries := backup.AnnotationEntries;
         };
 
-        // public func make 
+        _restore(state);
+
 
         public func AddAnnotation(id : Nat, caller : Principal, comments : Text, quote : Text) : () {
             var user = state._Users.getUser(caller);
@@ -434,13 +456,19 @@ module {
         
         var drafts : Buffer.Buffer<Types.DraftEntry> = Buffer.Buffer(0);
 
-        for (draft in state.drafts.vals()) {
-            drafts.add(draft)
+
+        public func toStable () : Types.DraftsLocalStableState {
+           {
+                draftEntries;
+           }
         };
 
-        public func toStable () : [Types.DraftEntry] {
-            return drafts.toArray();
+        public func _restore(backup : Types.DraftsLocalStableState) : () {
+            draftEntries := backup.draftEntries;
         };
+
+        // Restore local state init
+        _restore(state);
 
         private func _draftAnEssay(id : Nat, owner : Text, title : Text, text : Text, draftedAT : Int) : Types.DraftEntry {
             {id; owner; title; text; draftedAT;}

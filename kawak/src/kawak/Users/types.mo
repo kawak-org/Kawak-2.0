@@ -3,6 +3,10 @@ import Time "mo:base/Time";
 
 module {
 
+    public type LocalStableState = {
+        ProfileEntries : [(Principal, UserEntry)];
+    };
+
     public type  UserEntry = {
         userName : Text;
         token_balance  : Nat;
@@ -20,6 +24,7 @@ module {
 
     public type State = {
         // cid  : Principal;
+        ProfileEntries  : [(Principal, UserEntry)];
     };
 
     

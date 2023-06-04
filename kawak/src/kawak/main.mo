@@ -17,8 +17,12 @@ shared (msg) actor class Kawak(
 
   private stable var stableAdmins : [Principal] = [];
   private stable var stableEssays : [HandlersTypes.EssayEntry] = [];
-  private stable var stableDrafts : [HandlersTypes.DraftEntry] = [];
-  private stable var stableAnnotations : [HandlersTypes.AnnotationEntry] = [];
+  private stable var stableDraftsEntries : [(Nat, HandlersTypes.DraftEntry)] = [];
+  private stable var stableEssayEntries  : [(Nat, HandlersTypes.EssayEntry)] = [];
+  private stable var stableUserEssayEntries : [(Principal, HandlersTypes.EssayEntry)] = [];
+  private stable var stableProfileEntries : [(Principal, UsersTypes.UserEntry)] = [];
+  private stable var stableEssayPK : Nat = 0;
+  private stable var stableAnnotationEntries : [(Nat, HandlersTypes.AnnotationEntry)] = [];
   private stable var stableLedger : [DipTypes.TokenMetadata] = [];
   private stable var stableBalanceEntries : [(Principal, Nat)] = [];
   private stable var stableAllowanceEntries : [(Principal, [(Principal, Nat)])] = [];
@@ -28,21 +32,31 @@ shared (msg) actor class Kawak(
     stableAdmins := _Admins.toStable();
 
     // Preserve Essays
-    stableEssays := _Essays.toStable();
+    let {EssayEntries; UserEssayEntries; essayPK;} = _Essays.toStable();
+    stableEssayEntries := EssayEntries;
+    stableUserEssayEntries := UserEssayEntries;
+    stableEssayPK := essayPK;
 
     // Preserve Drafts
-    stableDrafts := _Drafts.toStable();
+    let { draftEntries; } = _Drafts.toStable();
+    stableDraftsEntries  := draftEntries;
 
     // Preserve Annotations
-    stableAnnotations := _Annotations.toStable();
+    let { AnnotationEntries; } = _Annotations.toStable();
+    stableAnnotationEntries := AnnotationEntries;
 
     // Preserve Dip_721
     let { ledger; } = _Brew_DIP721.toStable();
     stableLedger  := ledger;
 
+    // Preserve Dip_20
     let { balanceEntries; allowanceEntries; } = _Brew_DIP20.toStable();
     stableBalanceEntries := balanceEntries;
     stableAllowanceEntries := allowanceEntries;
+
+    // Preserve Users
+    let { ProfileEntries; } = _Users.toStable();
+    stableProfileEntries := ProfileEntries;
 
   };
 
@@ -51,7 +65,8 @@ shared (msg) actor class Kawak(
   };
 
   let _Users = Users.User({
-
+    ProfileEntries = stableProfileEntries;
+    // caller;
   });
 
   public shared ({ caller }) func createProfile(userName : Text, avatar : Text) : async Result.Result<Text, Text> {
@@ -109,12 +124,15 @@ shared (msg) actor class Kawak(
   // };
 
   let _Essays = Handlers.Essays({
+    caller;
     _Admins;
     _Users;
     _Brew_DIP20;
-    essays = stableEssays;
-    drafts = stableDrafts;
-    annotations = stableAnnotations;
+    EssayEntries = stableEssayEntries;
+    UserEssayEntries = stableUserEssayEntries;
+    essayPK = stableEssayPK;
+    draftEntries = stableDraftsEntries;
+    AnnotationEntries = stableAnnotationEntries;
   });
 
   public shared ({ caller }) func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<(Nat, Text), Text> {
@@ -158,12 +176,15 @@ shared (msg) actor class Kawak(
     // }
 
   let _Drafts = Handlers.Drafts({
+    caller;
     _Admins;
     _Users;
     _Brew_DIP20;
-    drafts = stableDrafts;
-    essays = stableEssays;
-    annotations = stableAnnotations;
+    EssayEntries = stableEssayEntries;
+    UserEssayEntries = stableUserEssayEntries;
+    essayPK = stableEssayPK;
+    draftEntries = stableDraftsEntries;
+    AnnotationEntries = stableAnnotationEntries;
   });
 
   public shared ({ caller }) func draftEssay(title : Text, text : Text) : async Nat {
@@ -187,12 +208,15 @@ shared (msg) actor class Kawak(
   };
 
   let _Annotations = Handlers.Annotations({
+   caller;
     _Admins;
     _Users;
     _Brew_DIP20;
-    essays = stableEssays;
-    drafts = stableDrafts;
-    annotations = stableAnnotations;
+    EssayEntries = stableEssayEntries;
+    UserEssayEntries = stableUserEssayEntries;
+    essayPK = stableEssayPK;
+    draftEntries = stableDraftsEntries;
+    AnnotationEntries = stableAnnotationEntries;
   });
 
   public shared ({caller}) func addAnnotation(id : Nat, comments : Text, quote : Text) : async () {
