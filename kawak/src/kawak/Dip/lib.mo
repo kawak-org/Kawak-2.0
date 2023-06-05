@@ -183,8 +183,9 @@ module {
         private var ops : [Types.TxRecord] = [genesis];
 
         public func toStable() : Types.DIP20_LocalStableState {
+            balanceEntries := Iter.toArray(balances.entries());
             {
-                balanceEntries = Iter.toArray(balances.entries());
+                balanceEntries;
                 allowanceEntries;
             }
         };    

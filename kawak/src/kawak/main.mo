@@ -71,15 +71,31 @@ shared (msg) actor class Kawak(
 
   system func postupgrade() {
     stableAdmins := [];
+
+    // Essays post
+    _Essays.postStable(stableEssayEntries, stableUserEssayEntries, stableEssayPK);
     stableEssayEntries := [];
     stableUserEssayEntries := [];
     stableEssayPK := 0;
+
+    // Drafts post
+    _Drafts.postStable(stableDraftsEntries);
     stableDraftsEntries := [];
+
+    // Annotation Post
+    _Annotations.postStable(stableAnnotationEntries);
     stableAnnotationEntries := [];
+
+    // Dip Post
     stableLedger := [];
     stableBalanceEntries := [];
     stableAllowanceEntries := [];
+
+    // Users post
+    _Users.postStable(stableProfileEntries);
     stableProfileEntries := [];
+
+    // Market Post
     stableItems := [];
     stableMarketListingEntries := [];
   };
@@ -317,6 +333,14 @@ shared (msg) actor class Kawak(
 
   public shared ({caller}) func GetNFTSeller(itemId : Nat) : async Principal {
     _Market.mp_getNFTSeller(itemId);
+  };
+
+  public shared ({caller}) func AmIlisted(tokenId : Nat) : async Bool {
+    _Market.mp_amIlisted(tokenId);
+  };
+
+  public shared ({caller}) func UnListItem(tokenId : Nat) : async Result.Result<Text, Text>{
+    _Market.mp_unListItem(caller, tokenId);
   };
 
 };

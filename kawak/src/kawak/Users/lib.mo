@@ -25,6 +25,10 @@ module {
             }
         };
 
+        public func postStable(_profileEntries : [(Principal, Types.UserEntry)]) {
+            ProfileHashMap := HashMap.fromIter<Principal, Types.UserEntry>(_profileEntries.vals(), 10, Principal.equal, Principal.hash);    
+        };
+
         public func _restore(backup : Types.LocalStableState) : () {
             ProfileEntries          := backup.ProfileEntries;
         };

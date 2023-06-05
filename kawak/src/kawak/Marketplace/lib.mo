@@ -35,8 +35,8 @@ module {
             // items := Array.freeze(item);
             MarketListingEntries := Iter.toArray(marketListings.entries());
             {
-            items = Array.freeze(item);
-            MarketListingEntries;
+                items = Array.freeze(item);
+                MarketListingEntries;
             };
         };
 

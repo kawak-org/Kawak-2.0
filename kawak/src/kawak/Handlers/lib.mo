@@ -49,6 +49,12 @@ module {
                     }
         };
 
+        public func postStable(_essayEntries : [(Nat, EssayEntry)], _userEssayEntries : [(Principal, EssayEntry)], _essayPK : Nat) {
+            EssayHashMap := HashMap.fromIter<Nat, EssayEntry>(_essayEntries.vals(), 10, Nat.equal, Hash.hash);
+            UserEssayHashMap := HashMap.fromIter<Principal, EssayEntry>(_userEssayEntries.vals(), 10, Principal.equal, Principal.hash);
+            essayPK := _essayPK;
+        };
+
         // Restore local state from backup.
         public func _restore(backup : Types.EssayLocalStableState) : () {
             EssayEntries        := backup.EssayEntries;
@@ -275,10 +281,15 @@ module {
         // };
 
         public func toStable() : Types.AnnotationsLocalStableState {
-            
+            AnnotationEntries := Iter.toArray(AnnotationHashMap.entries());
             {
                 AnnotationEntries;
             }
+        };
+
+        public func postStable(_annotationEntries : [(Nat, AnnotationEntry)]) {
+            AnnotationHashMap := HashMap.fromIter<Nat, AnnotationEntry>(_annotationEntries.vals(), 10, Nat.equal, Hash.hash);
+            
         };
 
         public func _restore(backup : Types.AnnotationsLocalStableState) : () {
@@ -461,8 +472,14 @@ module {
         
         var drafts : Buffer.Buffer<Types.DraftEntry> = Buffer.Buffer(0);
 
+        public func postStable(_draftEntries : [(Nat, Types.DraftEntry)]) {
+            DraftHashMap := HashMap.fromIter<Nat, Types.DraftEntry>(_draftEntries.vals(), 10, Nat.equal, Hash.hash);
+
+        };
+
 
         public func toStable () : Types.DraftsLocalStableState {
+            draftEntries := Iter.toArray(DraftHashMap.entries());
            {
                 draftEntries;
            }
