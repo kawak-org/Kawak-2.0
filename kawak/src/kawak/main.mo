@@ -342,5 +342,7 @@ shared (msg) actor class Kawak(
   public shared ({caller}) func UnListItem(tokenId : Nat) : async Result.Result<Text, Text>{
     _Market.mp_unListItem(caller, tokenId);
   };
-
+  public shared ({caller}) func ViewMarket() : async [MarketplaceTypes.Listing] {
+    _Market.mp_viewMarket()
+  };
 };
