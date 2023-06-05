@@ -315,5 +315,8 @@ shared (msg) actor class Kawak(
     _Market.mp_getListedNFTPrice(itemId);
   };
 
+  public shared ({caller}) func GetNFTSeller(itemId : Nat) : async Principal {
+    _Market.mp_getNFTSeller(itemId);
+  };
 
 };

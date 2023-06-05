@@ -38,11 +38,15 @@ module {
         // };
 
         public func toStable () : Types.EssayLocalStableState {
-            {
-                EssayEntries = Iter.toArray(EssayHashMap.entries());
-                UserEssayEntries = Iter.toArray(UserEssayHashMap.entries());
-                essayPK = essayPK;
-            }
+
+            EssayEntries := Iter.toArray(EssayHashMap.entries());
+            UserEssayEntries := Iter.toArray(UserEssayHashMap.entries());
+            essayPK := essayPK;
+            return {
+                        EssayEntries ;
+                        UserEssayEntries ;
+                        essayPK ;
+                    }
         };
 
         // Restore local state from backup.
@@ -271,6 +275,7 @@ module {
         // };
 
         public func toStable() : Types.AnnotationsLocalStableState {
+            
             {
                 AnnotationEntries;
             }

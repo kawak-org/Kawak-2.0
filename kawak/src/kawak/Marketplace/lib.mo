@@ -18,8 +18,10 @@ module {
         public type TokenIndex = Nat;
         public type MarketItem = Types.MarketItem;
 
+
         var MarketListingEntries : [(Principal, Types.Listing)] = [];
         var item : [var Types.Listing] = [var];
+
 
         var marketListings : HashMap.HashMap<Principal, Types.Listing> = HashMap.fromIter<Principal, Types.Listing>(
             MarketListingEntries.vals(),
@@ -30,9 +32,11 @@ module {
 
         // For stableness purposes.
         public func toStable() : Types.LocalStableState {
+            // items := Array.freeze(item);
+            MarketListingEntries := Iter.toArray(marketListings.entries());
             {
             items = Array.freeze(item);
-            MarketListingEntries = Iter.toArray(marketListings.entries());
+            MarketListingEntries;
             };
         };
 

@@ -19,6 +19,7 @@ module {
 
         
         public func toStable() : Types.LocalStableState {
+            ProfileEntries := Iter.toArray(ProfileHashMap.entries());
             {
                 ProfileEntries = Iter.toArray(ProfileHashMap.entries());
             }
