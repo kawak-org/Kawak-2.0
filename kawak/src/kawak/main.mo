@@ -70,15 +70,16 @@ shared (msg) actor class Kawak(
   };
 
   system func postupgrade() {
+    // Admin postUpgrade
     stableAdmins := [];
 
-    // Essays post
+    // Essays postUpgrade
     _Essays.postStable(stableEssayEntries, stableUserEssayEntries, stableEssayPK);
     stableEssayEntries := [];
     stableUserEssayEntries := [];
     stableEssayPK := 0;
 
-    // Drafts post
+    // Drafts postUpgrade
     _Drafts.postStable(stableDraftsEntries);
     stableDraftsEntries := [];
 
@@ -91,11 +92,11 @@ shared (msg) actor class Kawak(
     stableBalanceEntries := [];
     stableAllowanceEntries := [];
 
-    // Users post
+    // Users postUpgrade
     _Users.postStable(stableProfileEntries);
     stableProfileEntries := [];
 
-    // Market Post
+    // Market PostUpgarde
     stableItems := [];
     stableMarketListingEntries := [];
   };
