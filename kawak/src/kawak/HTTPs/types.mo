@@ -1,7 +1,7 @@
 module {
 
     public type State = {
-        
+        cid : Principal;
     };
 
     public type HeaderField = (Text, Text);
