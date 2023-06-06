@@ -22,5 +22,14 @@ module {
     public type Hash = Blob;
     public type Key = Blob;
     public type Value = Blob;
+
+    public type HashTree = {
+        #empty;
+        #pruned : Hash;
+        #fork : (HashTree, HashTree);
+        #labeled : (Key, HashTree);
+        #leaf : Value;
+
+    };
     
 }

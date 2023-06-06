@@ -154,6 +154,7 @@ module {
             };
         };
 
+        // Get all the essays in the forge
         public func GetAllEssays() : ([(Nat, EssayEntry)]) {
             Iter.toArray(EssayHashMap.entries());
         };
@@ -263,9 +264,6 @@ module {
         //     }
         // }
 
-
-
-
     };
 
     public class Annotations(state : Types.State) {
@@ -274,7 +272,7 @@ module {
         var AnnotationEntries : [(Nat, AnnotationEntry)] = [];
 
         var AnnotationHashMap : HashMap.HashMap<Nat, AnnotationEntry> = HashMap.fromIter(AnnotationEntries.vals(), 1, Nat.equal, Hash.hash);
-        // var annotations : Buffer.Buffer<AnnotationEntry> = Buffer.Buffer(0);
+        var annotations : Buffer.Buffer<AnnotationEntry> = Buffer.Buffer(0);
 
         // for (annotation in state.annotations.vals()) {
         //     annotations.add(annotation)
