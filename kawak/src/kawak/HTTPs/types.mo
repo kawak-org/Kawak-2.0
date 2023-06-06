@@ -19,5 +19,8 @@ module {
         blob : Blob;
     };
 
+    public type Hash = Blob;
+    public type Key = Blob;
+    public type Value = Blob;
     
 }
