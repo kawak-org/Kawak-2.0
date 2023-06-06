@@ -6,6 +6,11 @@ module {
 
     public type HeaderField = (Text, Text);
 
+    public type Page = {
+        text : Text;
+        content_type : Text;
+    };
+
     public type HttpResponse = {
         status_code : Nat16;
         headers : [HeaderField];
