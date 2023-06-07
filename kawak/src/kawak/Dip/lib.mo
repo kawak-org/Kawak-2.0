@@ -102,6 +102,14 @@ module {
             ledger.size() - 1;
         };
 
+        public func isListed(caller : Principal, tokenId : Nat) : Bool {
+            ledger[tokenId].listed;
+        };
+
+        public func Metadata(tokenId : Nat) : Types.TokenMetadata{
+            ledger[tokenId];
+        };
+
         public func TransferNFTto(to : Principal, caller : Principal, tokenId : Nat) : Result.Result<Nat, Types.NftError> {
             if (tokenId >= ledger.size()) {
                 return #err(#TokenNotFound)
@@ -221,6 +229,10 @@ module {
             case (?balance) { return balance };
             case (_) { return 0 };
         };
+    };
+
+    public func getBalanceOf(who : Principal) : Nat {
+        _balanceOf(who);
     };
 
     private func _allowance(

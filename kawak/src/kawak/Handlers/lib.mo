@@ -50,7 +50,8 @@ module {
             essayCost : Nat,
             submittedAt : Int,
             text : Text,
-            userDetails : UsersTypes.UserEntry
+            userDetails : UsersTypes.UserEntry,
+            reviews : [Types.AnnotationEntry]
         ) : EssayEntry {
             {
                 id : Nat;
@@ -66,16 +67,17 @@ module {
                 submittedAt : Int;
                 text : Text;
                 userDetails;
+                reviews;
             };
         };
 
-        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
-            essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
+        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry, reviews : [Types.AnnotationEntry]) {
+            essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, []));
         };
 
         private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
-            EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
-            UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails));
+            EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, []));
+            UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, []));
         };
 
 
@@ -102,7 +104,7 @@ module {
                 case(null){};
                 case(?user){
                     let username = user.userName;
-                        createOneEssay(caller, essayPK, username, title, topic, essay_word_count, essayCost, text, user);
+                        createOneEssay(caller, essayPK, username, title, topic, essay_word_count, essayCost, text, user, );
                         essayPK += 1;
                         var updated = state._Users.updateUserBoolTokenBalance(user, essayCost, true, essayPK);
                         var _updated = state._Users._updateUserProfile(caller, updated);
@@ -182,6 +184,8 @@ module {
             EssayHashMap.replace(id, update);
         };
 
+        // public func UpdateEssayReview(id : Nat, update)
+
         // public func UpdateEssay(id : Nat, title : Text, caller : Principal, owner : Text, topic : Text, wordCount : Nat, reviewTimes : Nat32, reviewed : Bool, essayCost : Nat, submittedAt : Int, text : Text) : () {
         //     let status = IsEssayOwner(id, caller);
         //     if (status == true){             
@@ -259,14 +263,15 @@ module {
                 case(null) {
                 };
                 case (?user) {
-                    AnnotationHashMap.put(id, {
+                    // var current = 
+                    var reviewUpdate = {
                         id = id;
                         user = caller;
                         comments = comments;
                         quote = quote;
                         rated = false;
-                        }, 
-                    );
+                    };
+                    AnnotationHashMap.put(id, reviewUpdate);
                     var essay = Essays(state).GetEssay(id);
                     switch(essay) {
                         case(null){
@@ -286,6 +291,7 @@ module {
                                 submittedAt = essay.submittedAt;
                                 text = essay.text;
                                 userDetails = essay.userDetails;
+                                reviews = Array.append(essay.reviews, [reviewUpdate]);
                             };
                             var updated = Essays(state).UpdateEssay(id, update);
                         };
@@ -293,6 +299,19 @@ module {
                 };
             }
 
+        };
+
+        public func GetAnnotations(id : Nat) : ?AnnotationEntry {
+            var hahs = AnnotationHashMap.get(id);
+
+            switch (hahs) {
+                case (null) {
+                    return null;
+                };
+                case (?hahs) {
+                    return ?hahs;
+                };
+            };
         };
 
         public func GetAnnotator(id : Nat) : ?Principal{
