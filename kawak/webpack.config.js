@@ -3,6 +3,8 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
+// var spawn = require('child_process').spawn
+// var child = spawn('pwd')
 
 const LOCAL_II_CANISTER =
   "http://127.0.0.1:4943/?canisterId=bkyz2-fmaaa-aaaaa-qaaaq-cai";
@@ -71,6 +73,11 @@ module.exports = {
       events: require.resolve("events/"),
       stream: require.resolve("stream-browserify/"),
       util: require.resolve("util/"),
+      path:require.resolve("path-browserify"),
+      constants: require.resolve("constants-browserify"),
+      fs:false,
+      child_process: require.resolve('child_process'),
+      // "spawn": false
     },
   },
   output: {
@@ -157,5 +164,5 @@ module.exports = {
   },
   experiments: {
     topLevelAwait: true,
-  },
+  }
 };
