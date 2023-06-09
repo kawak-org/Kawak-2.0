@@ -283,7 +283,6 @@ shared (msg) actor class Kawak(
     ledger = stableLedger;
     balanceEntries = stableBalanceEntries;
     allowanceEntries = stableAllowanceEntries;
-
   });
 
   public shared query ({ caller }) func totalSupplyofNFT() : async Nat {
