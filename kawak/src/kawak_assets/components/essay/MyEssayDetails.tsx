@@ -75,27 +75,27 @@ const MyEssayDetails = () => {
           toast.error("could not get an essay with this id");
         });
     };
-    // const getReviews = () => {
-    // 	actor
-    // 		.getReviewsFromEssay(BigInt(id))
-    // 		.then((d: any /* [ReviewType] */) => {
-    // 			if (d) {
-    // 				// var correctTyp = {
-    // 				// 	comments : d.comments.toString(),
-    // 				// 	user : d.user,
-    // 				// 	rated : d.rated
-    // 				// }
-    // 				setReview(d);
-    // 				console.log(d);
-    // 				return;
-    // 			}
-    // 		})
-    // 		.catch((err) => {
-    // 			toast.error("something went wrong");
-    // 			console.log(err);
-    // 		});
-    // };
-    // getReviews();
+    const getReviews = () => {
+    	actor
+    		.getAnnotation(BigInt(id))
+    		.then((d: any /* [ReviewType] */) => {
+    			if (d) {
+    				// var correctTyp = {
+    				// 	comments : d.comments.toString(),
+    				// 	user : d.user,
+    				// 	rated : d.rated
+    				// }
+    				setReview(d);
+    				console.log(d);
+    				return;
+    			}
+    		})
+    		.catch((err) => {
+    			toast.error("something went wrong");
+    			console.log(err);
+    		});
+    };
+    getReviews();
     callOnMount();
   }, []);
 
