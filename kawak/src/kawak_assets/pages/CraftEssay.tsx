@@ -25,7 +25,6 @@ import { EssayEditorContext } from "../context/EssayEditorContext";
 // import CustomPrompt from "../utils/navigation-block/CustomPrompt";
 import { addToMyDraft, updateDraftItem } from "../redux/slice/draftSlice";
 import TagInput from "../components/Tag/TagInput";
-
 // const topics: SearchOptionProps[] = [
 // 	{ id: 1, name: "Select topic", disabled: true },
 // 	{ id: 2, name: "Development" },
@@ -46,6 +45,8 @@ const CraftEssay = () => {
   const tags = useAppSelector((state) => state.essayTags);
   const dispatch = useAppDispatch();
   const essayWords = useAppSelector((state) => state.essay.words);
+  const [pdf, setPdf] = useState("")
+
 
   const {
     essay,
@@ -59,6 +60,7 @@ const CraftEssay = () => {
     setEssayCost,
     editingDraftId,
     setEditingDraftId,
+    convertHTMLtoEditorContent
   } = useContext(EssayEditorContext);
 
   const { actor } = useContext(UserContext);
@@ -234,6 +236,24 @@ const CraftEssay = () => {
     trackPageView(params);
   }, []);
 
+
+  const convertPdfToHtml = async (event:any) => {
+ const formData = new FormData();
+
+ formData.append("pdfFile",event.target.files[0])
+
+    fetch("http://localhost:3000/extract-text",{
+      method:"POST",
+      body:formData,
+    }).then(res => {
+   return res.text()
+    }).then((data) => {
+      setEssay(data)
+      convertHTMLtoEditorContent(data)
+    })
+  }
+
+
   return (
     <div className="">
       {/* <CustomPrompt
@@ -259,11 +279,14 @@ const CraftEssay = () => {
               <TagInput />
             </div>
             {/* word count */}
-            <div className="flex place-content-end mt-10 w-[80%]">
-              <div></div>
-              <p className=" text-white bg-[#08172E] italic rounded-lg border-inherit border-3 px-2 text-xs  py-1">
+            <div className="flex place-content-end gap-3 mt-10 w-[80%]">
+              <label className="text-white bg-[#08172E] italic rounded-lg border-inherit border-3 px-2 text-xs  py-1 cursor-pointer" htmlFor="pdf" >upload from pdf
+              <input type="file" name="upload" value={pdf} onChange={(e) => {convertPdfToHtml(e)}} style={{"display":"none"}} id="pdf" accept="application/pdf" />
+              </label>
+              <p className="text-white bg-[#08172E] italic rounded-lg border-inherit border-3 px-2 text-xs  py-1">
                 {essayWords} words
               </p>
+              {/* <PdfViewer/> */}
             </div>
             {/* Text Editor */}
             <div className="essay-editor-tour w-[80%]">
