@@ -24,12 +24,12 @@ module {
         //     }
         // }
 
-        // public func proxy(url : Text) : async T.CanisterHttpResponsePayload {
+        // public func proxy(url : Text) : T.CanisterHttpResponsePayload {
 
-        //     // let transform_context : T.TransformContext = {
-        //     // function = transform;
-        //     // context = Blob.fromArray([]);
-        //     // };
+        //     let transform_context : T.TransformContext = {
+        //     function = transform;
+        //     context = Blob.fromArray([]);
+        //     };
 
         //     // Construct canister request
         //     let request : T.CanisterHttpRequestArgs = {
