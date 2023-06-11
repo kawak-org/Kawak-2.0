@@ -75,27 +75,27 @@ const MyEssayDetails = () => {
           toast.error("could not get an essay with this id");
         });
     };
-    // const getReviews = () => {
-    // 	actor
-    // 		.getReviewsFromEssay(BigInt(id))
-    // 		.then((d: any /* [ReviewType] */) => {
-    // 			if (d) {
-    // 				// var correctTyp = {
-    // 				// 	comments : d.comments.toString(),
-    // 				// 	user : d.user,
-    // 				// 	rated : d.rated
-    // 				// }
-    // 				setReview(d);
-    // 				console.log(d);
-    // 				return;
-    // 			}
-    // 		})
-    // 		.catch((err) => {
-    // 			toast.error("something went wrong");
-    // 			console.log(err);
-    // 		});
-    // };
-    // getReviews();
+    const getReviews = () => {
+    	actor
+    		.getAnnotation(BigInt(id))
+    		.then((d: any /* [ReviewType] */) => {
+    			if (d) {
+    				// var correctTyp = {
+    				// 	comments : d.comments.toString(),
+    				// 	user : d.user,
+    				// 	rated : d.rated
+    				// }
+    				setReview(d);
+    				console.log(d);
+    				return;
+    			}
+    		})
+    		.catch((err) => {
+    			toast.error("something went wrong");
+    			console.log(err);
+    		});
+    };
+    getReviews();
     callOnMount();
   }, []);
 
@@ -186,16 +186,16 @@ const MyEssayDetails = () => {
 
                 <button
                   onClick={() => setShowComment(!showComment)}
-                  className="py-2 fixed  top-[4rem] sm:top-[4.5rem] lg:hidden right-[1rem] px-8 text-white bg-[#F98E2D] cursor-pointer"
+                  className="py-2 fixed dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white  top-[4.7rem] sm:top-[4.5rem] lg:hidden right-[1rem] px-8 text-white  bg-[#F98E2D] cursor-pointer"
                 >
                   Comment
                 </button>
 
                 {showComment && (
-                  <div className="bg-white z-40 fixed w-[70%] sm:w-[40%] top-[0] left-0 mt-[1rem] ">
+                  <div className="dark:bg-[#323f4b] bg-white z-40 fixed w-[70%] sm:w-[40%] top-[0] left-0 mt-[1rem] ">
                     {review[0] == (null || undefined) ? (
-                      <div className="bg-[#F98E2D]/10 rounded-[10px]  flex flex-col h-[37rem] py-8 px-4 mt-[.4rem] ">
-                        <div className="flex bg-[#F98E2D]x flex-col">
+                      <div className=" dark:bg-[#323f4b] dark:border dark:border-solid dark:border-[#3e5060]  bg-[#F98E2D]/10 rounded-[10px]  flex flex-col h-[37rem] py-8 px-4 mt-[.4rem] ">
+                        <div className="flex  flex-col">
                           <div className="flex flex-row justify-between items-center ">
                             <div className="flex flex-row">
                               <AiOutlineClose
@@ -262,8 +262,8 @@ const MyEssayDetails = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="bg-[#F98E2D]/10 rounded-[10px]  flex flex-col h-[37rem] py-8 px-4 mt-[.4rem] ">
-                        <div className="flebg-[#F98E2D]x flex-col">
+                      <div className=" dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px]  flex flex-col h-[37rem] py-8 px-4 mt-[.4rem] ">
+                        <div className="flex flex-col">
                           <div className="flex flex-row justify-between items-center ">
                             <div className="flex flex-row">
                               <AiOutlineClose
@@ -367,7 +367,7 @@ const MyEssayDetails = () => {
                 )}
 
                 {review[0] == (null || undefined) ? (
-                  <div className="bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
+                  <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
                     <div className="flex bg-[#F98E2D]x flex-col">
                       <div className="flex flex-row justify-between items-center ">
                         <div className="flex flex-row"></div>
@@ -427,7 +427,7 @@ const MyEssayDetails = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
+                  <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
                     <div className="flebg-[#F98E2D]x flex-col">
                       <div className="flex flex-row justify-between items-center ">
                         <div className="flex flex-row"></div>
