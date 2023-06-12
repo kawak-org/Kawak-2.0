@@ -16,6 +16,8 @@ module {
             admins.toArray();
         };
 
+        
+
         public func _isAdmin(p : Principal) : Bool {
             for (a in admins.vals()) {
 				return true;

@@ -6,7 +6,12 @@ import Admins "Admins";
 import AdminsTypes "Admins/types";
 import Dip "Dip";
 import DipTypes "Dip/types";
+import Marketplace "Marketplace";
+import MarketplaceTypes "Marketplace/types";
+import Types "Types";
 
+import Blob "mo:base/Blob";
+import Cycles "mo:base/ExperimentalCycles";
 import Error "mo:base/Error";
 import Result "mo:base/Result";
 import Principal "mo:base/Principal";
@@ -17,18 +22,86 @@ shared (msg) actor class Kawak(
 
   private stable var stableAdmins : [Principal] = [];
   private stable var stableEssays : [HandlersTypes.EssayEntry] = [];
-  private stable var stableDrafts : [HandlersTypes.DraftEntry] = [];
-  private stable var stableAnnotations : [HandlersTypes.AnnotationEntry] = [];
+  private stable var stableDraftsEntries : [(Nat, HandlersTypes.DraftEntry)] = [];
+  private stable var stableEssayEntries  : [(Nat, HandlersTypes.EssayEntry)] = [];
+  private stable var stableUserEssayEntries : [(Principal, HandlersTypes.EssayEntry)] = [];
+  private stable var stableProfileEntries : [(Principal, UsersTypes.UserEntry)] = [];
+  private stable var stableEssayPK : Nat = 0;
+  private stable var stableAnnotationEntries : [(Nat, HandlersTypes.AnnotationEntry)] = [];
+  private stable var stableLedger : [DipTypes.TokenMetadata] = [];
+  private stable var stableBalanceEntries : [(Principal, Nat)] = [];
+  private stable var stableAllowanceEntries : [(Principal, [(Principal, Nat)])] = [];
+  private stable var stableItems   : [MarketplaceTypes.Listing] = [];
+  private stable var stableMarketListingEntries : [(Principal, MarketplaceTypes.Listing)] = [];
 
   system func preupgrade() {
     // Preserve admins
     stableAdmins := _Admins.toStable();
 
     // Preserve Essays
-    stableEssays := _Essays.toStable();
+    let {EssayEntries; UserEssayEntries; essayPK;} = _Essays.toStable();
+    stableEssayEntries := EssayEntries;
+    stableUserEssayEntries := UserEssayEntries;
+    stableEssayPK := essayPK;
 
     // Preserve Drafts
-    stableDrafts := _Drafts.toStable();
+    let { draftEntries; } = _Drafts.toStable();
+    stableDraftsEntries  := draftEntries;
+
+    // Preserve Annotations
+    let { AnnotationEntries; } = _Annotations.toStable();
+    stableAnnotationEntries := AnnotationEntries;
+
+    // Preserve Dip_721
+    let { ledger; } = _Brew_DIP721.toStable();
+    stableLedger  := ledger;
+
+    // Preserve Dip_20
+    let { balanceEntries; allowanceEntries; } = _Brew_DIP20.toStable();
+    stableBalanceEntries := balanceEntries;
+    stableAllowanceEntries := allowanceEntries;
+
+    // Preserve Users
+    let { ProfileEntries; } = _Users.toStable();
+    stableProfileEntries := ProfileEntries;
+
+    // Preserve MarketPlace
+    let { items; MarketListingEntries; } = _Market.toStable();
+    stableItems := items;
+    stableMarketListingEntries := MarketListingEntries;
+
+  };
+
+  system func postupgrade() {
+    // Admin postUpgrade
+    stableAdmins := [];
+
+    // Essays postUpgrade
+    _Essays.postStable(stableEssayEntries, stableUserEssayEntries, stableEssayPK);
+    stableEssayEntries := [];
+    stableUserEssayEntries := [];
+    stableEssayPK := 0;
+
+    // Drafts postUpgrade
+    _Drafts.postStable(stableDraftsEntries);
+    stableDraftsEntries := [];
+
+    // Annotation Post
+    _Annotations.postStable(stableAnnotationEntries);
+    stableAnnotationEntries := [];
+
+    // Dip Post
+    stableLedger := [];
+    stableBalanceEntries := [];
+    stableAllowanceEntries := [];
+
+    // Users postUpgrade
+    _Users.postStable(stableProfileEntries);
+    stableProfileEntries := [];
+
+    // Market PostUpgarde
+    stableItems := [];
+    stableMarketListingEntries := [];
   };
 
   public shared ({caller}) func whoami() : async Principal {
@@ -36,7 +109,8 @@ shared (msg) actor class Kawak(
   };
 
   let _Users = Users.User({
-
+    ProfileEntries = stableProfileEntries;
+    // caller;
   });
 
   public shared ({ caller }) func createProfile(userName : Text, avatar : Text) : async Result.Result<Text, Text> {
@@ -80,6 +154,9 @@ shared (msg) actor class Kawak(
     _Admins;
     _Users;
     caller;
+    ledger = stableLedger;
+    balanceEntries = stableBalanceEntries;
+    allowanceEntries = stableAllowanceEntries;
   });
 
   public shared ({caller}) func transferTokenTo(to : Principal, value : Nat) : async DipTypes.TxReceipt {
@@ -91,12 +168,15 @@ shared (msg) actor class Kawak(
   // };
 
   let _Essays = Handlers.Essays({
+    caller;
     _Admins;
     _Users;
     _Brew_DIP20;
-    essays = stableEssays;
-    drafts = stableDrafts;
-    annotations = stableAnnotations;
+    EssayEntries = stableEssayEntries;
+    UserEssayEntries = stableUserEssayEntries;
+    essayPK = stableEssayPK;
+    draftEntries = stableDraftsEntries;
+    AnnotationEntries = stableAnnotationEntries;
   });
 
   public shared ({ caller }) func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<(Nat, Text), Text> {
@@ -140,12 +220,15 @@ shared (msg) actor class Kawak(
     // }
 
   let _Drafts = Handlers.Drafts({
+    caller;
     _Admins;
     _Users;
     _Brew_DIP20;
-    drafts = stableDrafts;
-    essays = stableEssays;
-    annotations = stableAnnotations;
+    EssayEntries = stableEssayEntries;
+    UserEssayEntries = stableUserEssayEntries;
+    essayPK = stableEssayPK;
+    draftEntries = stableDraftsEntries;
+    AnnotationEntries = stableAnnotationEntries;
   });
 
   public shared ({ caller }) func draftEssay(title : Text, text : Text) : async Nat {
@@ -169,12 +252,15 @@ shared (msg) actor class Kawak(
   };
 
   let _Annotations = Handlers.Annotations({
+   caller;
     _Admins;
     _Users;
     _Brew_DIP20;
-    essays = stableEssays;
-    drafts = stableDrafts;
-    annotations = stableAnnotations;
+    EssayEntries = stableEssayEntries;
+    UserEssayEntries = stableUserEssayEntries;
+    essayPK = stableEssayPK;
+    draftEntries = stableDraftsEntries;
+    AnnotationEntries = stableAnnotationEntries;
   });
 
   public shared ({caller}) func addAnnotation(id : Nat, comments : Text, quote : Text) : async () {
@@ -197,6 +283,9 @@ shared (msg) actor class Kawak(
     _Admins;
     _Users;
     caller;
+    ledger = stableLedger;
+    balanceEntries = stableBalanceEntries;
+    allowanceEntries = stableAllowanceEntries;
   });
 
   public shared query ({ caller }) func totalSupplyofNFT() : async Nat {
@@ -224,12 +313,89 @@ shared (msg) actor class Kawak(
   };
 
  
+  let _Market = Marketplace.Market({
+    _Admins;
+    _Users;
+    _Brew_DIP721;
+    _Brew_DIP20;
+    items = stableItems;
+    MarketListingEntries = stableMarketListingEntries;
+  });
 
-  
+  public shared ({caller}) func TotalListedNFT() : async Nat {
+    _Market.mp_totalListed();
+  };
 
-  
+  public shared ({caller}) func ViewSellerListedNFTs() : async  Result.Result<[MarketplaceTypes.Listing], Text> {
+      _Market.mp_viewSellerListedNFTs(caller);
+  };
 
-    // public shared ({caller}) func listNFT(tokenId : Nat, meta : DipTypes.TokenMetadata) 
+  public shared ({caller}) func GetListedNFTPrice(itemId : Nat) : async Result.Result<Nat64, Text> {
+    _Market.mp_getListedNFTPrice(itemId);
+  };
+
+  public shared ({caller}) func GetNFTSeller(itemId : Nat) : async Principal {
+    _Market.mp_getNFTSeller(itemId);
+  };
+
+  public shared ({caller}) func AmIlisted(tokenId : Nat) : async Bool {
+    _Market.mp_amIlisted(tokenId);
+  };
+
+  public shared ({caller}) func UnListItem(tokenId : Nat) : async Result.Result<Text, Text>{
+    _Market.mp_unListItem(caller, tokenId);
+  };
+  public shared ({caller}) func ViewMarket() : async [MarketplaceTypes.Listing] {
+    _Market.mp_viewMarket()
+  };
+
+   public shared ({caller}) func ListItem(tokenId : Nat, price : Nat64) : async Nat {
+    _Market.mp_ListItem(caller, tokenId, price);
+  };
 
 
+
+  public func proxy(url : Text) : async Types.CanisterHttpResponsePayload {
+
+    let transform_context : Types.TransformContext = {
+      function = transform;
+      context = Blob.fromArray([]);
+    };
+
+    // Construct canister request
+    let request : Types.CanisterHttpRequestArgs = {
+      url = url;
+      max_response_bytes = null;
+      headers = [];
+      body = null;
+      method = #post;
+      transform = ?transform_context;
+    };
+    Cycles.add(220_000_000_000);
+    let ic : Types.IC = actor ("aaaaa-aa");
+    let response : Types.CanisterHttpResponsePayload = await ic.http_request(request);
+    response;
+  };
+
+  public query func transform(raw : Types.TransformArgs) : async Types.CanisterHttpResponsePayload {
+    let transformed : Types.CanisterHttpResponsePayload = {
+      status = raw.response.status;
+      body = raw.response.body;
+      headers = [
+        {
+          name = "Content-Security-Policy";
+          value = "default-src 'self'";
+        },
+        { name = "Referrer-Policy"; value = "strict-origin" },
+        { name = "Permissions-Policy"; value = "geolocation=(self)" },
+        {
+          name = "Strict-Transport-Security";
+          value = "max-age=63072000";
+        },
+        { name = "X-Frame-Options"; value = "DENY" },
+        { name = "X-Content-Type-Options"; value = "nosniff" },
+      ];
+    };
+    transformed;
+  };
 };

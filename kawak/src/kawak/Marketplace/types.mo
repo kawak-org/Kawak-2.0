@@ -11,6 +11,8 @@ module {
         _Users  : Users.User;
         _Brew_DIP721    : Dip.Brew_DIP721;
         _Brew_DIP20     : Dip.Brew_DIP20;
+        items   : [Listing];
+        MarketListingEntries : [(Principal, Listing)];
     };
 
     public type LocalStableState = {

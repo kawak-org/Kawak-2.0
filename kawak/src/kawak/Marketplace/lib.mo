@@ -2,6 +2,7 @@ import Array "mo:base/Array";
 import Error "mo:base/Error";
 import HashMap "mo:base/HashMap";
 import Int "mo:base/Int";
+import Iter "mo:base/Iter";
 import Nat "mo:base/Nat";
 import Nat64 "mo:base/Nat64";
 import Principal "mo:base/Principal";
@@ -17,8 +18,10 @@ module {
         public type TokenIndex = Nat;
         public type MarketItem = Types.MarketItem;
 
+
         var MarketListingEntries : [(Principal, Types.Listing)] = [];
         var item : [var Types.Listing] = [var];
+
 
         var marketListings : HashMap.HashMap<Principal, Types.Listing> = HashMap.fromIter<Principal, Types.Listing>(
             MarketListingEntries.vals(),
@@ -28,10 +31,12 @@ module {
         );
 
         // For stableness purposes.
-        public func toStable() : async Types.LocalStableState {
+        public func toStable() : Types.LocalStableState {
+            // items := Array.freeze(item);
+            MarketListingEntries := Iter.toArray(marketListings.entries());
             {
-            items = Array.freeze(item);
-            MarketListingEntries;
+                items = Array.freeze(item);
+                MarketListingEntries;
             };
         };
 
@@ -42,7 +47,7 @@ module {
         };
 
         // Restore local state on init.
-        // _restore(state);
+        _restore(state);
 
         //
         //
@@ -77,12 +82,12 @@ module {
         };
 
         // Retruns the total number of NFTs on the market
-        public func mp_totalListed() : async Nat {
+        public func mp_totalListed() :  Nat {
             item.size();
         };
 
         // Return the number of the total NFTs listed by a caller
-        public func mp_myListedItems(caller : Principal) : async Nat {
+        public func mp_myListedItems(caller : Principal) :  Nat {
             Array.filter<Types.Listing>(
             Array.freeze(item),
             func(i) {
@@ -93,7 +98,7 @@ module {
         };
 
         // View the marketplace meta of a listed item
-        public func mp_viewListedNFT(itemId : Nat) : async Result.Result<Types.Listing, Text> {
+        public func mp_viewListedNFT(itemId : Nat) :  Result.Result<Types.Listing, Text> {
             if (itemId < item.size()) {
             #ok(item[itemId]);
             } else {
@@ -102,7 +107,7 @@ module {
         };
 
         // Returns an array of a users listed NFTs
-        public func mp_viewSellerListedNFTs(caller : Principal) : async Result.Result<[Types.Listing], Text> {
+        public func mp_viewSellerListedNFTs(caller : Principal) :  Result.Result<[Types.Listing], Text> {
             #ok(
             Array.filter<Types.Listing>(
                 Array.freeze(item),
@@ -114,15 +119,16 @@ module {
             );
         };
 
-        public func mp_viewMarket() : async [Types.Listing] {
+        public func mp_viewMarket() :  [Types.Listing] {
             Array.freeze(item);
         };
 
         // List Item to the marketplace
-        public shared ({caller}) func mp_ListItem(
+        public func mp_ListItem(
+            caller : Principal,
             tokenId : Nat,
             price : Nat64
-        ) : async Nat {
+        ) : Nat {
             // if (state._Brew_DIP721.ledger[tokenId].listed == true) {
             //     throw Error.reject("$ This NFT has already been listed #");
             // };
@@ -152,7 +158,7 @@ module {
         };
 
         //  Checks if an NFT is listed
-        public func mp_amIlisted(tokenId : Nat) : async Bool {
+        public func mp_amIlisted(tokenId : Nat) :  Bool {
             var iExist = false;
             for (_item in item.vals()) {
             if (_item.tokenId == tokenId) {
@@ -163,7 +169,7 @@ module {
         };
 
         // This function unlists an item from the marketplace
-        public func mp_unListItem(caller : Principal, tokenId : Nat) : async Result.Result<Text, Text> {
+        public func mp_unListItem(caller : Principal, tokenId : Nat) :  Result.Result<Text, Text> {
             var tempArr : [var Types.Listing] = [var];
             for (_item : Types.Listing in item.vals()) {
             // let _lister = AccountIdentifier.toText(AccountIdentifier.fromPrincipal(caller, null));
@@ -177,7 +183,7 @@ module {
         };
 
 
-        public func mp_getNFTSeller(itemId : Nat) : async Principal {
+        public func mp_getNFTSeller(itemId : Nat) :  Principal {
             item[itemId].seller;
         };
 
@@ -216,7 +222,7 @@ module {
         //     };
         // };
 
-        public func mp_getListedNFTPrice(itemId : Nat) : async Result.Result<Nat64, Text> {
+        public func mp_getListedNFTPrice(itemId : Nat) :  Result.Result<Nat64, Text> {
             if (itemId >= item.size()) {
             return #err("Item doesn't exist");
             } else {
