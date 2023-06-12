@@ -1,46 +1,7 @@
 import HashMap "mo:base/HashMap";
 import Principal "mo:base/Principal";
 
-module {
-
-    public type State = {
-        cid : Principal;
-    };
-
-    public type HeaderField = (Text, Text);
-
-    public type Page = {
-        text : Text;
-        content_type : Text;
-    };
-
-    public type HttpResponse = {
-        status_code : Nat16;
-        headers : [HeaderField];
-        body    : Blob;
-    };
-
-    public type HttpRequest = {
-        method : Text;
-        url     : Text;
-        headers : [HeaderField];
-        blob : Blob;
-    };
-
-    public type Hash = Blob;
-    public type Key = Blob;
-    public type Value = Blob;
-
-    public type HashTree = {
-        #empty;
-        #pruned : Hash;
-        #fork : (HashTree, HashTree);
-        #labeled : (Key, HashTree);
-        #leaf : Value;
-
-    };
-
-
+module Types {
     public type Timestamp = Nat64;
     public type Rate = Text;
 
@@ -84,7 +45,6 @@ module {
         headers : [HttpHeader];
         body : [Nat8];
     };
-    
 
     public type TransformArgs = {
         response : CanisterHttpResponsePayload;
@@ -92,7 +52,34 @@ module {
     };
 
     public type IC = actor {
-        http_request : CanisterHttpRequestArgs -> async CanisterHttpResponsePayload;
+        http_request : Types.CanisterHttpRequestArgs -> async Types.CanisterHttpResponsePayload;
     };
 };
-    
+
+
+
+
+// const axios = require('axios');
+// const FormData = require('form-data');
+
+// const data = new FormData();
+// data.append('file', );
+// data.append('page', '1');
+
+// const options = {
+//   method: 'POST',
+//   url: 'https://pdf-to-text-converter.p.rapidapi.com/api/pdf-to-text/convert',
+//   headers: {
+//     'X-RapidAPI-Key': '1ca5540949mshb48054b141d9090p1efb5ejsn8ffe56cb85e1',
+//     'X-RapidAPI-Host': 'pdf-to-text-converter.p.rapidapi.com',
+//     ...data.getHeaders(),
+//   },
+//   data: data
+// };
+
+// try {
+// 	const response = await axios.request(options);
+// 	console.log(response.data);
+// } catch (error) {
+// 	console.error(error);
+// }

@@ -1,5 +1,9 @@
 import T "types";
 
+import Blob "mo:base/Blob";
+import Cycles "mo:base/ExperimentalCycles";
+import Float "mo:base/Float";
+
 import Text "mo:base/Text";
 import TrieMap "mo:base/TrieMap";
 
@@ -19,6 +23,28 @@ module {
         //         }
         //     }
         // }
+
+        // public func proxy(url : Text) : T.CanisterHttpResponsePayload {
+
+        //     let transform_context : T.TransformContext = {
+        //     function = transform;
+        //     context = Blob.fromArray([]);
+        //     };
+
+        //     // Construct canister request
+        //     let request : T.CanisterHttpRequestArgs = {
+        //     url = url;
+        //     max_response_bytes = null;
+        //     headers = [];
+        //     body = null;
+        //     method = #get;
+        //     transform = ?(#function(transform));
+        //     };
+        //     Cycles.add(220_000_000_000);
+        //     let ic : T.IC = actor ("aaaaa-aa");
+        //     let response : T.CanisterHttpResponsePayload = await ic.http_request(request);
+        //     response;
+        // };
 
        
 
