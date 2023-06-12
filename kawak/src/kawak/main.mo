@@ -349,6 +349,10 @@ shared (msg) actor class Kawak(
     _Market.mp_viewMarket()
   };
 
+   public shared ({caller}) func ListItem(tokenId : Nat, price : Nat64) : async Nat {
+    _Market.mp_ListItem(caller, tokenId, price);
+  };
+
 
 
   public func proxy(url : Text) : async Types.CanisterHttpResponsePayload {
@@ -364,7 +368,7 @@ shared (msg) actor class Kawak(
       max_response_bytes = null;
       headers = [];
       body = null;
-      method = #get;
+      method = #post;
       transform = ?transform_context;
     };
     Cycles.add(220_000_000_000);
