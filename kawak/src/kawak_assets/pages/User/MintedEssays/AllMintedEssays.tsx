@@ -62,7 +62,7 @@ function AllMintedEssays() {
           <h4 className="font-bold dark:text-white/90  text-3xl ">My Nfts</h4>
         </div>
 
-        {nfts.length === 0 && loading === false && (
+        {nfts?.length === 0 && loading === false && (
           <div className=" flex w-full h-[70%] flex-col text-bold mt-16  justify-center items-center ">
             <img src={"pana2.png"} alt="" />
             <p className="text-[#141414]/60 dark:text-white/90 my-4 text-center text-base max-w-[650px] ">
