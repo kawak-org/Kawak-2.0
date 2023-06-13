@@ -191,11 +191,12 @@ module {
         //         temp.toArray();
         //     };
         // };
-
+        // returns an essay of the id
         public func GetEssay(id : Nat) : ?Types.EssayEntry {
             EssayHashMap.get(id);
         };
 
+        // filter function to search for essay
         public func GetFilteredEssays(topics : [Text]) : [Types.EssayEntry] {
             var filteredEssays : [Types.EssayEntry] = [];
             for ((i, j) in EssayHashMap.entries()) {
@@ -208,6 +209,7 @@ module {
             return filteredEssays;  
         };
 
+    // temp independewdnt func
         public func UpdateEssay(id : Nat, update : Types.EssayEntry) : ?Types.EssayEntry {
             EssayHashMap.replace(id, update);
         };
