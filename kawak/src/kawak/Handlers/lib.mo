@@ -196,6 +196,46 @@ module {
             EssayHashMap.get(id);
         };
 
+        public func EssayAnnotate(caller : Principal, id : Nat, comments : Text, quote : Text) : (){
+            var user = state._Users.getUser(caller);
+            switch (user){
+                case(null){};
+                case(?user){
+                    var reviewUpdate = {
+                        id = id;
+                        user = caller;
+                        comments = comments;
+                        quote = quote;
+                        rated = false;
+                    };
+                    var essay = GetEssay(id);
+                    switch(essay){
+                        case(null){};
+                        case(?essay){
+                            var update = {
+                                id = essay.id;
+                                aid = essay.aid;
+                                owner = essay.owner;
+                                title = essay.title;
+                                topic = [essay.title];
+                                wordCount = essay.wordCount;
+                                //createdAt : Time;
+                                reviewTimes = essay.reviewTimes + 1;
+                                reviewed = true;
+                                essayCost = essay.essayCost;
+                                submittedAt = essay.submittedAt;
+                                text = essay.text;
+                                userDetails = essay.userDetails;
+                                reviews = Array.append(essay.reviews, [reviewUpdate]);
+                            };
+                            var updated = UpdateEssay(id, update);
+                            
+                        };
+                    }
+                };
+            };
+        };
+
         // filter function to search for essay
         public func GetFilteredEssays(topics : [Text]) : [Types.EssayEntry] {
             var filteredEssays : [Types.EssayEntry] = [];
