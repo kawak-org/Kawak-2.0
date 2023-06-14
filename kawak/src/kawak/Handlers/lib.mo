@@ -236,6 +236,14 @@ module {
             };
         };
 
+        public func GetAnnotation(id : Nat) : [Types.AnnotationEntry] {
+            var tempAnnotation : [Types.AnnotationEntry] = [];
+            for ((i, j) in EssayHashMap.entries()){
+                tempAnnotation := Array.append(tempAnnotation, j.reviews);
+            };
+            return tempAnnotation;
+        };
+
         // filter function to search for essay
         public func GetFilteredEssays(topics : [Text]) : [Types.EssayEntry] {
             var filteredEssays : [Types.EssayEntry] = [];
