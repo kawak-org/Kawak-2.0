@@ -104,7 +104,7 @@
     "link-preview-generator": "1.0.7",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
-    "node": "^16.19.0",
+    "node": "^16.18.0",
     "path-browserify": "^1.0.1",
     "pdf-text-extract": "^1.5.0",
     "postcss-loader": "^6.2.1",
@@ -141,6 +141,6 @@
     "yjs": ">=13.5.22"
   },
   "engines": {
-    "node": "^16.19.0"
+    "node": "^16.18.0"
   }
 }

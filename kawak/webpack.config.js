@@ -7,7 +7,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 // var child = spawn('pwd')
 
 const LOCAL_II_CANISTER =
-  "http://127.0.0.1:4943/?canisterId=bkyz2-fmaaa-aaaaa-qaaaq-cai";
+  "http://127.0.0.1:4943/?canisterId=rrkah-fqaaa-aaaaa-aaaaq-cai";
 
 const network =
   process.env.DFX_NETWORK ||
@@ -73,10 +73,10 @@ module.exports = {
       events: require.resolve("events/"),
       stream: require.resolve("stream-browserify/"),
       util: require.resolve("util/"),
-      path:require.resolve("path-browserify"),
+      path: require.resolve("path-browserify"),
       constants: require.resolve("constants-browserify"),
-      fs:false,
-      child_process: require.resolve('child_process'),
+      fs: false,
+      child_process: require.resolve("child_process"),
       // "spawn": false
     },
   },
@@ -164,5 +164,5 @@ module.exports = {
   },
   experiments: {
     topLevelAwait: true,
-  }
+  },
 };
