@@ -191,11 +191,60 @@ module {
         //         temp.toArray();
         //     };
         // };
-
+        // returns an essay of the id
         public func GetEssay(id : Nat) : ?Types.EssayEntry {
             EssayHashMap.get(id);
         };
 
+        public func EssayAnnotate(caller : Principal, id : Nat, comments : Text, quote : Text) : (){
+            var user = state._Users.getUser(caller);
+            switch (user){
+                case(null){};
+                case(?user){
+                    var reviewUpdate = {
+                        id = id;
+                        user = caller;
+                        comments = comments;
+                        quote = quote;
+                        rated = false;
+                    };
+                    var essay = GetEssay(id);
+                    switch(essay){
+                        case(null){};
+                        case(?essay){
+                            var update = {
+                                id = essay.id;
+                                aid = essay.aid;
+                                owner = essay.owner;
+                                title = essay.title;
+                                topic = [essay.title];
+                                wordCount = essay.wordCount;
+                                //createdAt : Time;
+                                reviewTimes = essay.reviewTimes + 1;
+                                reviewed = true;
+                                essayCost = essay.essayCost;
+                                submittedAt = essay.submittedAt;
+                                text = essay.text;
+                                userDetails = essay.userDetails;
+                                reviews = Array.append(essay.reviews, [reviewUpdate]);
+                            };
+                            var updated = UpdateEssay(id, update);
+                            
+                        };
+                    }
+                };
+            };
+        };
+
+        public func GetAnnotation(id : Nat) : [Types.AnnotationEntry] {
+            var tempAnnotation : [Types.AnnotationEntry] = [];
+            for ((i, j) in EssayHashMap.entries()){
+                tempAnnotation := Array.append(tempAnnotation, j.reviews);
+            };
+            return tempAnnotation;
+        };
+
+        // filter function to search for essay
         public func GetFilteredEssays(topics : [Text]) : [Types.EssayEntry] {
             var filteredEssays : [Types.EssayEntry] = [];
             for ((i, j) in EssayHashMap.entries()) {
@@ -208,6 +257,7 @@ module {
             return filteredEssays;  
         };
 
+    // temp independewdnt func
         public func UpdateEssay(id : Nat, update : Types.EssayEntry) : ?Types.EssayEntry {
             EssayHashMap.replace(id, update);
         };
