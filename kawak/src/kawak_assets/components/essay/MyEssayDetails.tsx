@@ -69,6 +69,7 @@ const MyEssayDetails = () => {
             setEssay(value);
             // console.log(value)
             setIsLoading2(false);
+            console.log(d)
           }
         })
         .catch((err) => {

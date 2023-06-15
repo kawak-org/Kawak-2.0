@@ -7,7 +7,7 @@ import MarketCard from "../components/User/MarketCard";
 import ReactPaginate from "react-paginate";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
-// import { useMarketPlaceLists } from "../functions/contract";
+import { useMarketPlaceLists } from "../functions/contract";
 import { useAppSelector } from "../redux/hooks";
 import Loader from "../components/Loaders/Loader";
 import { Link } from "react-router-dom";
@@ -43,20 +43,20 @@ const MarketPlace = () => {
 			</Link>
 		));
 
-	// const { handleMarketPlace, loading } = useMarketPlaceLists();
+	const { handleMarketPlace, loading } = useMarketPlaceLists();
 
 	useEffect(() => {
-		// if (marketPlace.length < 1) return handleMarketPlace();
+		if (marketPlace.length < 1) return handleMarketPlace();
 	}, []);
 
 	return (
 		<div>
 			<Navbar />
-			{/* {loading ? ( */}
+			{loading ? (
 				<div className='className=" w-full h-screen flex m-auto justify-center items-center mt-[-5rem] '>
 					<Loader />
 				</div>
-			{/* ) : ( */}
+		 ) : ( 
 				<>
 					<div className='mx-8 mt-16 mb-8'>
 						<div className='flex flex-col justify-center items-center mt-[7rem]'>
@@ -123,7 +123,7 @@ const MarketPlace = () => {
 				</div> */}
 
 						<div className='flex flex-col'>
-							{/* {marketPlace.length === 0 && loading === false && ( */}
+							{marketPlace.length === 0 && loading === false && (
 								<div className=' flex w-full h-[70%] flex-col text-bold mt-16  justify-center items-center '>
 									<img src={"pana2.png"} alt='' />
 									<p className='text-[#141414]/60 my-4 text-center text-base max-w-[650px] '>
@@ -135,7 +135,7 @@ const MarketPlace = () => {
 										</button>
 									</Link>
 								</div>
-							{/* )} */}
+							 )} 
 							<div className='grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-4 mt-8 gap-4'>
 								{displayNfts}
 							</div>
@@ -157,7 +157,7 @@ const MarketPlace = () => {
 						</div>
 					</div>
 				</>
-			{/* )} */}
+			 )} 
 		</div>
 	);
 };

@@ -2,7 +2,7 @@ import React, { ClipboardEvent, useEffect, useState, useContext } from "react";
 import Popup from "../../../components/shared/Popup";
 import {
   useGetAllNFTs,
-  // 	useListNFTonMarketPlace,
+  	useListNFTonMarketPlace,
 } from "../../../functions/contract";
 import { useAppSelector } from "../../../redux/hooks";
 import toast from "react-hot-toast";
@@ -42,11 +42,11 @@ function AllMintedEssays() {
   };
   // const [wordLimit, setWordLimit] = useState(content.slice(0, 300));
 
-  // const { handleAddToMarketPlace, loading: isLoading } =
-  // 	useListNFTonMarketPlace();
+  const { handleAddToMarketPlace, loading: isLoading } =
+  	useListNFTonMarketPlace();
 
   const handleMoveToMarketPlace = () => {
-    // handleAddToMarketPlace(nftId, data);
+    handleAddToMarketPlace(nftId, data);
   };
 
   return (
@@ -174,7 +174,7 @@ function AllMintedEssays() {
                       data={data}
                       setData={setData}
                       onSubmit={handleMoveToMarketPlace}
-                      // isLoading={isLoading}
+                      isLoading={isLoading}
                     />
                   )}
                 </div>

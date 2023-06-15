@@ -324,33 +324,33 @@ export const useMarketPlaceLists = () => {
 	}
 };
 
-// export const useListNFTonMarketPlace = () => {
-// 	const [loading, setLoading] = useState(false);
-// 	const navigate = useNavigate();
-// 	const dispatch = useAppDispatch();
-// 	try {
-// 		const { actor } = useContext(UserContext);
-// 		const handleAddToMarketPlace = (nftId: number, price: number) => {
-// 			setLoading(true);
-// 			actor
-// 				?.mp_ListItem(BigInt(nftId), BigInt(price))
-// 				.then((d) => {
-// 					setLoading(false);
-// 					navigate("/marketplace");
-// 					toast.success("successfully listed");
-// 				})
-// 				.catch((err) => {
-// 					setLoading(false);
-// 					ErrorHandler(err);
-// 					console.log(err);
-// 				});
-// 		};
-// 		return { handleAddToMarketPlace, loading };
-// 	} catch (err) {
-// 		toast.error("something went wrong");
-// 		setLoading(false);
-// 	}
-// };
+export const useListNFTonMarketPlace = () => {
+	const [loading, setLoading] = useState(false);
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+	try {
+		const { actor } = useContext(UserContext);
+		const handleAddToMarketPlace = (nftId: number, price: number) => {
+			setLoading(true);
+			actor
+				?.ListItem(BigInt(nftId), BigInt(price))
+				.then((d) => {
+					setLoading(false);
+					navigate("/marketplace");
+					toast.success("successfully listed");
+				})
+				.catch((err) => {
+					setLoading(false);
+					ErrorHandler(err);
+					console.log(err);
+				});
+		};
+		return { handleAddToMarketPlace, loading };
+	} catch (err) {
+		toast.error("something went wrong");
+		setLoading(false);
+	}
+};
 
 //SEARCH
 
