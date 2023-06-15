@@ -39,8 +39,7 @@ module {
         #leaf : Value;
 
     };
-
-
+    //  second part of the types
     public type Timestamp = Nat64;
     public type Rate = Text;
 

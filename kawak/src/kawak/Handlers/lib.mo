@@ -257,7 +257,7 @@ module {
             return filteredEssays;  
         };
 
-    // temp independewdnt func
+        // temp independent func
         public func UpdateEssay(id : Nat, update : Types.EssayEntry) : ?Types.EssayEntry {
             EssayHashMap.replace(id, update);
         };
