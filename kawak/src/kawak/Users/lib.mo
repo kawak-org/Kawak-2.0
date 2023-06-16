@@ -1,6 +1,6 @@
 import HashMap "mo:base/HashMap";
 import Array "mo:base/Array";
-import iter "mo:base/Iter";
+import Iter "mo:base/Iter";
 import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Types "types";
@@ -11,7 +11,29 @@ module {
 
     public class User (state : Types.State) {
 
-        var profileHashMap = HashMap.HashMap<Principal, Types.UserEntry>(1, Principal.equal, Principal.hash);
+        // Iter.toArray(map.entries())
+
+        var ProfileEntries : [(Principal, Types.UserEntry)] = [];
+
+        var ProfileHashMap : HashMap.HashMap<Principal, Types.UserEntry> = HashMap.fromIter<Principal, Types.UserEntry>(ProfileEntries.vals(), 10, Principal.equal, Principal.hash);
+
+        
+        public func toStable() : Types.LocalStableState {
+            ProfileEntries := Iter.toArray(ProfileHashMap.entries());
+            {
+                ProfileEntries = Iter.toArray(ProfileHashMap.entries());
+            }
+        };
+
+        public func postStable(_profileEntries : [(Principal, Types.UserEntry)]) {
+            ProfileHashMap := HashMap.fromIter<Principal, Types.UserEntry>(_profileEntries.vals(), 10, Principal.equal, Principal.hash);    
+        };
+
+        public func _restore(backup : Types.LocalStableState) : () {
+            ProfileEntries          := backup.ProfileEntries;
+        };
+
+        _restore(state);
 
         func isEq (x : Principal, y : Principal) : Bool {
             x == y;
@@ -39,12 +61,12 @@ module {
         };
 
         private func createOneProfile(caller : Principal, userName : Text, token_balance : Nat, avatar : Text) {
-            profileHashMap.put(caller, makeProfile(userName, ?"regular", token_balance, avatar, 0, [], [], Time.now(), 0, [], false, false));
+            ProfileHashMap.put(caller, makeProfile(userName, ?"regular", token_balance, avatar, 0, [], [], Time.now(), 0, [], false, false));
         };
 
         private func usernameChecker(username : Text) : Bool {
             var unique = true;
-            for ((i, j) in profileHashMap.entries()) {
+            for ((i, j) in ProfileHashMap.entries()) {
                 if (j.userName == username) {
                     unique := false;
                 };
@@ -53,7 +75,7 @@ module {
         };
 
         public func logIn(caller : Principal) : Bool {
-            var result = profileHashMap.get(caller);
+            var result = ProfileHashMap.get(caller);
 
             switch (result) {
                 case null {
@@ -66,7 +88,7 @@ module {
         };
 
         public func getUser(caller : Principal) : ?Types.UserEntry {
-            profileHashMap.get(caller);
+            ProfileHashMap.get(caller);
         };
 
         // public func getProfiles(caller : Principal) : [Types.UserEntry] {
@@ -91,7 +113,7 @@ module {
                 let user = getUser(caller)!;
                 // let life = await mint(msg.caller);
                 // balance := await tokenBalanceOf(msg.caller);
-                profileHashMap.put(
+                ProfileHashMap.put(
                     caller,
                     makeProfile(
                         user.userName,
@@ -126,7 +148,7 @@ module {
         };
 
         private func updateUserProfile(caller : Principal, userEntry : Types.UserEntry) : ?Types.UserEntry {
-            profileHashMap.replace(caller, userEntry);
+            ProfileHashMap.replace(caller, userEntry);
         };
 
         public func _updateUserProfile(caller : Principal, userEntry : Types.UserEntry) : ?Types.UserEntry {
@@ -134,7 +156,7 @@ module {
         };
 
         public func makeUserAdmin(accountId : Principal) : () {
-            let user = profileHashMap.get(accountId);
+            let user = ProfileHashMap.get(accountId);
             switch(user) {
                 case(null) {};
                 case (?user) {

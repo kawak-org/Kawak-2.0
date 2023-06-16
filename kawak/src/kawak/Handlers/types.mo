@@ -6,13 +6,41 @@ import UsersTypes "../Users/types";
 
 module {
 
+    public type EssayLocalStableState = {
+        EssayEntries  : [(Nat, EssayEntry)];
+        UserEssayEntries : [(Principal, EssayEntry)];
+        essayPK     : Nat;
+    };
+
+    public type AnnotationsLocalStableState = {
+        AnnotationEntries : [(Nat, AnnotationEntry)];
+    };
+
     public type State = {
+        // caller     : Principal;
         _Admins : Admins.Admins;
         _Users  : Users.User;
         _Brew_DIP20    : Dip.Brew_DIP20;
-        essays  : [EssayEntry];
-        drafts  : [DraftEntry];
-        annotations : [AnnotationEntry];
+        EssayEntries : [(Nat, EssayEntry)];
+        UserEssayEntries : [(Principal, EssayEntry)];
+        essayPK     : Nat;
+        draftEntries : [(Nat, DraftEntry)];
+        AnnotationEntries : [(Nat, AnnotationEntry)];
+    };
+
+    public type EssayState = {
+        _Admins : Admins.Admins;
+        _Users  : Users.User;
+        _Brew_DIP20    : Dip.Brew_DIP20;
+        EssayEnntires  : [(Nat, EssayEntry)];
+        UserEssayEntries : [(Principal, EssayEntry)];
+        essayPK         : Nat;
+
+    };
+
+
+    public type DraftsLocalStableState = {
+        draftEntries : [(Nat, DraftEntry)];
     };
 
     public type DraftEntry = {

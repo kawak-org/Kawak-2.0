@@ -6,8 +6,11 @@ const CopyPlugin = require("copy-webpack-plugin");
 // var spawn = require('child_process').spawn
 // var child = spawn('pwd')
 
+const host = isProduction ? "https://icp-api.io" : undefined;
+const agent = new HttpAgent({ host });
+
 const LOCAL_II_CANISTER =
-  "http://127.0.0.1:4943/?canisterId=rrkah-fqaaa-aaaaa-aaaaq-cai";
+  "http://127.0.0.1:4943/?canisterId=bkyz2-fmaaa-aaaaa-qaaaq-cai";
 
 const network =
   process.env.DFX_NETWORK ||

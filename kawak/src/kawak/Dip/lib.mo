@@ -1,6 +1,7 @@
 import Array "mo:base/Array";
 import HashMap "mo:base/HashMap";
 import Int "mo:base/Int";
+import Iter "mo:base/Iter";
 import Nat "mo:base/Nat";
 import Nat64 "mo:base/Nat64";
 import Option "mo:base/Option";
@@ -19,6 +20,12 @@ module {
     public class Brew_DIP721 (state : Types.State) {
 
         var ledger : [var Types.TokenMetadata] = [var];
+
+        public func toStable() : Types.DIP721_LocalStableState {
+            {
+                ledger = Array.freeze(ledger);
+            }
+        };    
 
          /// Query methods
 
@@ -159,7 +166,7 @@ module {
         var fee : Nat = fee_;
         var balanceEntries : [(Principal, Nat)] = [];
         var allowanceEntries : [(Principal, [(Principal, Nat)])] = [];
-        var balances = HashMap.HashMap<Principal, Nat>(10, Principal.equal, Principal.hash);
+        var balances : HashMap.HashMap<Principal, Nat> = HashMap.fromIter<Principal, Nat>(balanceEntries.vals(), 10, Principal.equal, Principal.hash);
         var allowances = HashMap.HashMap<Principal, HashMap.HashMap<Principal, Nat>>(1, Principal.equal, Principal.hash);
         balances.put(owner_, totalSupply_);
         let genesis : Types.TxRecord = {
@@ -174,6 +181,14 @@ module {
             status = #succeeded;
         };
         private var ops : [Types.TxRecord] = [genesis];
+
+        public func toStable() : Types.DIP20_LocalStableState {
+            balanceEntries := Iter.toArray(balances.entries());
+            {
+                balanceEntries;
+                allowanceEntries;
+            }
+        };    
 
         private func _unwrap<T>(x : ?T) : T {
             switch x {
