@@ -58,7 +58,9 @@ const Navbar = () => {
         onClick={handleBackClick}
       >
         <IoIosArrowRoundBack className=" dark:text-white/90 text-black sm:text-white w-7 h-7" />
-        <h3 className="text-black sm:text-white dark:text-white/90">Back</h3>
+        <h3 className="text-black text-sm lg:text-lg sm:text-white dark:text-white/90">
+          Back
+        </h3>
       </div>
 
       <div className=" flex sm:hidden mx-4">

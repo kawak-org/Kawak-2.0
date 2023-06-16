@@ -129,7 +129,7 @@
     "redux": "^4.2.0",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
-    "rsuite": "^4.11.1",
+    "rsuite": "^5.35.1",
     "sass": "^1.60.0",
     "sass-loader": "^13.2.2",
     "split-type": "^0.3.3",
