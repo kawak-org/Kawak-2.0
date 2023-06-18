@@ -90,10 +90,12 @@ shared (msg) actor class Kawak(
     _Annotations.postStable(stableAnnotationEntries);
     stableAnnotationEntries := [];
 
-    // Dip Post
-    stableLedger := [];
+    // Dip20 Post
+    _Brew_DIP20.postStable(stableBalanceEntries, stableAllowanceEntries);
     stableBalanceEntries := [];
     stableAllowanceEntries := [];
+
+    
 
     // Users postUpgrade
     _Users.postStable(stableProfileEntries);
