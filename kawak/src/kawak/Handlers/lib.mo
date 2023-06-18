@@ -246,12 +246,18 @@ module {
 
         // filter function to search for essay
         public func GetFilteredEssays(topics : [Text]) : [Types.EssayEntry] {
-            var filteredEssays : [Types.EssayEntry] = [];
+            var filteredEssays : [Types.EssayEntry] = [];  //Temporay array that returns the filtered array
+
             for ((i, j) in EssayHashMap.entries()) {
-                for (topic in topics.vals()) {
-                    if (j.topic == topics) {
-                        filteredEssays := Array.append(filteredEssays, [j]);
-                    };
+                for (topic in topics.vals()) {  // Iterates through the topics argument
+                    for (_topic in j.topic.vals()){
+                        if (_topic == topic){
+                            filteredEssays := Array.append(filteredEssays, [j]);
+                        }
+                    }
+                    // if (j.topic == topics) {
+                    //     filteredEssays := Array.append(filteredEssays, [j]);
+                    // };
                 };
             };
             return filteredEssays;  

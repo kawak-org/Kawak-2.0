@@ -45,7 +45,7 @@ module {
 
     public type DraftEntry = {
         id : Nat;
-        owner : Text;   // username
+        owner : Text;   // username of user
         title : Text;
         text    : Text;
         draftedAT   : Int;
