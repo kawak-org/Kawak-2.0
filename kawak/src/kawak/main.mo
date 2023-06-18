@@ -95,7 +95,10 @@ shared (msg) actor class Kawak(
     stableBalanceEntries := [];
     stableAllowanceEntries := [];
 
-    
+    // Dip721 Post
+    _Brew_DIP721.postStable(stableLedger);
+    stableLedger := [];
+
 
     // Users postUpgrade
     _Users.postStable(stableProfileEntries);
