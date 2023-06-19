@@ -27,6 +27,10 @@ module {
             }
         };    
 
+        public func postStable(_ledger : [Types.TokenMetadata]){
+            ledger := Array.thaw(_ledger);
+        };
+
          /// Query methods
 
         // Function allows the canister to be queried

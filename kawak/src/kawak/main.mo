@@ -86,16 +86,16 @@ shared (msg) actor class Kawak(
     _Drafts.postStable(stableDraftsEntries);
     stableDraftsEntries := [];
 
-    // Annotation Post
+    // Annotation postUpgrade
     _Annotations.postStable(stableAnnotationEntries);
     stableAnnotationEntries := [];
 
-    // Dip20 Post
+    // Dip20 postUpgarde
     _Brew_DIP20.postStable(stableBalanceEntries, stableAllowanceEntries);
     stableBalanceEntries := [];
     stableAllowanceEntries := [];
 
-    // Dip721 Post
+    // Dip721 postUpgrade
     _Brew_DIP721.postStable(stableLedger);
     stableLedger := [];
 
@@ -104,7 +104,7 @@ shared (msg) actor class Kawak(
     _Users.postStable(stableProfileEntries);
     stableProfileEntries := [];
 
-    // Market PostUpgarde
+    // Market PpstUpgarde
     stableItems := [];
     stableMarketListingEntries := [];
   };
