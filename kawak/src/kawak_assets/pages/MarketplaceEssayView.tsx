@@ -5,7 +5,7 @@ import LexicalRichTextEditor from "../src/RichText/LexicalRichTextEditor";
 import MarketplaceSideBarCard from "../components/marketplace/MarketplaceSideBarCard";
 import { UserContext } from "../context/userContext";
 import Loader from "../components/Loaders/Loader";
-import { useGetNFTDetailsMP } from "../functions/contract";
+// import { useGetNFTDetailsMP } from "../functions/contract";
 import { useAppSelector } from "../redux/hooks";
 
 const MarketplaceEssayView = () => {
@@ -14,11 +14,11 @@ const MarketplaceEssayView = () => {
 	const { id } = useParams();
 	const nft = useAppSelector((state) => state.marketPlaceDetail);
 
-	const { handleGetDetails, loading } = useGetNFTDetailsMP();
+	// const { handleGetDetails, loading } = useGetNFTDetailsMP();
 
-	useEffect(() => {
-		handleGetDetails(id);
-	}, [id]);
+	// useEffect(() => {
+	// 	handleGetDetails(id);
+	// }, [id]);
 
 	return (
 		<div>
