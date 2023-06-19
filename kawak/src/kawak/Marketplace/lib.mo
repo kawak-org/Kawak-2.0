@@ -40,6 +40,10 @@ module {
             };
         };
 
+        // public func postStable(_marketListingEntries : [(Principal, Types.Listing)], items : Types.Listing){
+
+        // };
+
         // Restore local state from backup.
         public func _restore(backup : Types.LocalStableState) :  () {
             item := Array.thaw(backup.items);
