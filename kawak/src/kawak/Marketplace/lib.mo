@@ -40,9 +40,11 @@ module {
             };
         };
 
-        // public func postStable(_marketListingEntries : [(Principal, Types.Listing)], items : Types.Listing){
+        public func postStable(_marketListingEntries : [(Principal, Types.Listing)], _item : [Types.Listing]){
+            marketListings := HashMap.fromIter<Principal, Types.Listing>(_marketListingEntries.vals(), 10, Principal.equal, Principal.hash);
+            item := Array.thaw(_item);
 
-        // };
+        };
 
         // Restore local state from backup.
         public func _restore(backup : Types.LocalStableState) :  () {
