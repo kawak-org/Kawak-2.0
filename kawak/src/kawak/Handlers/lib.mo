@@ -273,6 +273,34 @@ module {
             EssayHashMap.replace(id, update);
         };
 
+        public func UpdatePublicStatus(pub : Bool, id : Nat) : () {
+            var essay = EssayHashMap.get(id);
+            switch(essay){
+                case(null){};
+                case(?essay) {
+                    var update = {
+                        id = essay.id;
+                        aid = essay.aid;
+                        owner = essay.owner;
+                        title = essay.title;
+                        topic = [essay.title];
+                        wordCount = essay.wordCount;
+                        //createdAt : Time;
+                        reviewTimes = essay.reviewTimes + 1;
+                        reviewed = true;
+                        essayCost = essay.essayCost;
+                        submittedAt = essay.submittedAt;
+                        text = essay.text;
+                        userDetails = essay.userDetails;
+                        reviews = essay.reviews;
+                        _public = pub;
+                        description = essay.description;
+                    };
+                    var updated = UpdateEssay(id, update); 
+                };
+            };
+        };
+
         // public func UpdateEssayReview(id : Nat, update)
 
         // public func UpdateEssay(id : Nat, title : Text, caller : Principal, owner : Text, topic : Text, wordCount : Nat, reviewTimes : Nat32, reviewed : Bool, essayCost : Nat, submittedAt : Int, text : Text) : () {
