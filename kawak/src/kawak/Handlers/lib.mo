@@ -102,13 +102,13 @@ module {
             };
         };
 
-        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry, reviews : [Types.AnnotationEntry], ) {
-            essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, []));
+        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry, reviews : [Types.AnnotationEntry], _public : Bool, description : Text) {
+            essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, [], _public, description));
         };
 
-        private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
-            EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, []));
-            UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, []));
+        private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry, _public : Bool, description : Text) {
+            EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, [], _public, description));
+            UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, [], _public, description));
         };
 
 
@@ -129,13 +129,13 @@ module {
         //     essayPK;
         // };
 
-        public func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text, caller : Principal) : Result.Result<(Nat, Text), Text> {
+        public func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text, caller : Principal, description : Text, _public : Bool) : Result.Result<(Nat, Text), Text> {
             var user = state._Users.getUser(caller);
             switch (user){
                 case(null){};
                 case(?user){
                     let username = user.userName;
-                        createOneEssay(caller, essayPK, username, title, topic, essay_word_count, essayCost, text, user, );
+                        createOneEssay(caller, essayPK, username, title, topic, essay_word_count, essayCost, text, user, _public, description);
                         essayPK += 1;
                         var updated = state._Users.updateUserBoolTokenBalance(user, essayCost, true, essayPK);
                         var _updated = state._Users._updateUserProfile(caller, updated);
@@ -231,9 +231,10 @@ module {
                                 text = essay.text;
                                 userDetails = essay.userDetails;
                                 reviews = Array.append(essay.reviews, [reviewUpdate]);
+                                _public = essay._public;
+                                description = essay.description;
                             };
-                            var updated = UpdateEssay(id, update);
-                            
+                            var updated = UpdateEssay(id, update);   
                         };
                     }
                 };
