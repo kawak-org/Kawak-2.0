@@ -78,7 +78,9 @@ module {
             submittedAt : Int,
             text : Text,
             userDetails : UsersTypes.UserEntry,
-            reviews : [Types.AnnotationEntry]
+            reviews : [Types.AnnotationEntry],
+            _public : Bool,
+            description : Text
         ) : EssayEntry {
             {
                 id : Nat;
@@ -95,10 +97,12 @@ module {
                 text : Text;
                 userDetails;
                 reviews;
+                _public;
+                description;
             };
         };
 
-        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry, reviews : [Types.AnnotationEntry]) {
+        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry, reviews : [Types.AnnotationEntry], ) {
             essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, []));
         };
 
