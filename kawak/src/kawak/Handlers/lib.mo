@@ -393,6 +393,8 @@ module {
                                 text = essay.text;
                                 userDetails = essay.userDetails;
                                 reviews = Array.append(essay.reviews, [reviewUpdate]);
+                                _public = essay._public;
+                                description = essay.description;
                             };
                             var updated = Essays(state).UpdateEssay(id, update);
                         };
