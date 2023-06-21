@@ -66,6 +66,8 @@ module {
         text : Text;
         userDetails : UsersTypes.UserEntry;
         reviews : [AnnotationEntry];
+        _public : Bool;
+        description : Text;
     };
 
     public type AnnotationEntry = {
