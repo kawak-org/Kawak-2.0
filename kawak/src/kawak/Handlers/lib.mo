@@ -159,9 +159,17 @@ module {
         };
 
         // Get all the essays in the forge
-        public func GetAllEssays() : ([(Nat, EssayEntry)]) {
-            Iter.toArray(EssayHashMap.entries());
+        public func GetAllEssays() : [EssayEntry] {
+            var buffer = Buffer.Buffer<EssayEntry>(0);
+            for ((i, j) in EssayHashMap.entries()){
+                if (j._public == true){
+                    buffer.add(j);
+                };
+            };
+            buffer.toArray();
         };
+
+        
 
         // public func GetAllEssays() : [Types.EssayEntry] {
         //     essays.toArray();
@@ -272,6 +280,18 @@ module {
         public func UpdateEssay(id : Nat, update : Types.EssayEntry) : ?Types.EssayEntry {
             EssayHashMap.replace(id, update);
         };
+
+        // public func checkStatus(id : Nat) : Bool {
+        //     var essay = EssayHashMap.get(id);
+        //     switch(essay){
+        //         case(null){
+        //             false;
+        //         };
+        //         case(?essay){
+
+        //         }
+        //     }
+        // };
 
         public func UpdatePublicStatus(pub : Bool, id : Nat) : () {
             var essay = EssayHashMap.get(id);

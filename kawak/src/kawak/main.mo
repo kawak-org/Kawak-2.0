@@ -201,6 +201,9 @@ shared (msg) actor class Kawak(
       _Essays.GetAllEssays();
     };
 
+    public shared ({caller}) func updatePublicStatus(pub: Bool, id : Nat){
+      _Essays.UpdatePublicStatus(pub, id);
+    };
 
     public shared ({caller}) func getFilteredEssays(topics : [Text]) : async [HandlersTypes.EssayEntry] {
       _Essays.GetFilteredEssays(topics);
