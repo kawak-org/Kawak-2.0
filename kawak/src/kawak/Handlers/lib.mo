@@ -78,7 +78,9 @@ module {
             submittedAt : Int,
             text : Text,
             userDetails : UsersTypes.UserEntry,
-            reviews : [Types.AnnotationEntry]
+            reviews : [Types.AnnotationEntry],
+            _public : Bool,
+            description : Text
         ) : EssayEntry {
             {
                 id : Nat;
@@ -95,16 +97,18 @@ module {
                 text : Text;
                 userDetails;
                 reviews;
+                _public;
+                description;
             };
         };
 
-        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry, reviews : [Types.AnnotationEntry]) {
-            essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, []));
+        private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry, reviews : [Types.AnnotationEntry], _public : Bool, description : Text) {
+            essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, [], _public, description));
         };
 
-        private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry) {
-            EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, []));
-            UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, []));
+        private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry, _public : Bool, description : Text) {
+            EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, [], _public, description));
+            UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, [], _public, description));
         };
 
 
@@ -125,13 +129,13 @@ module {
         //     essayPK;
         // };
 
-        public func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text, caller : Principal) : Result.Result<(Nat, Text), Text> {
+        public func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text, caller : Principal, description : Text, _public : Bool) : Result.Result<(Nat, Text), Text> {
             var user = state._Users.getUser(caller);
             switch (user){
                 case(null){};
                 case(?user){
                     let username = user.userName;
-                        createOneEssay(caller, essayPK, username, title, topic, essay_word_count, essayCost, text, user, );
+                        createOneEssay(caller, essayPK, username, title, topic, essay_word_count, essayCost, text, user, _public, description);
                         essayPK += 1;
                         var updated = state._Users.updateUserBoolTokenBalance(user, essayCost, true, essayPK);
                         var _updated = state._Users._updateUserProfile(caller, updated);
@@ -155,9 +159,17 @@ module {
         };
 
         // Get all the essays in the forge
-        public func GetAllEssays() : ([(Nat, EssayEntry)]) {
-            Iter.toArray(EssayHashMap.entries());
+        public func GetAllEssays() : [EssayEntry] {
+            var buffer = Buffer.Buffer<EssayEntry>(0);
+            for ((i, j) in EssayHashMap.entries()){
+                if (j._public == true){
+                    buffer.add(j);
+                };
+            };
+            buffer.toArray();
         };
+
+        
 
         // public func GetAllEssays() : [Types.EssayEntry] {
         //     essays.toArray();
@@ -227,9 +239,10 @@ module {
                                 text = essay.text;
                                 userDetails = essay.userDetails;
                                 reviews = Array.append(essay.reviews, [reviewUpdate]);
+                                _public = essay._public;
+                                description = essay.description;
                             };
-                            var updated = UpdateEssay(id, update);
-                            
+                            var updated = UpdateEssay(id, update);   
                         };
                     }
                 };
@@ -246,20 +259,66 @@ module {
 
         // filter function to search for essay
         public func GetFilteredEssays(topics : [Text]) : [Types.EssayEntry] {
-            var filteredEssays : [Types.EssayEntry] = [];
+            var filteredEssays : [Types.EssayEntry] = [];  //Temporay array that returns the filtered array
+
             for ((i, j) in EssayHashMap.entries()) {
-                for (topic in topics.vals()) {
-                    if (j.topic == topics) {
-                        filteredEssays := Array.append(filteredEssays, [j]);
-                    };
+                for (topic in topics.vals()) {  // Iterates through the topics argument
+                    for (_topic in j.topic.vals()){
+                        if (_topic == topic){
+                            filteredEssays := Array.append(filteredEssays, [j]);
+                        }
+                    }
+                    // if (j.topic == topics) {
+                    //     filteredEssays := Array.append(filteredEssays, [j]);
+                    // };
                 };
             };
             return filteredEssays;  
         };
 
-    // temp independewdnt func
+        // temp independent func
         public func UpdateEssay(id : Nat, update : Types.EssayEntry) : ?Types.EssayEntry {
             EssayHashMap.replace(id, update);
+        };
+
+        // public func checkStatus(id : Nat) : Bool {
+        //     var essay = EssayHashMap.get(id);
+        //     switch(essay){
+        //         case(null){
+        //             false;
+        //         };
+        //         case(?essay){
+
+        //         }
+        //     }
+        // };
+
+        public func UpdatePublicStatus(pub : Bool, id : Nat) : () {
+            var essay = EssayHashMap.get(id);
+            switch(essay){
+                case(null){};
+                case(?essay) {
+                    var update = {
+                        id = essay.id;
+                        aid = essay.aid;
+                        owner = essay.owner;
+                        title = essay.title;
+                        topic = [essay.title];
+                        wordCount = essay.wordCount;
+                        //createdAt : Time;
+                        reviewTimes = essay.reviewTimes + 1;
+                        reviewed = true;
+                        essayCost = essay.essayCost;
+                        submittedAt = essay.submittedAt;
+                        text = essay.text;
+                        userDetails = essay.userDetails;
+                        reviews = essay.reviews;
+                        _public = pub;
+                        description = essay.description;
+                    };
+                    var updated = UpdateEssay(id, update); 
+                };
+            };
         };
 
         // public func UpdateEssayReview(id : Nat, update)
@@ -382,6 +441,8 @@ module {
                                 text = essay.text;
                                 userDetails = essay.userDetails;
                                 reviews = Array.append(essay.reviews, [reviewUpdate]);
+                                _public = essay._public;
+                                description = essay.description;
                             };
                             var updated = Essays(state).UpdateEssay(id, update);
                         };

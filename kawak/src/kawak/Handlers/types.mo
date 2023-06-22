@@ -45,7 +45,7 @@ module {
 
     public type DraftEntry = {
         id : Nat;
-        owner : Text;   // username
+        owner : Text;   // username of user
         title : Text;
         text    : Text;
         draftedAT   : Int;
@@ -66,6 +66,8 @@ module {
         text : Text;
         userDetails : UsersTypes.UserEntry;
         reviews : [AnnotationEntry];
+        _public : Bool;
+        description : Text;
     };
 
     public type AnnotationEntry = {

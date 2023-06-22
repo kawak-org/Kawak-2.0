@@ -86,20 +86,25 @@ shared (msg) actor class Kawak(
     _Drafts.postStable(stableDraftsEntries);
     stableDraftsEntries := [];
 
-    // Annotation Post
+    // Annotation postUpgrade
     _Annotations.postStable(stableAnnotationEntries);
     stableAnnotationEntries := [];
 
-    // Dip Post
-    stableLedger := [];
+    // Dip20 postUpgarde
+    _Brew_DIP20.postStable(stableBalanceEntries, stableAllowanceEntries);
     stableBalanceEntries := [];
     stableAllowanceEntries := [];
+
+    // Dip721 postUpgrade
+    _Brew_DIP721.postStable(stableLedger);
+    stableLedger := [];
+
 
     // Users postUpgrade
     _Users.postStable(stableProfileEntries);
     stableProfileEntries := [];
 
-    // Market PostUpgarde
+    // Market PpstUpgarde
     stableItems := [];
     stableMarketListingEntries := [];
   };
@@ -179,12 +184,12 @@ shared (msg) actor class Kawak(
     AnnotationEntries = stableAnnotationEntries;
   });
 
-  public shared ({ caller }) func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<(Nat, Text), Text> {
+  public shared ({ caller }) func createEssay(title : Text, topic : [Text], essay_word_count : Nat, essayCost : Nat, text : Text, pub : Bool, description : Text) : async Result.Result<(Nat, Text), Text> {
     if (essay_word_count < 100) {
       throw Error.reject("$ Oooops! Minimum number of words should be 100. # ");
     };
     if (essayCost < _Users.getUserTokenBalance(caller) and (essayCost >= (essay_word_count / 100))){
-      _Essays.createEssay(title, topic, essay_word_count, essayCost, text, caller);
+      _Essays.createEssay(title, topic, essay_word_count, essayCost, text, caller, description, pub);
     }
     else {
       throw Error.reject("$ Awwwww!! Something went wrong, please make sure have enough tokens or contact us for advice # ");
@@ -192,8 +197,12 @@ shared (msg) actor class Kawak(
     
   };
 
-    public shared ({caller}) func getAllEssays() : async ([(Nat, HandlersTypes.EssayEntry)]) {
+    public shared ({caller}) func getAllEssays() : async [ HandlersTypes.EssayEntry] {
       _Essays.GetAllEssays();
+    };
+
+    public shared ({caller}) func updatePublicStatus(pub: Bool, id : Nat){
+      _Essays.UpdatePublicStatus(pub, id);
     };
 
     public shared ({caller}) func getFilteredEssays(topics : [Text]) : async [HandlersTypes.EssayEntry] {
