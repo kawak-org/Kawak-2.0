@@ -76,10 +76,10 @@ module.exports = {
       events: require.resolve("events/"),
       stream: require.resolve("stream-browserify/"),
       util: require.resolve("util/"),
-      path:require.resolve("path-browserify"),
+      path: require.resolve("path-browserify"),
       constants: require.resolve("constants-browserify"),
-      fs:false,
-      child_process: require.resolve('child_process'),
+      fs: false,
+      child_process: require.resolve("child_process"),
       // "spawn": false
     },
   },
@@ -167,5 +167,5 @@ module.exports = {
   },
   experiments: {
     topLevelAwait: true,
-  }
+  },
 };

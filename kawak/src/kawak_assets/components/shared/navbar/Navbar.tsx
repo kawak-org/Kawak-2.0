@@ -18,7 +18,7 @@ const Navbar = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const user = useAppSelector((state) => state.profile);
   const nfts = useAppSelector((state) => state.myNFT);
-
+  const navigate = useNavigate();
   const [theme, setTheme] = useState(localStorage.theme);
   const colorTheme = theme === "dark" ? "light" : "dark";
   const [isDarkMode, setIsDarkMode] = useState<boolean>(
@@ -79,7 +79,7 @@ const Navbar = () => {
 
       <div className=" flex sm:hidden mx-4">
         <IoIosMenu
-          className="w-[2rem] h-[2.2rem] cursor-pointer"
+          className="w-[2rem] dark:text-white/80 h-[2.2rem] cursor-pointer"
           onClick={() => setShowNavbar(true)}
         />
         {showNavbar && (
@@ -128,16 +128,19 @@ const Navbar = () => {
 										Display Settings
 									</p> */}
 
-                    <Link to="/terms-and-conditions">
-                      <p className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer">
-                        Terms of Use
-                      </p>
-                    </Link>
-                    <Link to="/privacy-policy">
-                      <p className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer">
-                        Privacy Policy
-                      </p>
-                    </Link>
+                    <p
+                      onClick={() => navigate("/terms-and-condition")}
+                      className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer"
+                    >
+                      Terms of Use
+                    </p>
+
+                    <p
+                      onClick={() => navigate("/privacy-policy")}
+                      className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer"
+                    >
+                      Privacy Policy
+                    </p>
                   </div>
                   <div className="border-b-[1px] bg-gray-400 my-3" />
                   <div className="flex flex-row  ">
@@ -158,41 +161,45 @@ const Navbar = () => {
             <div className=" flex flex-col justify-center mt-20 items-center w-full ">
               <NavLink
                 to="/forge"
+                style={{ textDecoration: "none" }}
                 className={({ isActive }) =>
                   isActive
-                    ? " text-white text-sm bg-[white]/10 px-6 py-2 mt-7 rounded-[4px]"
-                    : "text-white   mt-7 text-sm"
+                    ? " text-white text-sm hover:text-[white] bg-[white]/10 px-6 py-2 mt-7 rounded-[4px]"
+                    : "text-white hover:text-[white]  mt-7 text-sm"
                 }
               >
                 Forge
               </NavLink>
               <NavLink
+                style={{ textDecoration: "none" }}
                 to="/my-essay/all-essays"
                 className={({ isActive }) =>
                   isActive
-                    ? " text-white text-sm bg-[white]/10 px-6 py-2 mt-7 rounded-[4px]"
-                    : " text-white  mt-7 text-sm"
+                    ? " text-white text-sm hover:text-[white] bg-[white]/10 px-6 py-2 mt-7 rounded-[4px]"
+                    : " text-white hover:text-[white]  mt-7 text-sm"
                 }
               >
                 My Essay
               </NavLink>
               <NavLink
+                style={{ textDecoration: "none" }}
                 to="/my-NFTs"
                 className={({ isActive }) =>
                   isActive
-                    ? " text-white text-sm bg-[white]/10 px-6 py-2 mt-7 rounded-[4px]"
-                    : "text-white  mt-7 text-sm"
+                    ? " text-white text-sm hover:text-[white] bg-[white]/10 px-6 py-2 mt-7 rounded-[4px]"
+                    : "text-white  hover:text-[white] mt-7 text-sm"
                 }
               >
                 My NFts
               </NavLink>
 
               <NavLink
+                style={{ textDecoration: "none" }}
                 to="/marketplace"
                 className={({ isActive }) =>
                   isActive
-                    ? " text-white text-sm bg-[white]/10 px-6 py-2 mt-7 rounded-[4px]"
-                    : "text-white  mt-7 text-sm"
+                    ? " text-white hover:text-[white] text-sm bg-[white]/10 px-6 py-2 mt-7 rounded-[4px]"
+                    : "text-white hover:text-[white] mt-7 text-sm"
                 }
               >
                 Marketplace
@@ -216,41 +223,45 @@ const Navbar = () => {
 
       <div className=" hidden sm:flex mr-5 justify-center items-center ">
         <NavLink
+          style={{ textDecoration: "none" }}
           to="/forge"
           className={({ isActive }) =>
             isActive
-              ? " text-white text-sm bg-[white]/10 px-6 py-2 ml-7 rounded-[4px]"
-              : "text-white   ml-7 text-sm"
+              ? " text-white text-sm hover:text-[white] bg-[white]/10 px-6 py-2 ml-7 rounded-[4px]"
+              : "text-white  hover:text-[white]  ml-7 text-sm"
           }
         >
           Forge
         </NavLink>
         <NavLink
+          style={{ textDecoration: "none" }}
           to="/my-essay/all-essays"
           className={({ isActive }) =>
             isActive
-              ? " text-white text-sm bg-[white]/10 px-6 py-2 ml-7 rounded-[4px]"
-              : " text-white  ml-7 text-sm"
+              ? " text-white hover:text-[white] text-sm bg-[white]/10 px-6 py-2 ml-7 rounded-[4px]"
+              : " text-white  hover:text-[white] ml-7 text-sm"
           }
         >
           My Essay
         </NavLink>
         <NavLink
+          style={{ textDecoration: "none" }}
           to="/my-NFTs"
           className={({ isActive }) =>
             isActive
-              ? " text-white text-sm bg-[white]/10 px-6 py-2 ml-7 rounded-[4px]"
-              : "text-white  ml-7 text-sm"
+              ? " text-white text-sm hover:text-[white] bg-[white]/10 px-6 py-2 ml-7 rounded-[4px]"
+              : "text-white  hover:text-[white] ml-7 text-sm"
           }
         >
           My NFts
         </NavLink>
         <NavLink
+          style={{ textDecoration: "none" }}
           to="/marketplace"
           className={({ isActive }) =>
             isActive
-              ? " text-white text-sm bg-[white]/10 px-6 py-2 ml-7 rounded-[4px]"
-              : "text-white  ml-7 text-sm"
+              ? " text-white hover:text-[white] text-sm bg-[white]/10 px-6 py-2 ml-7 rounded-[4px]"
+              : "text-white  hover:text-[white] ml-7 text-sm"
           }
         >
           Marketplace
@@ -297,16 +308,20 @@ const Navbar = () => {
 								Display Settings
 							</p> */}
 
-              <Link to="/terms-and-conditions">
-                <p className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer">
-                  Terms of Use
-                </p>
-              </Link>
-              <Link to="/privacy-policy">
-                <p className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer">
-                  Privacy Policy
-                </p>
-              </Link>
+              <p
+                onClick={() => navigate("/terms-and-condition")}
+                className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer"
+              >
+                Terms of Use
+              </p>
+
+              <p
+                onClick={() => navigate("/privacy-policy")}
+                className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer"
+              >
+                Privacy Policy
+              </p>
+
               <div className="flex items-center justify-between text-gray-500 text-xs my-2  p-1 hover:w-full font-normal c">
                 <p> Toggle mode</p>
                 <DarkModeToggle
@@ -350,7 +365,7 @@ const Navbar = () => {
 						</p> */}
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 mt-4">
-            <Link to="/my-essay/all-essays">
+            <Link style={{ textDecoration: "none" }} to="/my-essay/all-essays">
               <div
                 className="bg-[#F98E2D]/30 dark:bg-[#F98E2D]/40 h-[6rem] w-[6.2rem] sm:h-[7rem] sm:w-[7.2rem] rounded-[10px] cursor-pointer flex flex-col items-center
 															p-6"
@@ -374,7 +389,7 @@ const Navbar = () => {
                 Reviewing Essay
               </h1>
             </div>
-            <Link to="/my-NFTs">
+            <Link style={{ textDecoration: "none" }} to="/my-NFTs">
               <div
                 className="bg-[#F98E2D]/30 dark:bg-[#F98E2D]/40 h-[6rem] w-[6.2rem] sm:h-[7rem] sm:w-[7.2rem] cursor-pointer rounded-[10px] flex flex-col items-center
 															p-6"
@@ -387,7 +402,7 @@ const Navbar = () => {
                 </h1>
               </div>
             </Link>
-            <Link to="/my-essay/draft">
+            <Link style={{ textDecoration: "none" }} to="/my-essay/draft">
               <div
                 className="bg-[#F98E2D]/30 dark:bg-[#F98E2D]/40 h-[6rem] w-[6.2rem] sm:h-[7rem] sm:w-[7.2rem] cursor-pointer rounded-[10px] flex flex-col items-center
 															p-6"
