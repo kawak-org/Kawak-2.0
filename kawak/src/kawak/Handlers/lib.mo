@@ -242,7 +242,7 @@ module {
                                 _public = essay._public;
                                 description = essay.description;
                             };
-                            var updated = UpdateEssay(id, update);   
+                            var updated = EssayHashMap.replace(id, update);   
                         };
                     }
                 };
