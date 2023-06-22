@@ -197,7 +197,7 @@ shared (msg) actor class Kawak(
     
   };
 
-    public shared ({caller}) func getAllEssays() : async ([(Nat, HandlersTypes.EssayEntry)]) {
+    public shared ({caller}) func getAllEssays() : async [ HandlersTypes.EssayEntry] {
       _Essays.GetAllEssays();
     };
 
