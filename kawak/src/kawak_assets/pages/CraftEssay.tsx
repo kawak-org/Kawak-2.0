@@ -25,6 +25,8 @@ import { EssayEditorContext } from "../context/EssayEditorContext";
 // import CustomPrompt from "../utils/navigation-block/CustomPrompt";
 import { addToMyDraft, updateDraftItem } from "../redux/slice/draftSlice";
 import TagInput from "../components/Tag/TagInput";
+import Toggle from 'react-toggle'
+import "react-toggle/style.css" // for ES6 modules
 // const topics: SearchOptionProps[] = [
 // 	{ id: 1, name: "Select topic", disabled: true },
 // 	{ id: 2, name: "Development" },
@@ -48,6 +50,7 @@ const CraftEssay = () => {
   const [pdf, setPdf] = useState("")
 
 
+
   const {
     essay,
     setEssay,
@@ -60,7 +63,11 @@ const CraftEssay = () => {
     setEssayCost,
     editingDraftId,
     setEditingDraftId,
-    convertHTMLtoEditorContent
+    convertHTMLtoEditorContent,
+    visibility, 
+    setVisibility,
+    description,
+    setDescription
   } = useContext(EssayEditorContext);
 
   const { actor } = useContext(UserContext);
@@ -81,10 +88,12 @@ const CraftEssay = () => {
     reviewed: false,
     reviewTimes: 0,
     avatar: user.avatar,
+    public:visibility,
+    description
   };
 
   const handleSubmit = async () => {
-    console.log(essayEntry);
+    // console.log(essayEntry);
     if (essayWords < 100) {
       toast.error("essay can't be lesser than a 100 words");
       return;
@@ -104,7 +113,9 @@ const CraftEssay = () => {
           essayEntry.topic,
           BigInt(essayWords),
           essayEntry.essayCost,
-          essayEntry.text
+          essayEntry.text,
+          visibility,
+          description
         )
         .then((d) => {
           if (d) {
@@ -126,6 +137,7 @@ const CraftEssay = () => {
             toast.success("Essay Created");
             dispatch(resetCount());
             localStorage.removeItem("last_essay");
+            console.log(d)
             navigate(`/forge`);
           }
         })
@@ -252,7 +264,10 @@ const CraftEssay = () => {
       convertHTMLtoEditorContent(data)
     })
   }
+const handleSetVisibility = (e:any) => {
+  setVisibility(e.target.checked)
 
+}
 
   return (
     <div className="">
@@ -277,6 +292,12 @@ const CraftEssay = () => {
                 placeholder="Enter title here......"
               />
               <TagInput />
+              <input
+                value={description}
+                onChange={(e: any) => setDescription(e.target.value)}
+                className="text-md mt-5 py-4 px-5 outline-none border dark:bg-[#323f4b] dark:border-[#3e5060] border-gray-200  dark:text-white text-red.500 rounded-md placeholder:text-xl placeholder:font-bold dark:placeholder:text-white/70 placeholder:text-[#141414A6] w-[100%]"
+                placeholder="Enter a short description of your essay......"
+              />
             </div>
             {/* word count */}
             <div className="flex place-content-end gap-3 mt-10 w-[80%]">
@@ -339,7 +360,12 @@ const CraftEssay = () => {
                 {title}
               </p>
               <div className="flex gap-4 items-center dark:text-white">
-                Tokens
+              <p>Public</p>
+              <Toggle
+               checked={visibility}
+               onChange={(e) => handleSetVisibility(e)} />
+
+                   <p>Tokens</p>
                 <input
                   className="py-1 px-1 w-12 h-6 rounded-sm dark:bg-[#323f4b] dark:text-white dark:border-[#3e5060] border-[#141414A6] border-1"
                   type="number"

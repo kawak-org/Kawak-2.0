@@ -87,7 +87,8 @@ export const useGetAllEssays = () => {
       const data = await actor?.getAllEssays();
       if (data) {
         for (let i = 0; i < data.length; i++) {
-          const val = data[i][1];
+          const val = data[i];
+         
           var val_: EssayType = {
             id: Number(val.id),
             essayCost: Number(val.essayCost),
@@ -98,6 +99,8 @@ export const useGetAllEssays = () => {
             text: val.text,
             title: val.title,
             reviewTimes: Number(val.reviewTimes),
+            public:val._public,
+            description: val.description
           };
           dispatch(addToForge(val_));
         }
@@ -125,8 +128,9 @@ export const useGetRecentForge = () => {
       setLoading(true);
       const data = await actor?.getAllEssays();
       if (data) {
+        console.log(data)
         for (let i = 0; i < data.length; i++) {
-          const val = data[i][1];
+          const val = data[i];
           var val_: EssayType = {
             id: Number(val.id),
             essayCost: Number(val.essayCost),
@@ -137,6 +141,8 @@ export const useGetRecentForge = () => {
             text: val.text,
             title: val.title,
             reviewTimes: Number(val.reviewTimes),
+            public:val._public,
+            description: val.description
           };
           array.push(val_);
         }
@@ -221,6 +227,8 @@ export const useGetMyEssays = () => {
             text: val.text,
             title: val.title,
             reviewTimes: Number(val.reviewTimes),
+            public:val._public,
+            description: val.description
           };
           dispatch(addToMyEssay(val_));
         }

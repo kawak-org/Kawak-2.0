@@ -16,6 +16,10 @@ export const EssayEditorContext = React.createContext<{
   editingDraftId: number | null;
   setEditingDraftId: any;
   convertHTMLtoEditorContent: (arg2: string) => void;
+  visibility:boolean;
+  setVisibility:any;
+  description:string;
+  setDescription:any
 }>({
   essay: "",
   setEssay: undefined,
@@ -31,6 +35,10 @@ export const EssayEditorContext = React.createContext<{
   editingDraftId: null,
   setEditingDraftId: undefined,
   convertHTMLtoEditorContent: undefined,
+  visibility:false,
+  setVisibility:undefined,
+  description:"",
+  setDescription:undefined
 });
 
 export const EssayEditorProvider = ({ children }) => {
@@ -42,6 +50,8 @@ export const EssayEditorProvider = ({ children }) => {
   const [essayCost, setEssayCost] = useState(0);
   const [essay, setEssay] = useState("");
   const [editingDraftId, setEditingDraftId] = useState(null);
+  const [visibility, setVisibility] = useState(false)
+  const [description, setDescription] = useState("")
 
 
   const handleChange = (state: any) => {
@@ -82,6 +92,10 @@ export const EssayEditorProvider = ({ children }) => {
         editingDraftId,
         setEditingDraftId,
         convertHTMLtoEditorContent,
+      visibility, 
+      setVisibility,
+      description,
+      setDescription
       }}
     >
       {children}
