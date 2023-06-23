@@ -306,8 +306,8 @@ module {
                         topic = [essay.title];
                         wordCount = essay.wordCount;
                         //createdAt : Time;
-                        reviewTimes = essay.reviewTimes + 1;
-                        reviewed = true;
+                        reviewTimes = essay.reviewTimes;
+                        reviewed = essay.reviewed;
                         essayCost = essay.essayCost;
                         submittedAt = essay.submittedAt;
                         text = essay.text;
