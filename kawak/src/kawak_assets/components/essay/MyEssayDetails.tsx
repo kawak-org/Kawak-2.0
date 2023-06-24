@@ -16,7 +16,7 @@ import { BiArrowBack } from "react-icons/bi";
 import { useMatomo } from "@datapunt/matomo-tracker-react";
 import FeedbackModal from "../../components/Modal/FeedbackModal";
 import Loader from "../Loaders/Loader";
-import CustomPrompt from "../../utils/navigation-block/CustomPrompt";
+// import CustomPrompt from "../../utils/navigation-block/CustomPrompt";
 
 type ReviewType = {
   user: Principal;
@@ -69,6 +69,7 @@ const MyEssayDetails = () => {
             setEssay(value);
             // console.log(value)
             setIsLoading2(false);
+            console.log(d)
           }
         })
         .catch((err) => {
@@ -86,6 +87,7 @@ const MyEssayDetails = () => {
     				// 	rated : d.rated
     				// }
     				setReview(d);
+            // setReviewerPrincipal(d.)
     				console.log(d);
     				return;
     			}
@@ -107,28 +109,28 @@ const MyEssayDetails = () => {
   };
 
   const submitRating = () => {
-    // setModalLoading(true);
-    // console.log(id, rating);
-    // actor
-    // 	.addRating(BigInt(id), BigInt(rating))
-    // 	.then((data) => {
-    // 		// Track Essay Draft Event
-    // 		trackEvent({
-    // 			category: "Essay",
-    // 			action: "Rated An Essay",
-    // 			documentTitle: "Essay Details Page",
-    // 			href: window.location.href,
-    // 		});
-    // 		console.log("add rating result", data);
-    // 		toast.success("User's rating successfully added");
-    // 		setModalLoading(false);
-    // 		navigate(-1);
-    // 	})
-    // 	.catch((err) => {
-    // 		console.log(err);
-    // 		setModalLoading(false);
-    // 		toast.error(err);
-    // 	});
+    setModalLoading(true);
+    console.log(id, rating);
+    actor
+    	.addRating(BigInt(id), BigInt(rating), review[0]?.user)
+    	.then((data) => {
+    		// Track Essay Draft Event
+    		// trackEvent({
+    		// 	category: "Essay",
+    		// 	action: "Rated An Essay",
+    		// 	documentTitle: "Essay Details Page",
+    		// 	href: window.location.href,
+    		// });
+    		console.log("add rating result", data);
+    		toast.success("User's rating successfully added");
+    		setModalLoading(false);
+    		navigate(-1);
+    	})
+    	.catch((err) => {
+    		console.log(err);
+    		setModalLoading(false);
+    		toast.error(err);
+    	});
   };
   const handleMintAsEssay = () => {};
 
@@ -144,10 +146,10 @@ const MyEssayDetails = () => {
   } else if (value) {
     return (
       <div className="">
-        <CustomPrompt
+        {/* <CustomPrompt
           when={deleting || modalLoading || isLoading2}
           message="You gonna lose your data, are you sure?"
-        />
+        /> */}
         <Navbar />
 
         <div className="relative px-6 mb-8 mt-[6rem]">

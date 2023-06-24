@@ -27,6 +27,10 @@ module {
             }
         };    
 
+        public func postStable(_ledger : [Types.TokenMetadata]){
+            ledger := Array.thaw(_ledger);
+        };
+
          /// Query methods
 
         // Function allows the canister to be queried
@@ -189,6 +193,14 @@ module {
                 allowanceEntries;
             }
         };    
+
+        public func postStable(_balanceEntries : [(Principal, Nat)], _allowanceEntries : [(Principal, [(Principal, Nat)])]) {
+            balances := HashMap.fromIter<Principal, Nat>(_balanceEntries.vals(), 10, Principal.equal, Principal.hash);
+            for ((k, v) in _allowanceEntries.vals()) {
+                let allowed_temp = HashMap.fromIter<Principal, Nat>(v.vals(), 10, Principal.equal, Principal.hash);
+                allowances.put(k, allowed_temp);
+            };
+        };
 
         private func _unwrap<T>(x : ?T) : T {
             switch x {

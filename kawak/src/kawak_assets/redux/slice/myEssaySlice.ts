@@ -11,6 +11,8 @@ export type EssayType = {
 	wordCount: number;
 	essayCost: number;
 	reviewTimes: number;
+	public:boolean;
+	description:string;
 };
 
 // Define the initial state using that type

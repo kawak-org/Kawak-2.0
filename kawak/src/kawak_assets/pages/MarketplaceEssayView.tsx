@@ -16,9 +16,9 @@ const MarketplaceEssayView = () => {
 
 	// const { handleGetDetails, loading } = useGetNFTDetailsMP();
 
-	useEffect(() => {
-		// handleGetDetails(id);
-	}, [id]);
+	// useEffect(() => {
+	// 	handleGetDetails(id);
+	// }, [id]);
 
 	return (
 		<div>

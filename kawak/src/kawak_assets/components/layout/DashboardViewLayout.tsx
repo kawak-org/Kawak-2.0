@@ -39,6 +39,8 @@ const DashboardViewLayout = ({ heading }: Props) => {
         title: string;
         reviewed: boolean;
         avatar: string;
+        public:boolean;
+        description:string
       }) => (
         <Link
           key={d.id}
