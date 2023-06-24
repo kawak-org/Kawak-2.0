@@ -242,7 +242,7 @@ module {
                                 _public = essay._public;
                                 description = essay.description;
                             };
-                            var updated = UpdateEssay(id, update);   
+                            var updated = EssayHashMap.replace(id, update);   
                         };
                     }
                 };
@@ -306,8 +306,8 @@ module {
                         topic = [essay.title];
                         wordCount = essay.wordCount;
                         //createdAt : Time;
-                        reviewTimes = essay.reviewTimes + 1;
-                        reviewed = true;
+                        reviewTimes = essay.reviewTimes;
+                        reviewed = essay.reviewed;
                         essayCost = essay.essayCost;
                         submittedAt = essay.submittedAt;
                         text = essay.text;
@@ -315,6 +315,34 @@ module {
                         reviews = essay.reviews;
                         _public = pub;
                         description = essay.description;
+                    };
+                    var updated = UpdateEssay(id, update); 
+                };
+            };
+        };
+
+        public func UpdateDescription(desc : Text, id : Nat) : () {
+            var essay = EssayHashMap.get(id);
+            switch(essay){
+                case(null){};
+                case(?essay) {
+                    var update = {
+                        id = essay.id;
+                        aid = essay.aid;
+                        owner = essay.owner;
+                        title = essay.title;
+                        topic = [essay.title];
+                        wordCount = essay.wordCount;
+                        //createdAt : Time;
+                        reviewTimes = essay.reviewTimes;
+                        reviewed = essay.reviewed;
+                        essayCost = essay.essayCost;
+                        submittedAt = essay.submittedAt;
+                        text = essay.text;
+                        userDetails = essay.userDetails;
+                        reviews = essay.reviews;
+                        _public = essay._public;
+                        description = desc;
                     };
                     var updated = UpdateEssay(id, update); 
                 };
