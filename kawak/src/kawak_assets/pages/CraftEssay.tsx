@@ -106,6 +106,7 @@ const CraftEssay = () => {
           essayEntry.essayCost,
           essayEntry.text
         )
+        
         .then((d) => {
           if (d) {
             // Track Create Essay Event
