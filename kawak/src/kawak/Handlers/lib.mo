@@ -220,6 +220,7 @@ module {
                         quote = quote;
                         rated = false;
                     };
+                    
                     var essay = GetEssay(id);
                     switch(essay){
                         case(null){};

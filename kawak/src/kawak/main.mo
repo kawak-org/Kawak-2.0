@@ -209,9 +209,13 @@ shared (msg) actor class Kawak(
       _Essays.GetFilteredEssays(topics);
     };
 
-    public shared ({caller}) func updateDescription(desc : Text, id : Nat) : async (){
-      _Essays.UpdateDescription(desc, id);
+    public shared ({caller}) func EssayAnnotate(id : Nat, comments : Text, quote : Text) : (){
+      _Essays.EssayAnnotate(caller, id, comments, quote);
     };
+
+    // public shared ({caller}) func updateDescription(desc : Text, id : Nat) : async (){
+    //   _Essays.UpdateDescription(desc, id);
+    // };
 
     public shared ({caller}) func getUserEssays(userName : Text) : async ?[HandlersTypes.EssayEntry] {
       _Essays.GetUserEssays(userName);
