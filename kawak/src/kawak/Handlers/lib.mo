@@ -203,6 +203,8 @@ module {
         //         temp.toArray();
         //     };
         // };
+
+        
         // returns an essay of the id
         public func GetEssay(id : Nat) : ?Types.EssayEntry {
             EssayHashMap.get(id);
