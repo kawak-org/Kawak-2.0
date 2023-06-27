@@ -40,6 +40,7 @@ const MyEssayDetails = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [rateModal, setRateModal] = useState(false);
   const [showComment, setShowComment] = useState(false);
+  const [reviewId, setReviewId] = useState(null)
   // const [openComment, setOpenComment] = useState(false);
   const { trackEvent } = useMatomo();
   const unserialized =
@@ -69,7 +70,7 @@ const MyEssayDetails = () => {
             setEssay(value);
             // console.log(value)
             setIsLoading2(false);
-            console.log(d)
+            // console.log(d)
           }
         })
         .catch((err) => {
@@ -88,7 +89,8 @@ const MyEssayDetails = () => {
     				// }
     				setReview(d);
             // setReviewerPrincipal(d.)
-    				console.log(d);
+    				console.log(d[0].id);
+            setReviewId(d[0].id)
     				return;
     			}
     		})
@@ -112,7 +114,7 @@ const MyEssayDetails = () => {
     setModalLoading(true);
     console.log(id, rating);
     actor
-    	.addRating(BigInt(id), BigInt(rating), review[0]?.user)
+    	.addRating(BigInt(reviewId), BigInt(rating), review[0]?.user)
     	.then((data) => {
     		// Track Essay Draft Event
     		// trackEvent({
