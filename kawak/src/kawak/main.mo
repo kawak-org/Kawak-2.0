@@ -213,6 +213,8 @@ shared (msg) actor class Kawak(
       _Essays.EssayAnnotate(caller, id, comments, quote);
     };
 
+
+
     // public shared ({caller}) func updateDescription(desc : Text, id : Nat) : async (){
     //   _Essays.UpdateDescription(desc, id);
     // };
@@ -369,6 +371,10 @@ shared (msg) actor class Kawak(
    public shared ({caller}) func ListItem(tokenId : Nat, price : Nat64) : async Nat {
     _Market.mp_ListItem(caller, tokenId, price);
   };
+
+  // public shared ({caller}) func ViewMarket() : async [MarketplaceTypes.Listing]{
+  //   _Market.mp_viewMarket()
+  // };
 
 
 

@@ -24,6 +24,7 @@ module {
         public type EssayEntry = Types.EssayEntry;
 
         public var essayPK : Nat = 0;
+      
 
         var EssayEntries : [(Nat, EssayEntry)] = [];
         var UserEssayEntries : [(Principal, EssayEntry)] = [];
@@ -158,6 +159,10 @@ module {
             };
         };
 
+        // public func getAnnotationID() : Nat{
+        //     annotationPK;
+        // };
+
         // Get all the essays in the forge
         public func GetAllEssays() : [EssayEntry] {
             var buffer = Buffer.Buffer<EssayEntry>(0);
@@ -210,23 +215,24 @@ module {
 
         public func EssayAnnotate(caller : Principal, id : Nat, comments : Text, quote : Text) : (){
             var user = state._Users.getUser(caller);
+            var annotationPK : Nat = 0;
             switch (user){
                 case(null){};
                 case(?user){
                     var reviewUpdate = {
-                        id = id;
+                        id = annotationPK;
                         user = caller;
                         comments = comments;
                         quote = quote;
                         rated = false;
                     };
-                    
+                    annotationPK += 1;
                     var essay = GetEssay(id);
                     switch(essay){
                         case(null){};
                         case(?essay){
                             var update = {
-                                id = essay.id;
+                                id = id;
                                 aid = essay.aid;
                                 owner = essay.owner;
                                 title = essay.title;
@@ -450,32 +456,32 @@ module {
                         rated = false;
                     };
                     AnnotationHashMap.put(id, reviewUpdate);
-                    var essay = Essays(state).GetEssay(id);
-                    switch(essay) {
-                        case(null){
-                        };
-                        case (?essay) {
-                            var update = {
-                                id = essay.id;
-                                aid = essay.aid;
-                                owner = essay.owner;
-                                title = essay.title;
-                                topic = [essay.title];
-                                wordCount = essay.wordCount;
-                                //createdAt : Time;
-                                reviewTimes = essay.reviewTimes + 1;
-                                reviewed = true;
-                                essayCost = essay.essayCost;
-                                submittedAt = essay.submittedAt;
-                                text = essay.text;
-                                userDetails = essay.userDetails;
-                                reviews = Array.append(essay.reviews, [reviewUpdate]);
-                                _public = essay._public;
-                                description = essay.description;
-                            };
-                            var updated = Essays(state).UpdateEssay(id, update);
-                        };
-                    };
+                    // var essay = Essays(state).GetEssay(id);
+                    // switch(essay) {
+                    //     case(null){
+                    //     };
+                    //     case (?essay) {
+                    //         var update = {
+                    //             id = essay.id;
+                    //             aid = essay.aid;
+                    //             owner = essay.owner;
+                    //             title = essay.title;
+                    //             topic = [essay.title];
+                    //             wordCount = essay.wordCount;
+                    //             //createdAt : Time;
+                    //             reviewTimes = essay.reviewTimes + 1;
+                    //             reviewed = true;
+                    //             essayCost = essay.essayCost;
+                    //             submittedAt = essay.submittedAt;
+                    //             text = essay.text;
+                    //             userDetails = essay.userDetails;
+                    //             reviews = Array.append(essay.reviews, [reviewUpdate]);
+                    //             _public = essay._public;
+                    //             description = essay.description;
+                    //         };
+                    //         var updated = Essays(state).UpdateEssay(id, update);
+                    //     };
+                    // };
                 };
             }
 
