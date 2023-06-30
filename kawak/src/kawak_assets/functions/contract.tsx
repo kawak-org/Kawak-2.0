@@ -360,6 +360,45 @@ export const useListNFTonMarketPlace = () => {
 	}
 };
 
+  export const useGetNFTDetailsMP = () => {
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    try {
+      const { actor } = useContext(UserContext);
+      const handleGetDetails = (nftId: string) => {
+        // setLoading(true);
+        // actor
+        //   .mp_viewListedNFT(BigInt(nftId))
+        //   .then((d: any) => {
+        //     console.log("detail", d);
+        //     const data = {
+        //       id: Number(d.ok.itemId),
+        //       owner: d.ok.metadata.userEntry[0].userName,
+        //       content: d.ok.metadata.content,
+        //       title: d.ok.metadata.title,
+        //       price: Number(d.ok.price),
+        //       listed: d.ok.status.listed,
+        //       avatar: d.ok.metadata.userEntry[0].avatar,
+        //     };
+        //     // console.log("data", data, d);
+        //     dispatch(addMarketPlaceDetail(data));
+        //     setLoading(false);
+        //   })
+        //   .catch((err) => {
+        //     ErrorHandler(err);
+        //     setLoading(false);
+        //   });
+      };
+  
+      return { handleGetDetails, loading };
+    } catch (err) {
+      toast.error("something went wrong");
+      setLoading(false);
+    }
+  };
+
+
 //SEARCH
 
 export const useFilterEssay = () => {

@@ -70,7 +70,8 @@ const MyEssayDetails = () => {
             setEssay(value);
             // console.log(value)
             setIsLoading2(false);
-            // console.log(d)
+            console.log("annotation", d)
+
           }
         })
         .catch((err) => {
@@ -87,10 +88,10 @@ const MyEssayDetails = () => {
     				// 	user : d.user,
     				// 	rated : d.rated
     				// }
-    				setReview(d);
+    				// setReview(d);
             // setReviewerPrincipal(d.)
-    				console.log(d[0].id);
-            setReviewId(d[0].id)
+    				console.log(d);
+            // setReviewId(d[0].id)
     				return;
     			}
     		})
@@ -98,7 +99,7 @@ const MyEssayDetails = () => {
     			toast.error("something went wrong");
     			console.log(err);
     		});
-    };
+    };  
     getReviews();
     callOnMount();
   }, []);

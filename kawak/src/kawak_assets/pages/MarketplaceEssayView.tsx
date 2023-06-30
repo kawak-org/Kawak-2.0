@@ -5,7 +5,7 @@ import LexicalRichTextEditor from "../src/RichText/LexicalRichTextEditor";
 import MarketplaceSideBarCard from "../components/marketplace/MarketplaceSideBarCard";
 import { UserContext } from "../context/userContext";
 import Loader from "../components/Loaders/Loader";
-// import { useGetNFTDetailsMP } from "../functions/contract";
+import { useGetNFTDetailsMP } from "../functions/contract";
 import { useAppSelector } from "../redux/hooks";
 
 const MarketplaceEssayView = () => {
@@ -14,20 +14,20 @@ const MarketplaceEssayView = () => {
 	const { id } = useParams();
 	const nft = useAppSelector((state) => state.marketPlaceDetail);
 
-	// const { handleGetDetails, loading } = useGetNFTDetailsMP();
+	const { handleGetDetails, loading } = useGetNFTDetailsMP();
 
-	// useEffect(() => {
-	// 	handleGetDetails(id);
-	// }, [id]);
+	useEffect(() => {
+		handleGetDetails(id);
+	}, [id]);
 
 	return (
 		<div>
 			<Navbar2 />
-			{/* {loading ? ( */}
+			{loading ? (
 				<div className='className=" w-full h-screen flex m-auto justify-center items-center mt-[-5rem] '>
 					<Loader />
 				</div>
-			{/* ) : ( */}
+			) : (
 				<div className='relative px-6 mb-8 mt-[6rem]'>
 					<div className='flex flex-col relative'>
 						<div className='flex flex-row gap-6 relative'>
@@ -51,7 +51,7 @@ const MarketplaceEssayView = () => {
 						</div>
 					</div>
 				</div>
-			{/* )} */}
+			 )} 
 		</div>
 	);
 };

@@ -95,7 +95,7 @@ const EssayDetails = () => {
   const handleSubmit = () => {
     setIsLoading(true);
     actor
-      .addAnnotation(BigInt(id), HighlightEssay, annotation)
+      .EssayAnnotate(BigInt(id), HighlightEssay, annotation)
       .then((d) => {
         // Track Annotation Event
         trackEvent({
@@ -185,18 +185,18 @@ const EssayDetails = () => {
                     <LexicalRichTextEditor essay={essay[0].text} />
                     <div className="flex flex-col my-5 space-y-5 justify-center items-center">
                       <div>
-                        {essay[0].reviewed === false ? (
+                        {/* {essay[0].reviewed === false ? ( */}
                           <button
                             onClick={changeSection}
                             className="py-2 px-14 text-white bg-[#F98E2D] dark:bg-[#627D98] dark:hover:text-white dark:hover:bg-[#9AA5B1] hover:bg-[#F98E2D]/30 hover:text-black"
                           >
                             {isLoading3 ? "just a sec..." : "Review Essay"}
                           </button>
-                        ) : (
+                        {/* ) : (
                           <div className="bg-[#08172E]/20 py-2 px-4 sm:px-14">
                             This essay has been reviewed already
                           </div>
-                        )}
+                        )} */}
                       </div>
                     </div>
                   </div>
