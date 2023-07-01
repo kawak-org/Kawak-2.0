@@ -83,7 +83,7 @@ const MyEssayDetails = () => {
             setVisibility(value[0]._public)
             // console.log(value)
             const rev: [ReviewType]  = [null]
-            // console.log("annotation", d)
+            console.log(d)
             dispatch(clearAnnotation())
             const dd = d[0]?.reviews.map((review) => {
               const val = {
