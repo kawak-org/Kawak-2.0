@@ -213,7 +213,7 @@ module {
             EssayHashMap.get(id);
         };
 
-        public func EssayAnnotate(caller : Principal, id : Nat, comments : Text, quote : Text) : (){
+        public func EssayAnnotate(caller : Principal, essayID : Nat, comments : Text, quote : Text) : (){
             var user = state._Users.getUser(caller);
             var annotationPK : Nat = 0;
             switch (user){
@@ -221,18 +221,19 @@ module {
                 case(?user){
                     var reviewUpdate = {
                         id = annotationPK;
+                        essayID = essayID;
                         user = caller;
                         comments = comments;
                         quote = quote;
                         rated = false;
                     };
                     annotationPK += 1;
-                    var essay = GetEssay(id);
+                    var essay = GetEssay(essayID);
                     switch(essay){
                         case(null){};
                         case(?essay){
                             var update = {
-                                id = id;
+                                id = essayID;
                                 aid = essay.aid;
                                 owner = essay.owner;
                                 title = essay.title;
@@ -249,7 +250,7 @@ module {
                                 _public = essay._public;
                                 description = essay.description;
                             };
-                            var updated = EssayHashMap.replace(id, update);   
+                            var updated = EssayHashMap.replace(essayID, update);   
                         };
                     }
                 };
@@ -418,6 +419,9 @@ module {
         var AnnotationHashMap : HashMap.HashMap<Nat, AnnotationEntry> = HashMap.fromIter(AnnotationEntries.vals(), 1, Nat.equal, Hash.hash);
         var annotations : Buffer.Buffer<AnnotationEntry> = Buffer.Buffer(0);
 
+        public var annotationPK : Nat = 0;
+
+
         // for (annotation in state.annotations.vals()) {
         //     annotations.add(annotation)
         // };
@@ -449,7 +453,8 @@ module {
                 case (?user) {
                     // var current = 
                     var reviewUpdate = {
-                        id = id;
+                        id = annotationPK;
+                        essayID = id;
                         user = caller;
                         comments = comments;
                         quote = quote;
@@ -487,8 +492,8 @@ module {
 
         };
 
-        public func GetAnnotations(id : Nat) : ?AnnotationEntry {
-            var hahs = AnnotationHashMap.get(id);
+        public func GetAnnotations(annotationPK : Nat) : ?AnnotationEntry {
+            var hahs = AnnotationHashMap.get(annotationPK);
 
             switch (hahs) {
                 case (null) {
@@ -498,6 +503,16 @@ module {
                     return ?hahs;
                 };
             };
+        };
+
+        public func GetAnnotation_EssayID(id : Nat) : [AnnotationEntry] {
+            var buffer = Buffer.Buffer<AnnotationEntry>(0);
+            for((i, j) in AnnotationHashMap.entries()){
+                if(j.essayID == id){
+                    buffer.add(j);
+                };
+            };
+            buffer.toArray();
         };
 
         public func GetAnnotator(id : Nat) : ?Principal{
@@ -576,6 +591,7 @@ module {
                                             }; case (?annotated) {
                                                 var update = {
                                                     id = annotated.id;
+                                                    essayID = annotated.essayID;
                                                     user = annotated.user;
                                                     comments = annotated.comments;
                                                     quote = annotated.quote;
