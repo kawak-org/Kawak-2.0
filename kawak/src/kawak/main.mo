@@ -300,6 +300,10 @@ shared (msg) actor class Kawak(
     _Annotations.GetAnnotations(id);
   };
 
+  public shared ({caller}) func getAnnotation_EssayID(essayId : Nat) : async [HandlersTypes.AnnotationEntry]{
+    _Annotations.GetAnnotation_EssayID(essayId);
+  };
+
   let _Brew_DIP721 = Dip.Brew_DIP721({
     _Admins;
     _Users;
