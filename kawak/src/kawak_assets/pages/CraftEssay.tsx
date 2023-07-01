@@ -131,7 +131,9 @@ const CraftEssay = () => {
             setIsLoading(false);
             dispatch(setTokenBalance(essayCost));
             dispatch(setnoOfEssays());
+            if(visibility) {
             dispatch(addToForge({ ...dispatchField, id: Number(d) - 1 }));
+          }
             dispatch(addToMyEssay({ ...dispatchField, id: Number(d) - 1 }));
             // set essay editor content to initial
             setStateEmpty();

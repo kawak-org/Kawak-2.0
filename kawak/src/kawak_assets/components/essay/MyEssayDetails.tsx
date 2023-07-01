@@ -8,17 +8,24 @@ import { UserContext } from "../../context/userContext";
 // import Popup from "../shared/Popup";
 import { Principal } from "@dfinity/principal";
 import ReviewCommentEditor from "../../src/RichText/ReviewCommentEditor/ReviewCommentEditor";
-import { AiOutlineClose } from "react-icons/ai";
 import MintEssayModal from "../mint/MintEssayModal";
 import Navbar from "../../components/shared/navbar/Navbar";
 import LexicalRichTextEditor from "../../src/RichText/LexicalRichTextEditor";
 import { BiArrowBack } from "react-icons/bi";
 import { useMatomo } from "@datapunt/matomo-tracker-react";
-import FeedbackModal from "../../components/Modal/FeedbackModal";
 import Loader from "../Loaders/Loader";
+import {Carousel} from 'react-responsive-carousel';
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import {addAnnotation, clearAnnotation} from "../../redux/slice/annotationSlice"
 // import CustomPrompt from "../../utils/navigation-block/CustomPrompt";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; 
+import ShowComment from "./ShowComment";
+import FeedbackModal from "../../components/Modal/FeedbackModal";
+import Toggle from 'react-toggle'
+import "react-toggle/style.css" 
 
 type ReviewType = {
+  id: number;
   user: Principal;
   quote: string;
   comments: string;
@@ -41,10 +48,15 @@ const MyEssayDetails = () => {
   const [rateModal, setRateModal] = useState(false);
   const [showComment, setShowComment] = useState(false);
   const [reviewId, setReviewId] = useState(null)
+  const annotations = useAppSelector((state) => state.annotation)
+  const dispatch = useAppDispatch()
+  const [annotationPosition, setAnnotationPosition] = useState(0)
+  const [disabled, setDisabled] = useState(false)
+  const [visibility, setVisibility] = useState(false)
   // const [openComment, setOpenComment] = useState(false);
+  var unserialized =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote);
+
   const { trackEvent } = useMatomo();
-  const unserialized =
-    review[0] == null ? undefined : JSON.parse(review[0]?.quote);
 
   // const { deleting, handleDelete } = deleteEssay(BigInt(id));
   const handleDelete = () => {
@@ -68,38 +80,36 @@ const MyEssayDetails = () => {
           if (d) {
             value.push(d[0]);
             setEssay(value);
+            setVisibility(value[0]._public)
             // console.log(value)
+            const rev: [ReviewType]  = [null]
+            console.log(d)
+            dispatch(clearAnnotation())
+            const dd = d[0]?.reviews.map((review) => {
+              const val = {
+                id: Number(review.id),
+                user: review.user,
+                quote: review.quote,
+                comments: review.comments,
+                rated:review.rated
+              }
+          
+              dispatch(addAnnotation(
+                val
+              ))
+            
+
+            })
+            console.log("essay", d)
             setIsLoading2(false);
-            // console.log(d)
+            setReview(rev)
           }
         })
         .catch((err) => {
           toast.error("could not get an essay with this id");
         });
     };
-    const getReviews = () => {
-    	actor
-    		.getAnnotation(BigInt(id))
-    		.then((d: any /* [ReviewType] */) => {
-    			if (d) {
-    				// var correctTyp = {
-    				// 	comments : d.comments.toString(),
-    				// 	user : d.user,
-    				// 	rated : d.rated
-    				// }
-    				setReview(d);
-            // setReviewerPrincipal(d.)
-    				console.log(d[0].id);
-            setReviewId(d[0].id)
-    				return;
-    			}
-    		})
-    		.catch((err) => {
-    			toast.error("something went wrong");
-    			console.log(err);
-    		});
-    };
-    getReviews();
+  
     callOnMount();
   }, []);
 
@@ -114,15 +124,8 @@ const MyEssayDetails = () => {
     setModalLoading(true);
     console.log(id, rating);
     actor
-    	.addRating(BigInt(reviewId), BigInt(rating), review[0]?.user)
+    	.addRating(BigInt(annotations[annotationPosition]?.id), BigInt(rating), annotations[annotationPosition]?.user)
     	.then((data) => {
-    		// Track Essay Draft Event
-    		// trackEvent({
-    		// 	category: "Essay",
-    		// 	action: "Rated An Essay",
-    		// 	documentTitle: "Essay Details Page",
-    		// 	href: window.location.href,
-    		// });
     		console.log("add rating result", data);
     		toast.success("User's rating successfully added");
     		setModalLoading(false);
@@ -134,7 +137,27 @@ const MyEssayDetails = () => {
     		toast.error(err);
     	});
   };
-  const handleMintAsEssay = () => {};
+  const handleCarouselChange = (index:number) => {
+    setAnnotationPosition(index)
+  };
+
+  const handleSetVisibility = (e:any) => {
+    // setDisabled(true)
+  actor.updatePublicStatus(e.target.checked, BigInt(id)).then(d => {
+    // setDisabled(false)
+    setTimeout(() => {
+   setVisibility((prev) => prev != prev)
+  },1000)
+
+  }).catch(err => {
+      // setDisabled(false)
+    console.log(err)
+  
+
+  })
+
+}
+
 
   if (isLoading2) {
     return (
@@ -148,10 +171,6 @@ const MyEssayDetails = () => {
   } else if (value) {
     return (
       <div className="">
-        {/* <CustomPrompt
-          when={deleting || modalLoading || isLoading2}
-          message="You gonna lose your data, are you sure?"
-        /> */}
         <Navbar />
 
         <div className="relative px-6 mb-8 mt-[6rem]">
@@ -172,7 +191,7 @@ const MyEssayDetails = () => {
                     {essay[0].title}
                   </h2>
                   <div className="border-b-[1px] bg-gray-400 mt-3 mb-7" />
-                  {review[0] == undefined ? (
+                  {annotations.length < 1 ? (
                     <div>
                       <LexicalRichTextEditor essay={essay[0].text} />
                       <div className="w-full flex justify-center items-center">
@@ -182,11 +201,16 @@ const MyEssayDetails = () => {
                       </div>
                     </div>
                   ) : (
-                    <div>
-                      <ReviewCommentEditor review={review[0]?.comments} />
-                    </div>
+                    <Carousel showArrows={true} onChange={(e) => handleCarouselChange(e)} /* onClickItem={onClickItem} onClickThumb={onClickThumb} */>
+                      {annotations.map((review_) => (
+                     <ReviewCommentEditor review={review_.comments} />
+                      ))
+                       }
+                      </Carousel>
                   )}
                 </div>
+            {  /* for mobile view */}     
+                 {/* ----------------BEGINNING OF MOBILE-------------------------- */}
 
                 <button
                   onClick={() => setShowComment(!showComment)}
@@ -195,190 +219,38 @@ const MyEssayDetails = () => {
                   Comment
                 </button>
 
-                {showComment && (
-                  <div className="dark:bg-[#323f4b] bg-white z-40 fixed w-[70%] sm:w-[40%] top-[0] left-0 mt-[1rem] ">
-                    {review[0] == (null || undefined) ? (
-                      <div className=" dark:bg-[#323f4b] dark:border dark:border-solid dark:border-[#3e5060]  bg-[#F98E2D]/10 rounded-[10px]  flex flex-col h-[37rem] py-8 px-4 mt-[.4rem] ">
-                        <div className="flex  flex-col">
-                          <div className="flex flex-row justify-between items-center ">
-                            <div className="flex flex-row">
-                              <AiOutlineClose
-                                className=" text-black cursor-pointer"
-                                onClick={() => setShowComment(false)}
-                              />
-                            </div>
-
-                            <div className="flex flex-row justify-center items-center">
-                              <img src={`token-icon.png`} alt="token" />
-                              <p className="text-[#2F6FED] ml-1 text-base">
-                                {Number(essay[0].essayCost)}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="border-b-[1px] bg-gray-400 my-2" />
-
-                          <div className="flex flex-row justify-between items-center ">
-                            <p className="text-gray-400 text-xs">
-                              {Number(essay[0].wordCount)} words
-                            </p>
-                            <p className="text-[#EF4444]  text-sm font-medium ">
-                              Not Reviewed
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* className=' comment-scroll overflow-y-scroll h-[152px]' */}
-
-                        {/* <div className='mt-4'>
-
-													<h4 className='text-[#08172E] font-semibold text-sm'>
-														Overall Feedback
-													</h4>
-													<textarea
-														placeholder='Enter review'
-														style={{ resize: "none" }}
-														className='w-[100%] h-[140px] p-3 text-xs mt-2 placeholder:text-xs '
-													/>
-												</div> */}
-
-                        <div className="w-full flex  flex-col  my-2">
-                          <button
-                            className="py-2 w-full text-sm text-center my-2 text-white bg-[#F98E2D] "
-                            onClick={() => setModalIsOpen(true)}
-                          >
-                            Mint
-                          </button>
-
-                          {/* {modalIsOpen && (
-                            <MintEssayModal
-                              body={convert(essay[0].text)}
-                              title={essay[0].title}
-                              Modal={setModalIsOpen}
-                            />
-                          )} */}
-                          <button
-                            className="py-2 w-full text-sm text-center my-2 text-[#B91C1C]  "
-                            onClick={handleDelete}
-                          >
-                            {deleting ? "Deleting..." : "Delete"}
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className=" dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px]  flex flex-col h-[37rem] py-8 px-4 mt-[.4rem] ">
-                        <div className="flex flex-col">
-                          <div className="flex flex-row justify-between items-center ">
-                            <div className="flex flex-row">
-                              <AiOutlineClose
-                                className=" text-black cursor-pointer"
-                                onClick={() => setShowComment(false)}
-                              />
-                            </div>
-
-                            <div className="flex flex-row justify-center items-center">
-                              <img src={`token-icon.png`} alt="token" />
-                              <p className="text-[#2F6FED] ml-1 text-base">
-                                {" "}
-                                {Number(essay[0].essayCost)}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="border-b-[1px] bg-gray-400 my-2" />
-
-                          <div className="flex flex-row justify-between items-center ">
-                            <p className="text-gray-400 text-xs">
-                              {Number(essay[0].wordCount)} words
-                            </p>
-                            <p className="text-[#08875D]  text-sm font-medium ">
-                              Reviewed
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* className=' comment-scroll overflow-y-scroll h-[152px]' */}
-                        <div className=" comment-scroll mt-3 overflow-y-scroll h-[20rem]">
-                          {unserialized ? (
-                            unserialized.map((item) => {
-                              return (
-                                <div
-                                  key={item.id}
-                                  className="flex flex-col p-2 my-3 bg-white"
-                                >
-                                  <p className="mt-1 font-medium rounded-md w-fit text-sm px-2 bg-[#FFFF00]/10">
-                                    {item.quote}
-                                  </p>
-
-                                  <p className="text-sm mt-2 ">
-                                    {item.comments[0].content}
-                                  </p>
-                                </div>
-                              );
-                            })
-                          ) : (
-                            <></>
-                          )}
-                        </div>
-
-                        {/* <div className='mt-4'>
-													<h4 className='text-[#08172E] font-semibold text-sm'>
-														Overall Feedback
-													</h4>
-													<textarea
-														placeholder='Enter review'
-														style={{ resize: "none" }}
-														className='w-[100%] h-[140px] p-3 text-xs mt-2 placeholder:text-xs '
-													/>
-												</div> */}
-
-                        <button
-                          className="py-2 w-full text-sm text-center mt-8 mb-2 text-white bg-[#F98E2D] "
-                          onClick={() => setModalIsOpen(true)}
-                        >
-                          Mint
-                        </button>
-
-                        {review[0]?.rated === false ? (
-                          <button
-                            className="py-2 w-full text-sm text-center my-2 text-white bg-[#F98E2D] "
-                            onClick={() => setRateModal(true)}
-                          >
-                            Rate Review
-                          </button>
-                        ) : (
-                          <></>
-                        )}
-
-                        {/* {modalIsOpen && (
-                          <MintEssayModal
-                            body={convert(essay[0].text)}
-                            title={essay[0].title}
-                            Modal={setModalIsOpen}
-                          />
-                        )} */}
-
-                        {rateModal && (
-                          <FeedbackModal
-                            rating={rating}
-                            ratingChanged={ratingChanged}
-                            submitRating={submitRating}
-                          />
-                        )}
-                      </div>
-                    )}
-                  </div>
+               {showComment && (
+              <ShowComment 
+              annotationPosition={annotationPosition} setRateModal={setRateModal} 
+              setShowComment={setShowComment} essay={essay} setModalIsOpen={setModalIsOpen} 
+              handleDelete={handleDelete} deleting={deleting} 
+              unserialized={unserialized}
+              rateModal={rateModal}
+              ratingChanged={ratingChanged}
+              submitRating={submitRating}
+              rating={rating}
+              />
                 )}
+          {/* ----------------END OF MOBILE-------------------------- */}
 
-                {review[0] == (null || undefined) ? (
+                 {annotations.length < 1 ? (
                   <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
                     <div className="flex bg-[#F98E2D]x flex-col">
                       <div className="flex flex-row justify-between items-center ">
-                        <div className="flex flex-row"></div>
+                        <div className="flex flex-row justify-center items-center">
+                        <p className="text-white">Public</p>
+                          <Toggle
+                          checked={visibility}
+                          onChange={(e) => handleSetVisibility(e)}
+                          disabled={disabled}
+                          />
+                        </div>
 
                         <div className="flex flex-row justify-center items-center">
+                        
                           <img src={`token-icon.png`} alt="token" />
                           <p className="text-[#2F6FED] ml-1 text-base">3</p>
+                          
                         </div>
                       </div>
 
@@ -393,19 +265,6 @@ const MyEssayDetails = () => {
                         </p>
                       </div>
                     </div>
-
-                    {/* className=' comment-scroll overflow-y-scroll h-[152px]' */}
-
-                    {/* <div className='mt-4'>
-											<h4 className='text-[#08172E] font-semibold text-sm'>
-												Overall Feedback
-											</h4>
-											<textarea
-												placeholder='Enter review'
-												style={{ resize: "none" }}
-												className='w-[100%] h-[140px] p-3 text-xs mt-2 placeholder:text-xs '
-											/>
-										</div> */}
 
                     <div className="w-full flex  flex-col  my-4">
                       <button
@@ -457,7 +316,6 @@ const MyEssayDetails = () => {
                       </div>
                     </div>
 
-                    {/* className=' comment-scroll overflow-y-scroll h-[152px]' */}
                     <div className=" comment-scroll mt-3 overflow-y-scroll h-[20rem]">
                       {unserialized ? (
                         unserialized.map((item) => {
@@ -481,16 +339,7 @@ const MyEssayDetails = () => {
                       )}
                     </div>
 
-                    {/* <div className='mt-4'>
-											<h4 className='text-[#08172E] font-semibold text-sm'>
-												Overall Feedback
-											</h4>
-											<textarea
-												placeholder='Enter review'
-												style={{ resize: "none" }}
-												className='w-[100%] h-[140px] p-3 text-xs mt-2 placeholder:text-xs '
-											/>
-										</div> */}
+                 
 
                     <button
                       className="py-2 w-full text-sm text-center mt-8 mb-4 text-white bg-[#F98E2D] "
@@ -499,7 +348,7 @@ const MyEssayDetails = () => {
                       Mint
                     </button>
 
-                    {review[0]?.rated === false ? (
+                    {annotations[0]?.rated === false ? (
                       <button
                         className="py-2 w-full text-sm text-center mt-4 mb-4 text-white bg-[#F98E2D] "
                         onClick={() => setRateModal(true)}

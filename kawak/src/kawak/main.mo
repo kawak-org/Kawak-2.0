@@ -209,9 +209,17 @@ shared (msg) actor class Kawak(
       _Essays.GetFilteredEssays(topics);
     };
 
-    public shared ({caller}) func updateDescription(desc : Text, id : Nat) : async (){
-      _Essays.UpdateDescription(desc, id);
+    public shared ({caller}) func EssayAnnotate(id : Nat, comments : Text, quote : Text) : (){
+      _Essays.EssayAnnotate(caller, id, comments, quote);
     };
+
+    public shared ({caller}) func getAnnotations(id : Nat) : async [HandlersTypes.AnnotationEntry]{
+      _Essays.GetAnnotation(id);
+    };
+
+    // public shared ({caller}) func updateDescription(desc : Text, id : Nat) : async (){
+    //   _Essays.UpdateDescription(desc, id);
+    // };
 
     public shared ({caller}) func getUserEssays(userName : Text) : async ?[HandlersTypes.EssayEntry] {
       _Essays.GetUserEssays(userName);
@@ -292,6 +300,10 @@ shared (msg) actor class Kawak(
     _Annotations.GetAnnotations(id);
   };
 
+  public shared ({caller}) func getAnnotation_EssayID(essayId : Nat) : async [HandlersTypes.AnnotationEntry]{
+    _Annotations.GetAnnotation_EssayID(essayId);
+  };
+
   let _Brew_DIP721 = Dip.Brew_DIP721({
     _Admins;
     _Users;
@@ -366,7 +378,9 @@ shared (msg) actor class Kawak(
     _Market.mp_ListItem(caller, tokenId, price);
   };
 
-
+  // public shared ({caller}) func ViewMarket() : async [MarketplaceTypes.Listing]{
+  //   _Market.mp_viewMarket()
+  // };
 
   public func proxy(url : Text) : async Types.CanisterHttpResponsePayload {
 
