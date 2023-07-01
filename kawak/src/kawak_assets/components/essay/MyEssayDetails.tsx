@@ -16,12 +16,13 @@ import { useMatomo } from "@datapunt/matomo-tracker-react";
 import Loader from "../Loaders/Loader";
 import {Carousel} from 'react-responsive-carousel';
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
-import {addAnnotation} from "../../redux/slice/annotationSlice"
+import {addAnnotation, clearAnnotation} from "../../redux/slice/annotationSlice"
 // import CustomPrompt from "../../utils/navigation-block/CustomPrompt";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; 
 import ShowComment from "./ShowComment";
 import FeedbackModal from "../../components/Modal/FeedbackModal";
-
+import Toggle from 'react-toggle'
+import "react-toggle/style.css" 
 
 type ReviewType = {
   id: number;
@@ -50,17 +51,12 @@ const MyEssayDetails = () => {
   const annotations = useAppSelector((state) => state.annotation)
   const dispatch = useAppDispatch()
   const [annotationPosition, setAnnotationPosition] = useState(0)
+  const [disabled, setDisabled] = useState(false)
+  const [visibility, setVisibility] = useState(false)
   // const [openComment, setOpenComment] = useState(false);
   var unserialized =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote);
 
   const { trackEvent } = useMatomo();
-
-  // const handleUnserialized = () => {
-  //   unserialized = 
-  //   review[0] == null ? undefined : JSON.parse(review[0]?.quote);
-  // }
-
-
 
   // const { deleting, handleDelete } = deleteEssay(BigInt(id));
   const handleDelete = () => {
@@ -84,9 +80,11 @@ const MyEssayDetails = () => {
           if (d) {
             value.push(d[0]);
             setEssay(value);
+            setVisibility(value[0]._public)
             // console.log(value)
             const rev: [ReviewType]  = [null]
             // console.log("annotation", d)
+            dispatch(clearAnnotation())
             const dd = d[0]?.reviews.map((review) => {
               const val = {
                 id: Number(review.id),
@@ -95,7 +93,7 @@ const MyEssayDetails = () => {
                 comments: review.comments,
                 rated:review.rated
               }
-             
+          
               dispatch(addAnnotation(
                 val
               ))
@@ -140,11 +138,25 @@ const MyEssayDetails = () => {
     	});
   };
   const handleCarouselChange = (index:number) => {
-    // console.log(e)
     setAnnotationPosition(index)
-    console.log(unserialized)
-    //change 
   };
+
+  const handleSetVisibility = (e:any) => {
+    // setDisabled(true)
+  actor.updatePublicStatus(e.target.checked, BigInt(id)).then(d => {
+    // setDisabled(false)
+    setTimeout(() => {
+   setVisibility((prev) => prev != prev)
+  },1000)
+
+  }).catch(err => {
+      // setDisabled(false)
+    console.log(err)
+  
+
+  })
+
+}
 
 
   if (isLoading2) {
@@ -225,11 +237,20 @@ const MyEssayDetails = () => {
                   <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
                     <div className="flex bg-[#F98E2D]x flex-col">
                       <div className="flex flex-row justify-between items-center ">
-                        <div className="flex flex-row"></div>
+                        <div className="flex flex-row justify-center items-center">
+                        <p className="text-white">Public</p>
+                          <Toggle
+                          checked={visibility}
+                          onChange={(e) => handleSetVisibility(e)}
+                          disabled={disabled}
+                          />
+                        </div>
 
                         <div className="flex flex-row justify-center items-center">
+                        
                           <img src={`token-icon.png`} alt="token" />
                           <p className="text-[#2F6FED] ml-1 text-base">3</p>
+                          
                         </div>
                       </div>
 
@@ -327,7 +348,7 @@ const MyEssayDetails = () => {
                       Mint
                     </button>
 
-                    {annotations[annotationPosition]?.rated === false ? (
+                    {annotations[0]?.rated === false ? (
                       <button
                         className="py-2 w-full text-sm text-center mt-4 mb-4 text-white bg-[#F98E2D] "
                         onClick={() => setRateModal(true)}

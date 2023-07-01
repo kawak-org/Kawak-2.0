@@ -23,15 +23,13 @@ export const annotationSlice = createSlice({
             state.push(payload);
 	
 		},
-		removeAnnotation: (state, { payload }: PayloadAction<number>) => {
-			const tag = state.findIndex((obj) => obj.id === +payload);
-			state.splice(tag, 1);
-			return;
+		clearAnnotation: () => {
+			return initialState;
 		},
 	},
 });
 
-export const { addAnnotation, removeAnnotation } = annotationSlice.actions;
+export const { addAnnotation,  clearAnnotation } = annotationSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 // export const selectCount = (state: RootState) => state.counter.value;
