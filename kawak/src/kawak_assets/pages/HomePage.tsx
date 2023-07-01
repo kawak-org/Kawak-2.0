@@ -367,7 +367,7 @@ export default function Page() {
       })
       .catch((err) => {
         ErrorHandler(err);
-        // console.log(err);
+        console.log(err);
         // alert(err);
       });
   };
