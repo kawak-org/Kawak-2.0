@@ -72,6 +72,7 @@ module {
 
     public type AnnotationEntry = {
         id : Nat;
+        essayID : Nat;
         user : Principal;
         comments : Text;
         quote : Text;

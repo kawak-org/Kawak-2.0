@@ -50,7 +50,7 @@ export const EssayEditorProvider = ({ children }) => {
   const [essayCost, setEssayCost] = useState(0);
   const [essay, setEssay] = useState("");
   const [editingDraftId, setEditingDraftId] = useState(null);
-  const [visibility, setVisibility] = useState(false)
+  const [visibility, setVisibility] = useState(true)
   const [description, setDescription] = useState("")
 
 

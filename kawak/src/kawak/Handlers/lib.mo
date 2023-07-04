@@ -24,6 +24,7 @@ module {
         public type EssayEntry = Types.EssayEntry;
 
         public var essayPK : Nat = 0;
+      
 
         var EssayEntries : [(Nat, EssayEntry)] = [];
         var UserEssayEntries : [(Principal, EssayEntry)] = [];
@@ -158,6 +159,10 @@ module {
             };
         };
 
+        // public func getAnnotationID() : Nat{
+        //     annotationPK;
+        // };
+
         // Get all the essays in the forge
         public func GetAllEssays() : [EssayEntry] {
             var buffer = Buffer.Buffer<EssayEntry>(0);
@@ -208,24 +213,27 @@ module {
             EssayHashMap.get(id);
         };
 
-        public func EssayAnnotate(caller : Principal, id : Nat, comments : Text, quote : Text) : (){
+        public func EssayAnnotate(caller : Principal, essayID : Nat, comments : Text, quote : Text) : (){
             var user = state._Users.getUser(caller);
+            var annotationPK : Nat = 0;
             switch (user){
                 case(null){};
                 case(?user){
                     var reviewUpdate = {
-                        id = id;
+                        id = annotationPK;
+                        essayID = essayID;
                         user = caller;
                         comments = comments;
                         quote = quote;
                         rated = false;
                     };
-                    var essay = GetEssay(id);
+                    annotationPK += 1;
+                    var essay = GetEssay(essayID);
                     switch(essay){
                         case(null){};
                         case(?essay){
                             var update = {
-                                id = essay.id;
+                                id = essayID;
                                 aid = essay.aid;
                                 owner = essay.owner;
                                 title = essay.title;
@@ -242,7 +250,7 @@ module {
                                 _public = essay._public;
                                 description = essay.description;
                             };
-                            var updated = UpdateEssay(id, update);   
+                            var updated = EssayHashMap.replace(essayID, update);   
                         };
                     }
                 };
@@ -306,8 +314,8 @@ module {
                         topic = [essay.title];
                         wordCount = essay.wordCount;
                         //createdAt : Time;
-                        reviewTimes = essay.reviewTimes + 1;
-                        reviewed = true;
+                        reviewTimes = essay.reviewTimes;
+                        reviewed = essay.reviewed;
                         essayCost = essay.essayCost;
                         submittedAt = essay.submittedAt;
                         text = essay.text;
@@ -315,6 +323,34 @@ module {
                         reviews = essay.reviews;
                         _public = pub;
                         description = essay.description;
+                    };
+                    var updated = UpdateEssay(id, update); 
+                };
+            };
+        };
+
+        public func UpdateDescription(desc : Text, id : Nat) : () {
+            var essay = EssayHashMap.get(id);
+            switch(essay){
+                case(null){};
+                case(?essay) {
+                    var update = {
+                        id = essay.id;
+                        aid = essay.aid;
+                        owner = essay.owner;
+                        title = essay.title;
+                        topic = [essay.title];
+                        wordCount = essay.wordCount;
+                        //createdAt : Time;
+                        reviewTimes = essay.reviewTimes;
+                        reviewed = essay.reviewed;
+                        essayCost = essay.essayCost;
+                        submittedAt = essay.submittedAt;
+                        text = essay.text;
+                        userDetails = essay.userDetails;
+                        reviews = essay.reviews;
+                        _public = essay._public;
+                        description = desc;
                     };
                     var updated = UpdateEssay(id, update); 
                 };
@@ -383,6 +419,9 @@ module {
         var AnnotationHashMap : HashMap.HashMap<Nat, AnnotationEntry> = HashMap.fromIter(AnnotationEntries.vals(), 1, Nat.equal, Hash.hash);
         var annotations : Buffer.Buffer<AnnotationEntry> = Buffer.Buffer(0);
 
+        public var annotationPK : Nat = 0;
+
+
         // for (annotation in state.annotations.vals()) {
         //     annotations.add(annotation)
         // };
@@ -414,46 +453,47 @@ module {
                 case (?user) {
                     // var current = 
                     var reviewUpdate = {
-                        id = id;
+                        id = annotationPK;
+                        essayID = id;
                         user = caller;
                         comments = comments;
                         quote = quote;
                         rated = false;
                     };
                     AnnotationHashMap.put(id, reviewUpdate);
-                    var essay = Essays(state).GetEssay(id);
-                    switch(essay) {
-                        case(null){
-                        };
-                        case (?essay) {
-                            var update = {
-                                id = essay.id;
-                                aid = essay.aid;
-                                owner = essay.owner;
-                                title = essay.title;
-                                topic = [essay.title];
-                                wordCount = essay.wordCount;
-                                //createdAt : Time;
-                                reviewTimes = essay.reviewTimes + 1;
-                                reviewed = true;
-                                essayCost = essay.essayCost;
-                                submittedAt = essay.submittedAt;
-                                text = essay.text;
-                                userDetails = essay.userDetails;
-                                reviews = Array.append(essay.reviews, [reviewUpdate]);
-                                _public = essay._public;
-                                description = essay.description;
-                            };
-                            var updated = Essays(state).UpdateEssay(id, update);
-                        };
-                    };
+                    // var essay = Essays(state).GetEssay(id);
+                    // switch(essay) {
+                    //     case(null){
+                    //     };
+                    //     case (?essay) {
+                    //         var update = {
+                    //             id = essay.id;
+                    //             aid = essay.aid;
+                    //             owner = essay.owner;
+                    //             title = essay.title;
+                    //             topic = [essay.title];
+                    //             wordCount = essay.wordCount;
+                    //             //createdAt : Time;
+                    //             reviewTimes = essay.reviewTimes + 1;
+                    //             reviewed = true;
+                    //             essayCost = essay.essayCost;
+                    //             submittedAt = essay.submittedAt;
+                    //             text = essay.text;
+                    //             userDetails = essay.userDetails;
+                    //             reviews = Array.append(essay.reviews, [reviewUpdate]);
+                    //             _public = essay._public;
+                    //             description = essay.description;
+                    //         };
+                    //         var updated = Essays(state).UpdateEssay(id, update);
+                    //     };
+                    // };
                 };
             }
 
         };
 
-        public func GetAnnotations(id : Nat) : ?AnnotationEntry {
-            var hahs = AnnotationHashMap.get(id);
+        public func GetAnnotations(annotationPK : Nat) : ?AnnotationEntry {
+            var hahs = AnnotationHashMap.get(annotationPK);
 
             switch (hahs) {
                 case (null) {
@@ -463,6 +503,16 @@ module {
                     return ?hahs;
                 };
             };
+        };
+
+        public func GetAnnotation_EssayID(id : Nat) : [AnnotationEntry] {
+            var buffer = Buffer.Buffer<AnnotationEntry>(0);
+            for((i, j) in AnnotationHashMap.entries()){
+                if(j.essayID == id){
+                    buffer.add(j);
+                };
+            };
+            buffer.toArray();
         };
 
         public func GetAnnotator(id : Nat) : ?Principal{
@@ -541,6 +591,7 @@ module {
                                             }; case (?annotated) {
                                                 var update = {
                                                     id = annotated.id;
+                                                    essayID = annotated.essayID;
                                                     user = annotated.user;
                                                     comments = annotated.comments;
                                                     quote = annotated.quote;
