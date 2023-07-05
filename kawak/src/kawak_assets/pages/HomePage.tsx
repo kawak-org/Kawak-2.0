@@ -351,6 +351,7 @@ export default function Page() {
       ?.logIn()
       .then((d) => {
         if (d === true) {
+          console.log("loggin function success response", d)
           changeAuthStatus();
           navigate("/forge");
           navigate(0);
@@ -360,14 +361,15 @@ export default function Page() {
           return;
         }
         changeAuthStatus();
+        console.log("loggin function success response", d)
         navigate("/onboarding1");
         navigate(0);
         // window.location.reload();
         // setIamNew(true);
       })
       .catch((err) => {
+        console.log("loggin function error response", err)
         ErrorHandler(err);
-        console.log(err);
         // alert(err);
       });
   };
