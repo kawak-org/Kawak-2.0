@@ -492,6 +492,10 @@ module {
 
         };
 
+        public func UpdateAnnoatation(updated : AnnotationEntry, id : Nat) : ?AnnotationEntry {
+            AnnotationHashMap.replace(id, updated);
+        };
+
         public func GetAnnotations(annotationPK : Nat) : ?AnnotationEntry {
             var hahs = AnnotationHashMap.get(annotationPK);
 
