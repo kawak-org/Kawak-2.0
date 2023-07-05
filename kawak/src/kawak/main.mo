@@ -1,20 +1,22 @@
-import Users "Users";
-import UsersTypes "Users/types";
-import Handlers "Handlers";
-import HandlersTypes "Handlers/types";
+import Array "mo:base/Array";
+import Blob "mo:base/Blob";
+import Cycles "mo:base/ExperimentalCycles";
+import Error "mo:base/Error";
+import Nat "mo:base/Nat";
+import Principal "mo:base/Principal";
+import Result "mo:base/Result";
+
 import Admins "Admins";
 import AdminsTypes "Admins/types";
 import Dip "Dip";
 import DipTypes "Dip/types";
+import Handlers "Handlers";
+import HandlersTypes "Handlers/types";
 import Marketplace "Marketplace";
 import MarketplaceTypes "Marketplace/types";
 import Types "Types";
-
-import Blob "mo:base/Blob";
-import Cycles "mo:base/ExperimentalCycles";
-import Error "mo:base/Error";
-import Result "mo:base/Result";
-import Principal "mo:base/Principal";
+import Users "Users";
+import UsersTypes "Users/types";
 
 shared (msg) actor class Kawak(
   caller : Principal
@@ -23,7 +25,7 @@ shared (msg) actor class Kawak(
   private stable var stableAdmins : [Principal] = [];
   private stable var stableEssays : [HandlersTypes.EssayEntry] = [];
   private stable var stableDraftsEntries : [(Nat, HandlersTypes.DraftEntry)] = [];
-  private stable var stableEssayEntries  : [(Nat, HandlersTypes.EssayEntry)] = [];
+  private stable var stableEssayEntries : [(Nat, HandlersTypes.EssayEntry)] = [];
   private stable var stableUserEssayEntries : [(Principal, HandlersTypes.EssayEntry)] = [];
   private stable var stableProfileEntries : [(Principal, UsersTypes.UserEntry)] = [];
   private stable var stableEssayPK : Nat = 0;
@@ -31,7 +33,7 @@ shared (msg) actor class Kawak(
   private stable var stableLedger : [DipTypes.TokenMetadata] = [];
   private stable var stableBalanceEntries : [(Principal, Nat)] = [];
   private stable var stableAllowanceEntries : [(Principal, [(Principal, Nat)])] = [];
-  private stable var stableItems   : [MarketplaceTypes.Listing] = [];
+  private stable var stableItems : [MarketplaceTypes.Listing] = [];
   private stable var stableMarketListingEntries : [(Principal, MarketplaceTypes.Listing)] = [];
 
   system func preupgrade() {
@@ -39,34 +41,34 @@ shared (msg) actor class Kawak(
     stableAdmins := _Admins.toStable();
 
     // Preserve Essays
-    let {EssayEntries; UserEssayEntries; essayPK;} = _Essays.toStable();
+    let { EssayEntries; UserEssayEntries; essayPK } = _Essays.toStable();
     stableEssayEntries := EssayEntries;
     stableUserEssayEntries := UserEssayEntries;
     stableEssayPK := essayPK;
 
     // Preserve Drafts
-    let { draftEntries; } = _Drafts.toStable();
-    stableDraftsEntries  := draftEntries;
+    let { draftEntries } = _Drafts.toStable();
+    stableDraftsEntries := draftEntries;
 
     // Preserve Annotations
-    let { AnnotationEntries; } = _Annotations.toStable();
+    let { AnnotationEntries } = _Annotations.toStable();
     stableAnnotationEntries := AnnotationEntries;
 
     // Preserve Dip_721
-    let { ledger; } = _Brew_DIP721.toStable();
-    stableLedger  := ledger;
+    let { ledger } = _Brew_DIP721.toStable();
+    stableLedger := ledger;
 
     // Preserve Dip_20
-    let { balanceEntries; allowanceEntries; } = _Brew_DIP20.toStable();
+    let { balanceEntries; allowanceEntries } = _Brew_DIP20.toStable();
     stableBalanceEntries := balanceEntries;
     stableAllowanceEntries := allowanceEntries;
 
     // Preserve Users
-    let { ProfileEntries; } = _Users.toStable();
+    let { ProfileEntries } = _Users.toStable();
     stableProfileEntries := ProfileEntries;
 
     // Preserve MarketPlace
-    let { items; MarketListingEntries; } = _Market.toStable();
+    let { items; MarketListingEntries } = _Market.toStable();
     stableItems := items;
     stableMarketListingEntries := MarketListingEntries;
 
@@ -99,7 +101,6 @@ shared (msg) actor class Kawak(
     _Brew_DIP721.postStable(stableLedger);
     stableLedger := [];
 
-
     // Users postUpgrade
     _Users.postStable(stableProfileEntries);
     stableProfileEntries := [];
@@ -109,7 +110,7 @@ shared (msg) actor class Kawak(
     stableMarketListingEntries := [];
   };
 
-  public shared ({caller}) func whoami() : async Principal {
+  public shared ({ caller }) func whoami() : async Principal {
     caller;
   };
 
@@ -155,7 +156,7 @@ shared (msg) actor class Kawak(
     _Admins.getAdmins();
   };
 
-   let _Brew_DIP20 = Dip.Brew_DIP20({
+  let _Brew_DIP20 = Dip.Brew_DIP20({
     _Admins;
     _Users;
     caller;
@@ -164,7 +165,7 @@ shared (msg) actor class Kawak(
     allowanceEntries = stableAllowanceEntries;
   });
 
-  public shared ({caller}) func transferTokenTo(to : Principal, value : Nat) : async DipTypes.TxReceipt {
+  public shared ({ caller }) func transferTokenTo(to : Principal, value : Nat) : async DipTypes.TxReceipt {
     _Brew_DIP20.transfer(caller, to, value);
   };
 
@@ -188,57 +189,56 @@ shared (msg) actor class Kawak(
     if (essay_word_count < 100) {
       throw Error.reject("$ Oooops! Minimum number of words should be 100. # ");
     };
-    if (essayCost < _Users.getUserTokenBalance(caller) and (essayCost >= (essay_word_count / 100))){
+    if (essayCost < _Users.getUserTokenBalance(caller) and (essayCost >= (essay_word_count / 100))) {
       _Essays.createEssay(title, topic, essay_word_count, essayCost, text, caller, description, pub);
-    }
-    else {
+    } else {
       throw Error.reject("$ Awwwww!! Something went wrong, please make sure have enough tokens or contact us for advice # ");
     };
-    
+
   };
 
-    public shared ({caller}) func getAllEssays() : async [ HandlersTypes.EssayEntry] {
-      _Essays.GetAllEssays();
-    };
+  public shared ({ caller }) func getAllEssays() : async [HandlersTypes.EssayEntry] {
+    _Essays.GetAllEssays();
+  };
 
-    public shared ({caller}) func updatePublicStatus(pub: Bool, id : Nat){
-      _Essays.UpdatePublicStatus(pub, id);
-    };
+  public shared ({ caller }) func updatePublicStatus(pub : Bool, id : Nat) {
+    _Essays.UpdatePublicStatus(pub, id);
+  };
 
-    public shared ({caller}) func getFilteredEssays(topics : [Text]) : async [HandlersTypes.EssayEntry] {
-      _Essays.GetFilteredEssays(topics);
-    };
+  public shared ({ caller }) func getFilteredEssays(topics : [Text]) : async [HandlersTypes.EssayEntry] {
+    _Essays.GetFilteredEssays(topics);
+  };
 
-    public shared ({caller}) func EssayAnnotate(id : Nat, comments : Text, quote : Text) : (){
-      _Essays.EssayAnnotate(caller, id, comments, quote);
-    };
+  public shared ({ caller }) func EssayAnnotate(id : Nat, comments : Text, quote : Text) : () {
+    _Essays.EssayAnnotate(caller, id, comments, quote);
+  };
 
-    public shared ({caller}) func getAnnotations(id : Nat) : async [HandlersTypes.AnnotationEntry]{
-      _Essays.GetAnnotation(id);
-    };
+  public shared ({ caller }) func getAnnotations(id : Nat) : async [HandlersTypes.AnnotationEntry] {
+    _Essays.GetAnnotation(id);
+  };
 
-    // public shared ({caller}) func updateDescription(desc : Text, id : Nat) : async (){
-    //   _Essays.UpdateDescription(desc, id);
-    // };
+  // public shared ({caller}) func updateDescription(desc : Text, id : Nat) : async (){
+  //   _Essays.UpdateDescription(desc, id);
+  // };
 
-    public shared ({caller}) func getUserEssays(userName : Text) : async ?[HandlersTypes.EssayEntry] {
-      _Essays.GetUserEssays(userName);
-    };
+  public shared ({ caller }) func getUserEssays(userName : Text) : async ?[HandlersTypes.EssayEntry] {
+    _Essays.GetUserEssays(userName);
+  };
 
-    public func getessay(id : Nat) : async ?HandlersTypes.EssayEntry {
-      _Essays.GetEssay(id);
-    };
+  public func getessay(id : Nat) : async ?HandlersTypes.EssayEntry {
+    _Essays.GetEssay(id);
+  };
 
-    public shared func deleteEssay(id : Nat) : async Result.Result<Text, Text> {
-      _Essays.DeleteEssay(id, caller);
-    };
+  public shared func deleteEssay(id : Nat) : async Result.Result<Text, Text> {
+    _Essays.DeleteEssay(id, caller);
+  };
 
-    // public shared ({caller}) func createEssays(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Nat {
-    //   if (essay_word_count < 100){
-    //     throw Error.reject(" $ Oooops! Minimum number of words should be 100. # ");
-    //   };
-    //   if (essayCost)
-    // }
+  // public shared ({caller}) func createEssays(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Nat {
+  //   if (essay_word_count < 100){
+  //     throw Error.reject(" $ Oooops! Minimum number of words should be 100. # ");
+  //   };
+  //   if (essayCost)
+  // }
 
   let _Drafts = Handlers.Drafts({
     caller;
@@ -273,7 +273,7 @@ shared (msg) actor class Kawak(
   };
 
   let _Annotations = Handlers.Annotations({
-   caller;
+    caller;
     _Admins;
     _Users;
     _Brew_DIP20;
@@ -284,23 +284,106 @@ shared (msg) actor class Kawak(
     AnnotationEntries = stableAnnotationEntries;
   });
 
-  public shared ({caller}) func addAnnotation(id : Nat, comments : Text, quote : Text) : async () {
+  public shared ({ caller }) func addAnnotation(id : Nat, comments : Text, quote : Text) : async () {
     _Annotations.AddAnnotation(id, caller, comments, quote);
   };
 
-  public shared ({caller}) func getAnnotator(id : Nat) : async ?Principal {
+  public shared ({ caller }) func getAnnotator(id : Nat) : async ?Principal {
     _Annotations.GetAnnotator(id);
   };
 
-  public shared ({caller}) func addRating(id : Nat, rating : Nat, caller : Principal) : async ?() {
+  public shared ({ caller }) func AddRating(id : Nat, rating : Nat, caller : Principal) : async ?() {
+    var annotator = _Annotations.GetAnnotations(id);
+    switch (annotator) {
+      case (null) { null };
+      case (?annotator) {
+        var user = _Users.getUser(caller);
+        switch (user) {
+          case (null) { null };
+          case (?user) {
+            var updatedArray = Array.append(user.pastRatedFeedbacks, [rating]);
+            var i = 0;
+            var iterator = 0;
+            for (j in updatedArray.vals()) {
+              iterator := iterator + 1;
+              i := i + j;
+            };
+            var annoatorUpdate = {
+              userName = user.userName;
+              role = user.role;
+              token_balance = user.token_balance;
+              avatar = user.avatar;
+              userRating = Nat.div(i, iterator);
+              myEssays = user.myEssays;
+              myDrafts = user.myDrafts;
+              createdAt = user.createdAt;
+              reviewingEssay = user.reviewingEssay;
+              pastRatedFeedbacks = user.pastRatedFeedbacks;
+              onBoarding = user.onBoarding;
+              isAdmin = user.isAdmin;
+            };
+            var userEssayDetails = _Essays.GetEssay(id);
+            switch (userEssayDetails) {
+              case (null) { null };
+              case (?userEssayDetails) {
+                do ? {
+                  var cost = userEssayDetails.essayCost;
+                  var annotatorPrincipal = _Annotations.GetAnnotator(id)!;
+                  var _annotation = _Users.getUser(annotatorPrincipal)!;
+                  var _annotatorUpdate = {
+                    userName = _annotation.userName;
+                    role = _annotation.role;
+                    token_balance = _annotation.token_balance + cost;
+                    avatar = _annotation.avatar;
+                    userRating = _annotation.userRating;
+                    myEssays = _annotation.myEssays;
+                    myDrafts = _annotation.myDrafts;
+                    createdAt = _annotation.createdAt;
+                    reviewingEssay = _annotation.reviewingEssay;
+                    pastRatedFeedbacks = _annotation.pastRatedFeedbacks;
+                    onBoarding = _annotation.onBoarding;
+                    isAdmin = _annotation.isAdmin;
+                  };
+                  var replaced = _Users._updateUserProfile(annotator.user, _annotatorUpdate);
+                  var __replaced = _Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
+                  var transfer = _Brew_DIP20.transfer(caller, annotatorPrincipal, cost);
+
+                  var annotated = _Annotations.GetAnnotations(id);
+                  switch (annotated) {
+                    case (null) {
+                      return null;
+                    };
+                    case (?annotated) {
+                      var update = {
+                        id = annotated.id;
+                        essayID = annotated.essayID;
+                        user = annotated.user;
+                        comments = annotated.comments;
+                        quote = annotated.quote;
+                        rated = true;
+                      };
+                      var updated = _Annotations.UpdateAnnoatation(update, id);
+                    };
+                  }
+
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+
+  public shared ({ caller }) func addRating(id : Nat, rating : Nat, caller : Principal) : async ?() {
     _Annotations.AddRating(id, rating, caller);
   };
 
-  public shared ({caller}) func getAnnotation(id : Nat) : async ?HandlersTypes.AnnotationEntry {
+  public shared ({ caller }) func getAnnotation(id : Nat) : async ?HandlersTypes.AnnotationEntry {
     _Annotations.GetAnnotations(id);
   };
 
-  public shared ({caller}) func getAnnotation_EssayID(essayId : Nat) : async [HandlersTypes.AnnotationEntry]{
+  public shared ({ caller }) func getAnnotation_EssayID(essayId : Nat) : async [HandlersTypes.AnnotationEntry] {
     _Annotations.GetAnnotation_EssayID(essayId);
   };
 
@@ -333,11 +416,10 @@ shared (msg) actor class Kawak(
     _Brew_DIP721.MintNFT(title, content, caller);
   };
 
-  public shared ({caller}) func transferNFTto(to : Principal, tokenId : Nat) : async Result.Result<Nat, DipTypes.NftError> {
+  public shared ({ caller }) func transferNFTto(to : Principal, tokenId : Nat) : async Result.Result<Nat, DipTypes.NftError> {
     _Brew_DIP721.TransferNFTto(to, caller, tokenId);
   };
 
- 
   let _Market = Marketplace.Market({
     _Admins;
     _Users;
@@ -347,34 +429,34 @@ shared (msg) actor class Kawak(
     MarketListingEntries = stableMarketListingEntries;
   });
 
-  public shared ({caller}) func TotalListedNFT() : async Nat {
+  public shared ({ caller }) func TotalListedNFT() : async Nat {
     _Market.mp_totalListed();
   };
 
-  public shared ({caller}) func ViewSellerListedNFTs() : async  Result.Result<[MarketplaceTypes.Listing], Text> {
-      _Market.mp_viewSellerListedNFTs(caller);
+  public shared ({ caller }) func ViewSellerListedNFTs() : async Result.Result<[MarketplaceTypes.Listing], Text> {
+    _Market.mp_viewSellerListedNFTs(caller);
   };
 
-  public shared ({caller}) func GetListedNFTPrice(itemId : Nat) : async Result.Result<Nat64, Text> {
+  public shared ({ caller }) func GetListedNFTPrice(itemId : Nat) : async Result.Result<Nat64, Text> {
     _Market.mp_getListedNFTPrice(itemId);
   };
 
-  public shared ({caller}) func GetNFTSeller(itemId : Nat) : async Principal {
+  public shared ({ caller }) func GetNFTSeller(itemId : Nat) : async Principal {
     _Market.mp_getNFTSeller(itemId);
   };
 
-  public shared ({caller}) func AmIlisted(tokenId : Nat) : async Bool {
+  public shared ({ caller }) func AmIlisted(tokenId : Nat) : async Bool {
     _Market.mp_amIlisted(tokenId);
   };
 
-  public shared ({caller}) func UnListItem(tokenId : Nat) : async Result.Result<Text, Text>{
+  public shared ({ caller }) func UnListItem(tokenId : Nat) : async Result.Result<Text, Text> {
     _Market.mp_unListItem(caller, tokenId);
   };
-  public shared ({caller}) func ViewMarket() : async [MarketplaceTypes.Listing] {
-    _Market.mp_viewMarket()
+  public shared ({ caller }) func ViewMarket() : async [MarketplaceTypes.Listing] {
+    _Market.mp_viewMarket();
   };
 
-   public shared ({caller}) func ListItem(tokenId : Nat, price : Nat64) : async Nat {
+  public shared ({ caller }) func ListItem(tokenId : Nat, price : Nat64) : async Nat {
     _Market.mp_ListItem(caller, tokenId, price);
   };
 
