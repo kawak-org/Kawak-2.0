@@ -51,13 +51,19 @@ const Onboarding2 = () => {
 		setCreating(true);
 		actor
 			?.createProfile(username, avatarUrl)
-			.then((d) => {
+			.then((d:any) => {
+				// chows error message if userrname is not unique
+				if(d.err) {
+					toast.error(d.err)
+					setCreating(false);
+					return
+				}
 				// Track click on button
-				trackEvent({
-					category: "Sign up",
-					action: "click-event",
-					documentTitle: "Onboarding Screen", // optional
-				});
+				// trackEvent({
+				// 	category: "Sign up",
+				// 	action: "click-event",
+				// 	documentTitle: "Onboarding Screen", // optional
+				// });
 				actor
 					?.logIn()
 					.then((d) => {
@@ -72,16 +78,17 @@ const Onboarding2 = () => {
 							refreshPage();
 							return;
 						}
-						// setCreating(false);
+						setCreating(false);
 						toast.error("could not log in");
 					})
 					.catch((err) => {
 						console.log(err);
-						// setCreating(false);
+						setCreating(false);
 						toast.error(err.message);
 					});
 			})
 			.catch((err) => {
+				setCreating(false);
 				toast.error(err);
 				console.log(err);
 				// setCreating(false);
