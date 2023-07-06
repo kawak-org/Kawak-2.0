@@ -855,8 +855,8 @@ export default function Page() {
           </div> */}
            <div className="relative mt-[3.9rem">
            <video /*  className="tag-content2" */ autoPlay muted controls>
-            <source src={`onboarding-videos/KawaK2.0_Forge.m4v`} type="video/mp4"/>
-            <source src={`onboarding-videos/KawaK2.0_Forge.ogg`} type="video/ogg"/>
+            <source src={`onboarding-videos/ForgeFinal.mp4`} type="video/mp4"/>
+            <source src={`onboarding-videos/ForgeFinal.ogg`} type="video/ogg"/>
             Your browser does not support the video tag.
           </video>
           </div>
@@ -943,7 +943,7 @@ export default function Page() {
             </div>
           </div>
 
-          {/* <div className="relative mt-[3.9rem] tribunal2">
+          <div className="relative mt-[3.9rem] tribunal2">
             <img
               className="z-20 tribunal-content2"
               src={`forge-3.png`}
@@ -960,14 +960,8 @@ export default function Page() {
               alt=""
             />
 
-          </div> */}
-           <div className="relative mt-[3.9rem] ">
-           <video /* className="tribunal-content2" */ autoPlay muted controls>
-            <source src={`onboarding-videos/KawaK2.0_Forge.m4v`} type="video/mp4"/>
-            <source src={`onboarding-videos/KawaK2.0_Forge.ogg`} type="video/ogg"/>
-            Your browser does not support the video tag.
-          </video>
           </div>
+         
         </div>
       </section>
 
