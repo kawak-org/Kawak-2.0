@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { convert } from "html-to-text";
 import { useAppSelector } from "../../redux/hooks";
+import { TagGroup, Tag } from "rsuite";
 type Props = {
   annotationEnabled?: boolean;
   title?: string;
@@ -12,6 +13,7 @@ type Props = {
   words?: number;
   reviewed: boolean;
   avatar: string;
+  tags: any;
 };
 
 const EssayCard = ({
@@ -23,17 +25,34 @@ const EssayCard = ({
   annotationEnabled,
   reviewed,
   avatar,
+  tags,
 }: Props) => {
   const text = convert(body, {
     wordwrap: 90,
   });
   const [wordLimit, setWordLimit] = useState(text.slice(0, 200));
   const user = useAppSelector((state) => state.profile);
+  const [color, setColor] = useState([
+    "violet",
+    "blue",
+    "orange",
+    "yellow",
+    "grey",
+    "green",
+    "cyan",
+  ]);
+  const [randomColor, setRandomColor] = useState<any>("");
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * color.length);
+    const selectedElement = color[randomIndex];
+    setRandomColor(selectedElement);
+  }, []);
 
   return (
     <div className="dark:bg-[#323f4b] bg-white shadow-xl rounded-[10px] py-3 px-4 max-w-sm hover:scale-105 transition-transform duration-200 ease-in-out">
       <div className="flex flex-row justify-between items-center mt-5">
-        <h2 className=" text-[#08172E] font-bold text-base dark:text-white/90 ">
+        <h2 className=" text-[#08172E] font-bold text-base dark:text-white/90 no-underline">
           {title}
         </h2>
         <div className="flex flex-row justify-center items-center">
@@ -43,12 +62,25 @@ const EssayCard = ({
       </div>
 
       <div className=" flex flex-col mt-3">
-        <p className="text-[#141414] dark:text-white/70 text-sm text-ellipsis overflow-hidden">
+        <p className="text-[#141414] dark:text-white/70 text-sm text-ellipsis overflow-hidden no-underline">
           {wordLimit}..........
         </p>
-        <span className="w-full mt-1 text-xs text-gray-400  flex items-center justify-end flex-row">
-          {words} words
-        </span>
+        <div className="flex flex-row justify-between items-center my-3 flex-wrap">
+          <TagGroup
+            className="flex flex-row flex-wrap
+          "
+          >
+            {tags.map((tag, index) => (
+              <Tag key={index} color={randomColor}>
+                {tag}
+              </Tag>
+            ))}
+          </TagGroup>
+
+          <span className="w-full mt-1 text-xs text-gray-400  flex items-center justify-end flex-row">
+            {words} words
+          </span>
+        </div>
       </div>
 
       <div className="border-b-2 bg-gray-400 my-3" />

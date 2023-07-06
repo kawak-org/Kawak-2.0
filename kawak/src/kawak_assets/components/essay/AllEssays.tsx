@@ -67,7 +67,11 @@ const AllEssays = () => {
 			lg:grid-cols-3 xl:grid-cols-4 gap-6"
           >
             {essays?.map((d: any) => (
-              <Link key={d.id} to={`/my-essay/${d.id}`}>
+              <Link
+                style={{ textDecoration: "none" }}
+                key={d.id}
+                to={`/my-essay/${d.id}`}
+              >
                 <EssayCard
                   annotationEnabled={true}
                   body={d.text}
@@ -77,6 +81,7 @@ const AllEssays = () => {
                   title={d.title}
                   reviewed={d.reviewed}
                   avatar={d.avatar}
+                  tags={d.tags}
                 />
               </Link>
             ))}

@@ -56,11 +56,11 @@ const Navbar = () => {
   //   setActivePage(number);
   // };
 
-  // const handleSignOut = () => {
-  //   window.localStorage.clear();
-  //   window.location.reload();
-  //   // navigate("/");
-  // };
+  const handleSignOut = () => {
+    window.localStorage.clear();
+    window.location.reload();
+    navigate("/");
+  };
 
   return (
     <div className="fixed dark:bg-[#323f4b] top-0 z-30 bg-white sm:bg-[#08172E] h-[4rem] flex flex-rol items-center justify-between w-full">
@@ -129,7 +129,7 @@ const Navbar = () => {
 									</p> */}
 
                     <p
-                      onClick={() => navigate("/terms-and-condition")}
+                      onClick={() => navigate("/terms-and-conditions")}
                       className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer"
                     >
                       Terms of Use
@@ -309,7 +309,7 @@ const Navbar = () => {
 							</p> */}
 
               <p
-                onClick={() => navigate("/terms-and-condition")}
+                onClick={() => navigate("/terms-and-conditions")}
                 className="text-gray-500 text-xs my-2 dark:hover:bg-white/10 dark:hover:text-white/60 hover:bg-gray-200 p-1 hover:w-full font-normal cursor-pointer"
               >
                 Terms of Use
@@ -432,9 +432,9 @@ const Navbar = () => {
           </div>
         </div>
       )}
-      {/* {modalIsOpen && (
+      {modalIsOpen && (
         <SignOutModal modal={setModalIsOpen} handleSignOut={handleSignOut} />
-      )} */}
+      )}
     </div>
   );
 };

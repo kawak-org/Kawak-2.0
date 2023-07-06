@@ -55,6 +55,7 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
                 className=" flex flex-row mt-4 cursor-pointer "
               >
                 <NavLink
+                  style={{ textDecoration: "none" }}
                   to="all-essays"
                   className={({ isActive }) =>
                     isActive
@@ -73,6 +74,7 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
                 className="flex flex-row mt-4  cursor-pointer"
               >
                 <NavLink
+                  style={{ textDecoration: "none" }}
                   to="reviewed-essay"
                   className={({ isActive }) =>
                     isActive
@@ -91,6 +93,7 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
                 className="flex flex-row mt-4  cursor-pointer"
               >
                 <NavLink
+                  style={{ textDecoration: "none" }}
                   to="not-reviewed-essay"
                   className={({ isActive }) =>
                     isActive
@@ -109,6 +112,7 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
                 className="flex flex-row mt-4  cursor-pointer"
               >
                 <NavLink
+                  style={{ textDecoration: "none" }}
                   to="draft"
                   className={({ isActive }) =>
                     isActive
@@ -121,7 +125,7 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
               </div>
             </div>
           )}
-          <Link to="/craft">
+          <Link style={{ textDecoration: "none" }} to="/craft">
             <button className="dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white craft-Essay ml-5 text-white bg-[#08172E] hover:bg-primary-light hover:text-black">
               Create Essay
             </button>
@@ -129,9 +133,10 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
         </div>
       </div>
 
-      <div className="sm:flex hidden flex-row w-full justify-between items-center mt-3 ">
+      <div className="sm:flex hidden flex-row w-full justify-between items-center mt-[0.8rem] ">
         <div className=" flex flex-row mb-[-1.3rem]">
           <NavLink
+            style={{ textDecoration: "none" }}
             to="all-essays"
             className={({ isActive }) =>
               isActive
@@ -142,6 +147,7 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
             All
           </NavLink>
           <NavLink
+            style={{ textDecoration: "none" }}
             to="reviewed-essay"
             className={({ isActive }) =>
               isActive
@@ -152,6 +158,7 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
             Reviewed
           </NavLink>
           <NavLink
+            style={{ textDecoration: "none" }}
             to="not-reviewed-essay"
             className={({ isActive }) =>
               isActive
@@ -162,6 +169,7 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
             Not Reviewed
           </NavLink>
           <NavLink
+            style={{ textDecoration: "none" }}
             to="draft"
             className={({ isActive }) =>
               isActive
@@ -174,7 +182,7 @@ const MyEssaysViewLayout = ({ heading }: Props) => {
         </div>
 
         <div className="flex ml-5">
-          <Link to="/craft">
+          <Link style={{ textDecoration: "none" }} to="/craft">
             <button className="dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white craft-Essay text-white bg-[#08172E] hover:bg-primary-light hover:text-black">
               Create an essay
             </button>
