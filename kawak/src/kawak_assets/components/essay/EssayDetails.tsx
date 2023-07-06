@@ -127,6 +127,7 @@ const EssayDetails = () => {
             value.push(d[0]);
             setEssay(value);
             setIsLoading2(false);
+            console.log(d)
             return;
           }
           setNoEssay(true);
@@ -248,22 +249,21 @@ const EssayDetails = () => {
 
                           <div className="flex flex-col mt-3 ">
                             <h4 className="text-[#F98E2D] dark:text-[#F98E2D]/60 text-base font-bold mb-2 ">
-                              Note:
+                              Description:
                             </h4>
                             <div className="flex flex-row  mb-2">
                               <div className=" w-1 mt-[6px] p-1 h-1 rounded-full  justify-center items-center dark:text-[#F98E2D]/50 bg-[#F98E2D] "></div>
                               <p className="text-[#08172E] dark:text-gray-400  text-xs font-medium ml-2">
-                                Read the essay and highlight suggestions and
-                                feedbacks
+                                {essay[0].description && essay[0].description}
                               </p>
                             </div>
-                            <div className="flex flex-row  mb-2">
+                            {/* <div className="flex flex-row  mb-2">
                               <div className=" w-1 mt-[6px] p-1 h-1 rounded-full justify-center items-center dark:text-[#F98E2D]/50 bg-[#F98E2D] "></div>
                               <p className="text-[#08172E] dark:text-gray-400 text-xs font-medium ml-2">
                                 After reading through the essay be sure to give
                                 your overall feedback
                               </p>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
 
@@ -319,22 +319,21 @@ const EssayDetails = () => {
 
                       <div className="flex flex-col mt-3 ">
                         <h4 className="text-[#F98E2D] text-base font-bold mb-2 ">
-                          Note:
+                          Description:
                         </h4>
                         <div className="flex flex-row  mb-2">
                           <div className=" w-1 mt-[6px] p-1 h-1 rounded-full  justify-center items-center bg-[#F98E2D] "></div>
                           <p className="dark:text-white/60 text-[#08172E] text-xs font-medium ml-2">
-                            Read the essay and highlight suggestions and
-                            feedbacks
+                          {essay[0]?.description && essay[0]?.description}
                           </p>
                         </div>
-                        <div className="flex flex-row  mb-2">
+                        {/* <div className="flex flex-row  mb-2">
                           <div className=" w-1 mt-[6px] p-1 h-1 rounded-full justify-center items-center bg-[#F98E2D] "></div>
                           <p className=" dark:text-white/60 text-[#08172E] text-xs font-medium ml-2">
                             After reading through the essay be sure to give your
                             overall feedback
                           </p>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
 
