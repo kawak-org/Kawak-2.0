@@ -882,8 +882,8 @@ export default function Page() {
           </div> */}
            <div className="relative mt-[3.9rem] ">
            <video /* className="anvil-content" */ /* width="320" height="240" */autoPlay muted controls>
-            <source src={`onboarding-videos/KawaK2.0_Forge.m4v`} type="video/mp4"/>
-            <source src={`onboarding-videos/KawaK2.0_Forge.ogg`} type="video/ogg"/>
+            <source src={`onboarding-videos/Anvil.mp4`} type="video/mp4"/>
+            <source src={`onboarding-videos/Anvil.ogg`} type="video/ogg"/>
             Your browser does not support the video tag.
           </video>
           </div>
