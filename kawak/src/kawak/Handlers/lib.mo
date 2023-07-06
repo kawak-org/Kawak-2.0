@@ -192,6 +192,143 @@ module {
             return decision;
         };
 
+
+        public func updatePastRating(essayID : Nat, reviewID : Nat, rating : Nat){
+            var annotation = GetAnnotation(essayID);
+            for (vals in Iter.fromArray(annotation)){
+                if (vals.id == reviewID){
+                    var user = state. _Users.getUser(vals.user);
+                    switch(user){
+                        case(null){};
+                        case(?user){
+                            var updatedArray = Array.append(user.pastRatedFeedbacks, [rating]);
+                            var i = 0;
+                            var iterator = 0;
+                            for (j in updatedArray.vals()) {
+                                iterator := iterator + 1;
+                                i := i + j;
+                            };
+                            var annotatorUpdate = {
+                                userName = user.userName;
+                                role = user.role;
+                                token_balance = user.token_balance;
+                                avatar = user.avatar;
+                                userRating = Nat.div(i, iterator);
+                                myEssays = user.myEssays;
+                                myDrafts = user.myDrafts;
+                                createdAt = user.createdAt;
+                                reviewingEssay = user.reviewingEssay;
+                                pastRatedFeedbacks = user.pastRatedFeedbacks;
+                                onBoarding = user.onBoarding;
+                                isAdmin = user.isAdmin;
+                            };
+                            var replaced = state._Users._updateUserProfile(vals.user, annotatorUpdate);
+                        }
+                    }
+                }
+            }
+        };
+
+        public func UpdateReview(essayID : Nat, review : [Types.AnnotationEntry]) : () {
+            var essay = EssayHashMap.get(essayID);
+            switch(essay){
+                case(null){};
+                case(?essay) {
+                    var update = {
+                        id = essay.id;
+                        aid = essay.aid;
+                        owner = essay.owner;
+                        title = essay.title;
+                        topic = essay.topic;
+                        wordCount = essay.wordCount;
+                        //createdAt : Time;
+                        reviewTimes = essay.reviewTimes;
+                        reviewed = essay.reviewed;
+                        essayCost = essay.essayCost;
+                        submittedAt = essay.submittedAt;
+                        text = essay.text;
+                        userDetails = essay.userDetails;
+                        reviews = review;
+                        _public = essay._public;
+                        description = essay.description;
+                    };
+                    var updated = UpdateEssay(essayID, update); 
+                };
+            };
+        };
+
+        public func updateRating(bool : Bool, essayID : Nat, reviewID : Nat ) : () {
+             var annotation = GetAnnotation(essayID);
+            for (vals in Iter.fromArray(annotation)){
+                if (vals.id == reviewID){
+                    var uptReview = {
+                        id = vals.id;
+                        essayID = vals.essayID;
+                        user = vals.user;
+                        comments = vals.comments;
+                        quote = vals.comments;
+                        rated = bool;
+                    };
+                    var thawed = Array.thaw<Types.AnnotationEntry>(annotation);
+                    thawed[reviewID-1] := uptReview;
+                    var frozen = Array.freeze<Types.AnnotationEntry>(thawed);
+                    UpdateReview(essayID, frozen);
+                    // vals.rated := true;
+                }
+            }
+        };
+
+
+        public func getAnnotatorPrincipal(essayID : Nat, reviewID : Nat) : ?Principal{
+            var annotation = GetAnnotation(essayID);
+            var user : ?Principal = null;
+            for (vals in Iter.fromArray(annotation)){
+                if (vals.id == reviewID){
+                    user := ?vals.user;
+                };
+            };
+            return user; 
+        };
+
+        
+
+        public func Rate(essayID : Nat, reviewID : Nat, rating : Nat, aid : Principal) : ?() {
+            var essay = GetEssay(essayID);
+            var annotation = GetAnnotation(essayID);
+            updatePastRating(essayID, reviewID, rating);
+            switch(essay){
+                case(null){null};
+                case(?essay){
+                    do ? {
+                        var cost = essay.essayCost;
+                        var annotatorPrincipal = getAnnotatorPrincipal(essayID, reviewID)!;
+                        var _annotation = state._Users.getUser(annotatorPrincipal)!;
+                        var _annotatorUpdate = {
+                            userName = _annotation.userName;
+                            role = _annotation.role;
+                            token_balance = _annotation.token_balance + cost;
+                            avatar = _annotation.avatar;
+                            userRating = _annotation.userRating;
+                            myEssays = _annotation.myEssays;
+                            myDrafts = _annotation.myDrafts;
+                            createdAt = _annotation.createdAt;
+                            reviewingEssay = _annotation.reviewingEssay;
+                            pastRatedFeedbacks = _annotation.pastRatedFeedbacks;
+                            onBoarding = _annotation.onBoarding;
+                            isAdmin = _annotation.isAdmin;
+                        };
+                        var replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
+                        // var __replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
+                        var transfer = state._Brew_DIP20.transfer(aid, annotatorPrincipal, cost);
+                        updateRating(true, essayID, reviewID);
+                    }
+                }
+            // var annotation = GetAnnotation(essayID);
+            };
+        };
+
+
+
         // @deprecated function
         // public func GetUserEssays(userName : Text) : ?[Types.EssayEntry] {
         //     do ? {
@@ -313,7 +450,7 @@ module {
                         aid = essay.aid;
                         owner = essay.owner;
                         title = essay.title;
-                        topic = [essay.title];
+                        topic = essay.topic;
                         wordCount = essay.wordCount;
                         //createdAt : Time;
                         reviewTimes = essay.reviewTimes;

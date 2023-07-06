@@ -235,6 +235,10 @@ shared (msg) actor class Kawak(
     _Essays.DeleteEssay(id, caller);
   };
 
+  public shared ({caller}) func AddRating_(essayID : Nat, reviewID : Nat, rating : Nat) : async ?() {
+    _Essays.Rate(essayID, reviewID, rating, caller);
+  };
+
   // public shared ({caller}) func createEssays(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Nat {
   //   if (essay_word_count < 100){
   //     throw Error.reject(" $ Oooops! Minimum number of words should be 100. # ");
