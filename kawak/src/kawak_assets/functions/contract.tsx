@@ -88,7 +88,7 @@ export const useGetAllEssays = () => {
       if (data) {
         for (let i = 0; i < data.length; i++) {
           const val = data[i];
-         
+
           var val_: EssayType = {
             id: Number(val.id),
             essayCost: Number(val.essayCost),
@@ -99,8 +99,9 @@ export const useGetAllEssays = () => {
             text: val.text,
             title: val.title,
             reviewTimes: Number(val.reviewTimes),
-            public:val._public,
-            description: val.description
+            public: val._public,
+            description: val.description,
+            tags: val.topic,
           };
           dispatch(addToForge(val_));
         }
@@ -128,7 +129,7 @@ export const useGetRecentForge = () => {
       setLoading(true);
       const data = await actor?.getAllEssays();
       if (data) {
-        console.log(data)
+        console.log(data);
         for (let i = 0; i < data.length; i++) {
           const val = data[i];
           var val_: EssayType = {
@@ -141,8 +142,9 @@ export const useGetRecentForge = () => {
             text: val.text,
             title: val.title,
             reviewTimes: Number(val.reviewTimes),
-            public:val._public,
-            description: val.description
+            public: val._public,
+            description: val.description,
+            tags: val.topic,
           };
           array.push(val_);
         }
@@ -227,8 +229,9 @@ export const useGetMyEssays = () => {
             text: val.text,
             title: val.title,
             reviewTimes: Number(val.reviewTimes),
-            public:val._public,
-            description: val.description
+            public: val._public,
+            description: val.description,
+            tags: val.topic,
           };
           dispatch(addToMyEssay(val_));
         }
@@ -285,163 +288,161 @@ export const useGetAllNFTs = () => {
   }
 };
 
-
 //MARKETPLACE FUNCTIONS
 
 export const useMarketPlaceLists = () => {
-	const [loading, setLoading] = useState(false);
-	const navigate = useNavigate();
-	const dispatch = useAppDispatch();
-	try {
-		const { actor } = useContext(UserContext);
-		const handleMarketPlace = () => {
-			setLoading(true);
-			actor
-				?.ViewMarket()
-				.then((d) => {
-					let marketPlace: ItemType[] = [];
-					for (let i = 0; i < d.length; i++) {
-						const item = d[i];
-						marketPlace.push({
-							id: Number(item.itemId),
-							owner: item.metadata.userEntry[0].userName,
-							content: item.metadata.content,
-							title: item.metadata.title,
-							price: Number(item.price),
-							listed: item.status.listed,
-							avatar: item.metadata.userEntry[0].avatar,
-						});
-					}
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  try {
+    const { actor } = useContext(UserContext);
+    const handleMarketPlace = () => {
+      setLoading(true);
+      actor
+        ?.ViewMarket()
+        .then((d) => {
+          let marketPlace: ItemType[] = [];
+          for (let i = 0; i < d.length; i++) {
+            const item = d[i];
+            marketPlace.push({
+              id: Number(item.itemId),
+              owner: item.metadata.userEntry[0].userName,
+              content: item.metadata.content,
+              title: item.metadata.title,
+              price: Number(item.price),
+              listed: item.status.listed,
+              avatar: item.metadata.userEntry[0].avatar,
+            });
+          }
 
-					dispatch(clearMarketPlace());
-					marketPlace.forEach((d) => {
-						dispatch(addToMarketPlace(d));
-					});
-					setLoading(false);
-					return;
-				})
-				.catch((err) => {
-					setLoading(false);
-					ErrorHandler(err);
-				});
-		};
-		return { handleMarketPlace, loading };
-	} catch (err) {
-		toast.error("something went wrong");
-		setLoading(false);
-	}
+          dispatch(clearMarketPlace());
+          marketPlace.forEach((d) => {
+            dispatch(addToMarketPlace(d));
+          });
+          setLoading(false);
+          return;
+        })
+        .catch((err) => {
+          setLoading(false);
+          ErrorHandler(err);
+        });
+    };
+    return { handleMarketPlace, loading };
+  } catch (err) {
+    toast.error("something went wrong");
+    setLoading(false);
+  }
 };
 
 export const useListNFTonMarketPlace = () => {
-	const [loading, setLoading] = useState(false);
-	const navigate = useNavigate();
-	const dispatch = useAppDispatch();
-	try {
-		const { actor } = useContext(UserContext);
-		const handleAddToMarketPlace = (nftId: number, price: number) => {
-			setLoading(true);
-			actor
-				?.ListItem(BigInt(nftId), BigInt(price))
-				.then((d) => {
-					setLoading(false);
-					navigate("/marketplace");
-					toast.success("successfully listed");
-				})
-				.catch((err) => {
-					setLoading(false);
-					ErrorHandler(err);
-					console.log(err);
-				});
-		};
-		return { handleAddToMarketPlace, loading };
-	} catch (err) {
-		toast.error("something went wrong");
-		setLoading(false);
-	}
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  try {
+    const { actor } = useContext(UserContext);
+    const handleAddToMarketPlace = (nftId: number, price: number) => {
+      setLoading(true);
+      actor
+        ?.ListItem(BigInt(nftId), BigInt(price))
+        .then((d) => {
+          setLoading(false);
+          navigate("/marketplace");
+          toast.success("successfully listed");
+        })
+        .catch((err) => {
+          setLoading(false);
+          ErrorHandler(err);
+          console.log(err);
+        });
+    };
+    return { handleAddToMarketPlace, loading };
+  } catch (err) {
+    toast.error("something went wrong");
+    setLoading(false);
+  }
 };
 
-  export const useGetNFTDetailsMP = () => {
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch();
-    try {
-      const { actor } = useContext(UserContext);
-      const handleGetDetails = (nftId: string) => {
-        // setLoading(true);
-        // actor
-        //   .mp_viewListedNFT(BigInt(nftId))
-        //   .then((d: any) => {
-        //     console.log("detail", d);
-        //     const data = {
-        //       id: Number(d.ok.itemId),
-        //       owner: d.ok.metadata.userEntry[0].userName,
-        //       content: d.ok.metadata.content,
-        //       title: d.ok.metadata.title,
-        //       price: Number(d.ok.price),
-        //       listed: d.ok.status.listed,
-        //       avatar: d.ok.metadata.userEntry[0].avatar,
-        //     };
-        //     // console.log("data", data, d);
-        //     dispatch(addMarketPlaceDetail(data));
-        //     setLoading(false);
-        //   })
-        //   .catch((err) => {
-        //     ErrorHandler(err);
-        //     setLoading(false);
-        //   });
-      };
-  
-      return { handleGetDetails, loading };
-    } catch (err) {
-      toast.error("something went wrong");
-      setLoading(false);
-    }
-  };
+export const useGetNFTDetailsMP = () => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  try {
+    const { actor } = useContext(UserContext);
+    const handleGetDetails = (nftId: string) => {
+      // setLoading(true);
+      // actor
+      //   .mp_viewListedNFT(BigInt(nftId))
+      //   .then((d: any) => {
+      //     console.log("detail", d);
+      //     const data = {
+      //       id: Number(d.ok.itemId),
+      //       owner: d.ok.metadata.userEntry[0].userName,
+      //       content: d.ok.metadata.content,
+      //       title: d.ok.metadata.title,
+      //       price: Number(d.ok.price),
+      //       listed: d.ok.status.listed,
+      //       avatar: d.ok.metadata.userEntry[0].avatar,
+      //     };
+      //     // console.log("data", data, d);
+      //     dispatch(addMarketPlaceDetail(data));
+      //     setLoading(false);
+      //   })
+      //   .catch((err) => {
+      //     ErrorHandler(err);
+      //     setLoading(false);
+      //   });
+    };
 
+    return { handleGetDetails, loading };
+  } catch (err) {
+    toast.error("something went wrong");
+    setLoading(false);
+  }
+};
 
 //SEARCH
 
 export const useFilterEssay = () => {
   const [loading, setLoading] = useState(false);
-	const navigate = useNavigate();
-	const dispatch = useAppDispatch();
-	try {
-		const { actor } = useContext(UserContext);
-		const handleFilterEssay = (text:[string]) => {
-			setLoading(true);
-			actor
-				?.getFilteredEssays(text)
-				.then((d) => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  try {
+    const { actor } = useContext(UserContext);
+    const handleFilterEssay = (text: [string]) => {
+      setLoading(true);
+      actor
+        ?.getFilteredEssays(text)
+        .then((d) => {
           console.log(d);
-					// let marketPlace: ItemType[] = [];
-					// for (let i = 0; i < d.length; i++) {
-					// 	const item = d[i];
-					// 	marketPlace.push({
-					// 		id: Number(item.itemId),
-					// 		owner: item.metadata.userEntry[0].userName,
-					// 		content: item.metadata.content,
-					// 		title: item.metadata.title,
-					// 		price: Number(item.price),
-					// 		listed: item.status.listed,
-					// 		avatar: item.metadata.userEntry[0].avatar,
-					// 	});
-					// }
+          // let marketPlace: ItemType[] = [];
+          // for (let i = 0; i < d.length; i++) {
+          // 	const item = d[i];
+          // 	marketPlace.push({
+          // 		id: Number(item.itemId),
+          // 		owner: item.metadata.userEntry[0].userName,
+          // 		content: item.metadata.content,
+          // 		title: item.metadata.title,
+          // 		price: Number(item.price),
+          // 		listed: item.status.listed,
+          // 		avatar: item.metadata.userEntry[0].avatar,
+          // 	});
+          // }
 
-					// dispatch(clearMarketPlace());
-					// marketPlace.forEach((d) => {
-					// 	dispatch(addToMarketPlace(d));
-					// });
-					setLoading(false);
-					return;
-				})
-				.catch((err) => {
-					setLoading(false);
-					ErrorHandler(err);
-				});
-		};
-		return { handleFilterEssay, loading };
-	} catch (err) {
-		toast.error("something went wrong");
-		setLoading(false);
-	}
-}
+          // dispatch(clearMarketPlace());
+          // marketPlace.forEach((d) => {
+          // 	dispatch(addToMarketPlace(d));
+          // });
+          setLoading(false);
+          return;
+        })
+        .catch((err) => {
+          setLoading(false);
+          ErrorHandler(err);
+        });
+    };
+    return { handleFilterEssay, loading };
+  } catch (err) {
+    toast.error("something went wrong");
+    setLoading(false);
+  }
+};

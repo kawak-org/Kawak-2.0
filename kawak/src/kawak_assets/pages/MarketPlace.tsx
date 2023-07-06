@@ -13,58 +13,58 @@ import Loader from "../components/Loaders/Loader";
 import { Link } from "react-router-dom";
 
 const MarketPlace = () => {
-	const [openSort, setOpenSort] = useState<boolean>(false);
-	const [openWalletTab, setOpenWalletTab] = useState<boolean>(false);
-	const [pageNumber, setPageNumber] = useState<number>(0);
-	const NftPerPage: number = 8;
-	const NftViewed: number = pageNumber * NftPerPage;
-	const marketPlace = useAppSelector((state) => state.marketPlace);
+  const [openSort, setOpenSort] = useState<boolean>(false);
+  const [openWalletTab, setOpenWalletTab] = useState<boolean>(false);
+  const [pageNumber, setPageNumber] = useState<number>(0);
+  const NftPerPage: number = 8;
+  const NftViewed: number = pageNumber * NftPerPage;
+  const marketPlace = useAppSelector((state) => state.marketPlace);
 
-	const pageCount: number = Math.ceil(marketPlace?.length / NftPerPage);
-	const changePage = ({ selected }) => {
-		setPageNumber(selected);
-	};
+  const pageCount: number = Math.ceil(marketPlace?.length / NftPerPage);
+  const changePage = ({ selected }) => {
+    setPageNumber(selected);
+  };
 
-	const displayNfts = marketPlace
-		?.slice(NftViewed, NftViewed + NftPerPage)
-		.map((data) => (
-			<Link key={data.id} to={`/marketplace-essay-view/${data.id}`}>
-				<div key={data.id}>
-					<MarketCard
-						id={data.id}
-						owner={data.owner}
-						content={data.content}
-						title={data.title}
-						price={data.price}
-						listed={data.listed}
-						avatar={data.avatar}
-					/>
-				</div>
-			</Link>
-		));
+  const displayNfts = marketPlace
+    ?.slice(NftViewed, NftViewed + NftPerPage)
+    .map((data) => (
+      <Link key={data.id} to={`/marketplace-essay-view/${data.id}`}>
+        <div key={data.id}>
+          <MarketCard
+            id={data.id}
+            owner={data.owner}
+            content={data.content}
+            title={data.title}
+            price={data.price}
+            listed={data.listed}
+            avatar={data.avatar}
+          />
+        </div>
+      </Link>
+    ));
 
-	const { handleMarketPlace, loading } = useMarketPlaceLists();
+  const { handleMarketPlace, loading } = useMarketPlaceLists();
 
-	useEffect(() => {
-		if (marketPlace.length < 1) return handleMarketPlace();
-	}, []);
+  useEffect(() => {
+    if (marketPlace.length < 1) return handleMarketPlace();
+  }, []);
 
-	return (
-		<div>
-			<Navbar />
-			{loading ? (
-				<div className='className=" w-full h-screen flex m-auto justify-center items-center mt-[-5rem] '>
-					<Loader />
-				</div>
-		 ) : ( 
-				<>
-					<div className='mx-8 mt-16 mb-8'>
-						<div className='flex flex-col justify-center items-center mt-[7rem]'>
-							<h2 className='text-[#08172E] text-3xl font-semibold '>
-								Marketplace
-							</h2>
+  return (
+    <div>
+      <Navbar />
+      {loading ? (
+        <div className='className=" w-full h-screen flex m-auto justify-center items-center mt-[-5rem] '>
+          <Loader />
+        </div>
+      ) : (
+        <>
+          <div className="mx-8 mt-16 mb-8">
+            <div className="flex flex-col justify-center items-center mt-[7rem]">
+              <h2 className="text-[#08172E] dark:text-white/90 text-3xl font-semibold ">
+                Marketplace
+              </h2>
 
-							{/* <div className='w-[20%] flex items-center mt-[1rem] border-[1px] py-1 border-[#141414]/60 '>
+              {/* <div className='w-[20%] flex items-center mt-[1rem] border-[1px] py-1 border-[#141414]/60 '>
 						<AiOutlineSearch className='mx-4' />
 						<input
 							type='text'
@@ -72,9 +72,9 @@ const MarketPlace = () => {
 							className=' border-none outline-none text-sm'
 						/>
 					</div> */}
-						</div>
+            </div>
 
-						{/* <div className='w-[100%] flex mt-[1rem] justify-end'>
+            {/* <div className='w-[100%] flex mt-[1rem] justify-end'>
 					<div className=' flex relative'>
 						<button
 							className='flex relative justify-center items-center bg-transparent px-2 ml-7 py-2 border border-solid border-[#08172E] text-sm  rounded-[4px]'
@@ -122,43 +122,43 @@ const MarketPlace = () => {
 					</div>
 				</div> */}
 
-						<div className='flex flex-col'>
-							{marketPlace.length === 0 && loading === false && (
-								<div className=' flex w-full h-[70%] flex-col text-bold mt-16  justify-center items-center '>
-									<img src={"pana2.png"} alt='' />
-									<p className='text-[#141414]/60 my-4 text-center text-base max-w-[650px] '>
-										There are currently no Nfts listed here.
-									</p>
-									<Link to='/forge'>
-										<button className='text-white bg-[#08172E] text-base py-3 px-10'>
-											Back to Forge
-										</button>
-									</Link>
-								</div>
-							 )} 
-							<div className='grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-4 mt-8 gap-4'>
-								{displayNfts}
-							</div>
-							<div className=' flex flex-row justify-end items-center mt-4 '>
-								{marketPlace?.length >= 5 && (
-									<ReactPaginate
-										previousLabel={<MdKeyboardArrowLeft className='text-xl' />}
-										nextLabel={<MdKeyboardArrowRight className='text-xl' />}
-										pageCount={pageCount}
-										onPageChange={changePage}
-										containerClassName={" paginationBttns "}
-										previousLinkClassName={""}
-										nextLinkClassName={""}
-										disabledClassName={""}
-										activeClassName={"activeBttn"}
-									/>
-								)}
-							</div>
-						</div>
-					</div>
-				</>
-			 )} 
-		</div>
-	);
+            <div className="flex flex-col">
+              {marketPlace.length === 0 && loading === false && (
+                <div className=" flex w-full h-[70%] flex-col text-bold mt-16  justify-center items-center ">
+                  <img src={"pana2.png"} alt="" />
+                  <p className="text-[#141414]/60 dark:text-white/90 my-4 text-center text-base max-w-[650px] ">
+                    There are currently no Nfts listed here.
+                  </p>
+                  <Link to="/forge">
+                    <button className="dark:bg-[#627D98] hover:no-underline dark:hover:text-white dark:hover:bg-[#9AA5B1] bg-[#08172E] hover:bg-primary-light hover:text-black text-base py-3 px-10">
+                      Back to Forge
+                    </button>
+                  </Link>
+                </div>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2  xl:grid-cols-4 mt-8 gap-4">
+                {displayNfts}
+              </div>
+              <div className=" flex flex-row justify-end items-center mt-4 ">
+                {marketPlace?.length >= 5 && (
+                  <ReactPaginate
+                    previousLabel={<MdKeyboardArrowLeft className="text-xl" />}
+                    nextLabel={<MdKeyboardArrowRight className="text-xl" />}
+                    pageCount={pageCount}
+                    onPageChange={changePage}
+                    containerClassName={" paginationBttns "}
+                    previousLinkClassName={""}
+                    nextLinkClassName={""}
+                    disabledClassName={""}
+                    activeClassName={"activeBttn"}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
 };
 export default MarketPlace;

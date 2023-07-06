@@ -81,9 +81,9 @@ const TagInput = () => {
         ))}
         <button
           onClick={() => setShowInputTag(true)}
-          className="border dark:text-white/60 text-sm md:text-base cursor-pointer rounded-[9999px] w-[fit-content] border-gray-300 flex justify-center items-center px-4 py-2 "
+          className="text-white dark:bg-[#627D98] rounded-[12px] hover:bg-[#1a2026] dark:hover:bg-[#9AA5B1] dark:hover:text-white bg-[#08172E] text-base py-3 px-5"
         >
-          More
+          Create a Custom Tag
         </button>
       </div>
       {showInputTag && (

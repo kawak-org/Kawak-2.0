@@ -43,7 +43,7 @@ const ReviewedEssay = () => {
                 <p className="text-[#141414]/60 dark:text-white/90 my-4 text-center text-base max-w-[650px] ">
                   You have not created any essay yet.
                 </p>
-                <Link to="/craft">
+                <Link style={{ textDecoration: "none" }} to="/craft">
                   <button className="text-white dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white bg-[#08172E] text-base py-3 px-10">
                     Create an Essay
                   </button>
@@ -68,7 +68,11 @@ const ReviewedEssay = () => {
 			lg:grid-cols-3 xl:grid-cols-4 gap-6"
           >
             {reviewed?.map((d: any) => (
-              <Link key={d.id} to={`/my-essay/${d.id}`}>
+              <Link
+                style={{ textDecoration: "none" }}
+                key={d.id}
+                to={`/my-essay/${d.id}`}
+              >
                 <EssayCard
                   annotationEnabled={true}
                   body={d.text}
@@ -78,6 +82,7 @@ const ReviewedEssay = () => {
                   title={d.title}
                   reviewed={d.reviewed}
                   avatar={d.avatar}
+                  tags={d.tags}
                 />
               </Link>
             ))}

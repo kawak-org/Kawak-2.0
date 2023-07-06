@@ -19,7 +19,6 @@ const DashboardViewLayout = ({ heading }: Props) => {
   const user = useAppSelector((state) => state.profile);
   const essays = useAppSelector((state) => state.forge);
   // const loading = false;
-
   const { fetchData, loading } = useGetAllEssays();
   const { fetchData: updateData, loading: updating } = useGetRecentForge();
   const [pageNumber, setPageNumber] = useState(0);
@@ -39,11 +38,13 @@ const DashboardViewLayout = ({ heading }: Props) => {
         title: string;
         reviewed: boolean;
         avatar: string;
-        public:boolean;
-        description:string
+        public: boolean;
+        description: string;
+        tags: string[];
       }) => (
         <Link
           key={d.id}
+          style={{ textDecoration: "none" }}
           to={
             user.username === d.owner ? `/my-essay/${d.id}` : `/forge/${d.id}`
           }
@@ -58,6 +59,7 @@ const DashboardViewLayout = ({ heading }: Props) => {
             title={d.title}
             reviewed={d.reviewed}
             avatar={d.avatar}
+            tags={d.tags}
           />
         </Link>
       )
