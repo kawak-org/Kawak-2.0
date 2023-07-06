@@ -114,7 +114,7 @@ shared (msg) actor class Kawak(
     caller;
   };
 
-  
+
 
   let _Users = Users.User({
     ProfileEntries = stableProfileEntries;
@@ -438,6 +438,10 @@ shared (msg) actor class Kawak(
   public shared ({ caller }) func ViewSellerListedNFTs() : async Result.Result<[MarketplaceTypes.Listing], Text> {
     _Market.mp_viewSellerListedNFTs(caller);
   };
+
+  public shared ({caller}) func ViewListedNFTs(itemID : Nat) : async Result.Result<MarketplaceTypes.Listing, Text> {
+    _Market.mp_viewListedNFT(itemID);
+  }; 
 
   public shared ({ caller }) func GetListedNFTPrice(itemId : Nat) : async Result.Result<Nat64, Text> {
     _Market.mp_getListedNFTPrice(itemId);
