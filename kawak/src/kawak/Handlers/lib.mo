@@ -239,7 +239,7 @@ module {
                                 aid = essay.aid;
                                 owner = essay.owner;
                                 title = essay.title;
-                                topic = [essay.title];
+                                topic = essay.topic;
                                 wordCount = essay.wordCount;
                                 //createdAt : Time;
                                 reviewTimes = essay.reviewTimes + 1;
