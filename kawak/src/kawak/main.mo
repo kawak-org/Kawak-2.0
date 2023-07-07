@@ -171,9 +171,9 @@ shared (msg) actor class Kawak(
     _Brew_DIP20.transfer(caller, to, value);
   };
 
-  // public shared ({caller}) func removeAdmin(principal : Principal) : async {
-  //   _Admins.removeAdmin(caller, principal);
-  // };
+  public shared ({caller}) func removeAdmin(principal : Principal) : async () {
+    _Admins.removeAdmin(caller, principal);
+  };
 
   let _Essays = Handlers.Essays({
     caller;
