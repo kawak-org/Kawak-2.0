@@ -176,9 +176,9 @@ module {
 
         
 
-        // public func GetAllEssays() : [Types.EssayEntry] {
-        //     essays.toArray();
-        // };
+        public func GetAllEssays_() : [Types.EssayEntry] {
+            essays.toArray();
+        };
 
         public func IsEssayOwner(id : Nat, caller : Principal) : Bool {
             var decision = false;
