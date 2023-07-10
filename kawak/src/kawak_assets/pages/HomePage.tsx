@@ -351,6 +351,7 @@ export default function Page() {
       ?.logIn()
       .then((d) => {
         if (d === true) {
+          console.log("loggin function success response", d)
           changeAuthStatus();
           navigate("/forge");
           navigate(0);
@@ -360,14 +361,15 @@ export default function Page() {
           return;
         }
         changeAuthStatus();
+        console.log("loggin function success response", d)
         navigate("/onboarding1");
         navigate(0);
         // window.location.reload();
         // setIamNew(true);
       })
       .catch((err) => {
+        console.log("loggin function error response", err)
         ErrorHandler(err);
-        console.log(err);
         // alert(err);
       });
   };
@@ -838,7 +840,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="relative mt-[3.9rem] tag2">
+          {/* <div className="relative mt-[3.9rem] tag2">
             <img className="z-20 tag-content2" src={`forge-3.png`} alt="" />
             <img
               className="absolute z-[-20] bottom-0 left-[-13rem]"
@@ -850,11 +852,18 @@ export default function Page() {
               src={`pink.png`}
               alt=""
             />
+          </div> */}
+           <div className="relative mt-[3.9rem">
+           <video /*  className="tag-content2" */ autoPlay muted controls>
+            <source src={`onboarding-videos/ForgeFinal.mp4`} type="video/mp4"/>
+            <source src={`onboarding-videos/ForgeFinal.ogg`} type="video/ogg"/>
+            Your browser does not support the video tag.
+          </video>
           </div>
         </div>
 
         <div className="flex flex-col-reverse md:flex-row items-center gap-[4rem] mt-[10rem]">
-          <div className="relative mt-[3.9rem] anvil">
+          {/* <div className="relative mt-[3.9rem] anvil">
             <img
               className="z-20 anvil-content"
               src={`text-editor.png`}
@@ -870,6 +879,13 @@ export default function Page() {
               src={`pink.png`}
               alt=""
             />
+          </div> */}
+           <div className="relative mt-[3.9rem] ">
+           <video /* className="anvil-content" */ /* width="320" height="240" */autoPlay muted controls>
+            <source src={`onboarding-videos/Anvil.mp4`} type="video/mp4"/>
+            <source src={`onboarding-videos/Anvil.ogg`} type="video/ogg"/>
+            Your browser does not support the video tag.
+          </video>
           </div>
 
           <div className="flex flex-col anvil2">
@@ -884,30 +900,6 @@ export default function Page() {
               editor and private storage tool. Write, dance, think, create,
               explore like no one is watching.
             </p>
-
-            {/* <div className=' mt-3 flex flex-col'>
-							<div className='flex flex-row  my-3 '>
-								<div className='bg-[#F98E2D] w-4 h-4 p-3 rounded-full'></div>
-								<p className='text-[#152537] ml-2 text-sm '>
-									Lorem ipsum dolor sit amet, consectetur adipiscing elitneque
-									nullap donec.
-								</p>
-							</div>
-							<div className='flex flex-row  my-3 '>
-								<div className='bg-[#F98E2D] w-4 h-4 p-3 rounded-full'></div>
-								<p className='text-[#152537] ml-2 text-sm '>
-									Lorem ipsum dolor sit amet, consectetur adipiscing elitneque
-									nullap donec.
-								</p>
-							</div>
-							<div className='flex flex-row my-3'>
-								<div className='bg-[#F98E2D] w-4 h-4 p-3 rounded-full'></div>
-								<p className='text-[#152537] ml-2 text-sm '>
-									Lorem ipsum dolor sit amet, consectetur adipiscing elitneque
-									nullap donec.
-								</p>
-							</div>
-						</div> */}
           </div>
         </div>
 
@@ -967,7 +959,9 @@ export default function Page() {
               src={`pink.png`}
               alt=""
             />
+
           </div>
+         
         </div>
       </section>
 

@@ -123,8 +123,8 @@ const MyEssayDetails = () => {
   const submitRating = () => {
     setModalLoading(true);
     console.log(id, rating);
-    actor
-    	.addRating(BigInt(annotations[annotationPosition]?.id), BigInt(rating), annotations[annotationPosition]?.user)
+    actor.AddRating(BigInt(annotations[annotationPosition]?.id), BigInt(rating), annotations[annotationPosition]?.user)
+    	// .addRating(BigInt(annotations[annotationPosition]?.id), BigInt(rating), annotations[annotationPosition]?.user)
     	.then((data) => {
     		console.log("add rating result", data);
     		toast.success("User's rating successfully added");

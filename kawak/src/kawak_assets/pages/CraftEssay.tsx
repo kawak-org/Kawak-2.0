@@ -117,6 +117,7 @@ const CraftEssay = () => {
           visibility,
           description
         )
+        
         .then((d) => {
           if (d) {
             // Track Create Essay Event
