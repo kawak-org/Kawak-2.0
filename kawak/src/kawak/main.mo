@@ -169,9 +169,9 @@ shared (msg) actor class Kawak(
     _Brew_DIP20.transfer(caller, to, value);
   };
 
-  // public shared ({caller}) func removeAdmin(principal : Principal) : async {
-  //   _Admins.removeAdmin(caller, principal);
-  // };
+  public shared ({caller}) func removeAdmin(principal : Principal) : async () {
+    _Admins.removeAdmin(caller, principal);
+  };
 
   let _Essays = Handlers.Essays({
     caller;
@@ -217,9 +217,9 @@ shared (msg) actor class Kawak(
     _Essays.GetAnnotation(id);
   };
 
-  // public shared ({caller}) func updateDescription(desc : Text, id : Nat) : async (){
-  //   _Essays.UpdateDescription(desc, id);
-  // };
+  public shared ({caller}) func updateDescription(desc : Text, id : Nat) : async (){
+    _Essays.UpdateDescription(desc, id);
+  };
 
   public shared ({ caller }) func getUserEssays(userName : Text) : async ?[HandlersTypes.EssayEntry] {
     _Essays.GetUserEssays(userName);
