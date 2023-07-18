@@ -442,7 +442,7 @@ const EssayCard = ({
                     ? "violet"
                     : tag === "engineering"
                     ? "violet"
-                    : "cyan"
+                    : "grey"
                 }
               >
                 {tag}

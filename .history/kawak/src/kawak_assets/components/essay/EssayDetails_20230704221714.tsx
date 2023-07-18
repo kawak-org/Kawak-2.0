@@ -186,12 +186,12 @@ const EssayDetails = () => {
                     <div className="flex flex-col my-5 space-y-5 justify-center items-center">
                       <div>
                         {/* {essay[0].reviewed === false ? ( */}
-                        <button
-                          onClick={changeSection}
-                          className="py-2 px-14 text-white bg-[#F98E2D] dark:bg-[#627D98] dark:hover:text-white dark:hover:bg-[#9AA5B1] hover:bg-[#F98E2D]/30 hover:text-black"
-                        >
-                          {isLoading3 ? "just a sec..." : "Review Essay"}
-                        </button>
+                          <button
+                            onClick={changeSection}
+                            className="py-2 px-14 text-white bg-[#F98E2D] dark:bg-[#627D98] dark:hover:text-white dark:hover:bg-[#9AA5B1] hover:bg-[#F98E2D]/30 hover:text-black"
+                          >
+                            {isLoading3 ? "just a sec..." : "Review Essay"}
+                          </button>
                         {/* ) : (
                           <div className="bg-[#08172E]/20 py-2 px-4 sm:px-14">
                             This essay has been reviewed already
@@ -228,11 +228,7 @@ const EssayDetails = () => {
                             </div>
 
                             <div className="flex flex-row justify-center items-center">
-                              <img
-                                className="w-[2rem] "
-                                src={`wood-log.png`}
-                                alt="token"
-                              />
+                              <img src={`token-icon.png`} alt="token" />
                               <p className="text-[#2F6FED] ml-1 text-base">
                                 {Number(essay[0].essayCost)}
                               </p>
@@ -303,11 +299,7 @@ const EssayDetails = () => {
                         </div>
 
                         <div className="flex flex-row justify-center items-center">
-                          <img
-                            className="w-[2rem] "
-                            src={`wood-log.png`}
-                            alt="token"
-                          />
+                          <img src={`token-icon.png`} alt="token" />
                           <p className="text-[#2F6FED] ml-1 text-base">
                             {Number(essay[0].essayCost)}
                           </p>

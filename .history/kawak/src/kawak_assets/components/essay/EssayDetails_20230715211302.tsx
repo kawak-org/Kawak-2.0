@@ -303,11 +303,7 @@ const EssayDetails = () => {
                         </div>
 
                         <div className="flex flex-row justify-center items-center">
-                          <img
-                            className="w-[2rem] "
-                            src={`wood-log.png`}
-                            alt="token"
-                          />
+                          <img src={`token-icon.png`} alt="token" />
                           <p className="text-[#2F6FED] ml-1 text-base">
                             {Number(essay[0].essayCost)}
                           </p>

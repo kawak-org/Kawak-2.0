@@ -304,7 +304,7 @@ const EssayDetails = () => {
 
                         <div className="flex flex-row justify-center items-center">
                           <img
-                            className="w-[2rem] "
+                            sclassName="w-[2rem] "
                             src={`wood-log.png`}
                             alt="token"
                           />

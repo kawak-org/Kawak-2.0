@@ -49,7 +49,7 @@ const NftDetails = () => {
               <p className="text-[#08172E]  font-medium">Price</p>
 
               <div className="flex flex-row justify-center items-center mt-3">
-                <img className="w-[2rem] " src={`wood-log.png`} alt="token" />
+                <img src={`token-icon.png`} alt="token" />
                 <p className="text-[#2F6FED] ml-1 text-base">{nft.price}</p>
 
                 {/* <p className='text-[#141414]/40 ml-4  text-xs font-semibold '>

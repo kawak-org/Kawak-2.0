@@ -14,18 +14,15 @@ import LexicalRichTextEditor from "../../src/RichText/LexicalRichTextEditor";
 import { BiArrowBack } from "react-icons/bi";
 import { useMatomo } from "@datapunt/matomo-tracker-react";
 import Loader from "../Loaders/Loader";
-import { Carousel } from "react-responsive-carousel";
+import {Carousel} from 'react-responsive-carousel';
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
-import {
-  addAnnotation,
-  clearAnnotation,
-} from "../../redux/slice/annotationSlice";
+import {addAnnotation, clearAnnotation} from "../../redux/slice/annotationSlice"
 // import CustomPrompt from "../../utils/navigation-block/CustomPrompt";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; 
 import ShowComment from "./ShowComment";
 import FeedbackModal from "../../components/Modal/FeedbackModal";
-import Toggle from "react-toggle";
-import "react-toggle/style.css";
+import Toggle from 'react-toggle'
+import "react-toggle/style.css" 
 
 type ReviewType = {
   id: number;
@@ -50,17 +47,14 @@ const MyEssayDetails = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [rateModal, setRateModal] = useState(false);
   const [showComment, setShowComment] = useState(false);
-  const [reviewId, setReviewId] = useState(null);
-  const annotations = useAppSelector((state) => state.annotation);
-  const dispatch = useAppDispatch();
-  const [annotationPosition, setAnnotationPosition] = useState(0);
-  const [disabled, setDisabled] = useState(false);
-  const [visibility, setVisibility] = useState(false);
+  const [reviewId, setReviewId] = useState(null)
+  const annotations = useAppSelector((state) => state.annotation)
+  const dispatch = useAppDispatch()
+  const [annotationPosition, setAnnotationPosition] = useState(0)
+  const [disabled, setDisabled] = useState(false)
+  const [visibility, setVisibility] = useState(false)
   // const [openComment, setOpenComment] = useState(false);
-  var unserialized =
-    annotations[annotationPosition] == null
-      ? undefined
-      : JSON.parse(annotations[annotationPosition]?.quote);
+  var unserialized =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote);
 
   const { trackEvent } = useMatomo();
 
@@ -86,32 +80,36 @@ const MyEssayDetails = () => {
           if (d) {
             value.push(d[0]);
             setEssay(value);
-            setVisibility(value[0]._public);
+            setVisibility(value[0]._public)
             // console.log(value)
-            const rev: [ReviewType] = [null];
-            console.log(d);
-            dispatch(clearAnnotation());
+            const rev: [ReviewType]  = [null]
+            console.log(d)
+            dispatch(clearAnnotation())
             const dd = d[0]?.reviews.map((review) => {
               const val = {
                 id: Number(review.id),
                 user: review.user,
                 quote: review.quote,
                 comments: review.comments,
-                rated: review.rated,
-              };
+                rated:review.rated
+              }
+          
+              dispatch(addAnnotation(
+                val
+              ))
+            
 
-              dispatch(addAnnotation(val));
-            });
-            console.log("essay", d);
+            })
+            console.log("essay", d)
             setIsLoading2(false);
-            setReview(rev);
+            setReview(rev)
           }
         })
         .catch((err) => {
           toast.error("could not get an essay with this id");
         });
     };
-
+  
     callOnMount();
   }, []);
 
@@ -126,42 +124,40 @@ const MyEssayDetails = () => {
     setModalLoading(true);
     console.log(id, rating);
     actor
-      .addRating(
-        BigInt(annotations[annotationPosition]?.id),
-        BigInt(rating),
-        annotations[annotationPosition]?.user
-      )
-      .then((data) => {
-        console.log("add rating result", data);
-        toast.success("User's rating successfully added");
-        setModalLoading(false);
-        navigate(-1);
-      })
-      .catch((err) => {
-        console.log(err);
-        setModalLoading(false);
-        toast.error(err);
-      });
+    	.addRating(BigInt(annotations[annotationPosition]?.id), BigInt(rating), annotations[annotationPosition]?.user)
+    	.then((data) => {
+    		console.log("add rating result", data);
+    		toast.success("User's rating successfully added");
+    		setModalLoading(false);
+    		navigate(-1);
+    	})
+    	.catch((err) => {
+    		console.log(err);
+    		setModalLoading(false);
+    		toast.error(err);
+    	});
   };
-  const handleCarouselChange = (index: number) => {
-    setAnnotationPosition(index);
+  const handleCarouselChange = (index:number) => {
+    setAnnotationPosition(index)
   };
 
-  const handleSetVisibility = (e: any) => {
+  const handleSetVisibility = (e:any) => {
     // setDisabled(true)
-    actor
-      .updatePublicStatus(e.target.checked, BigInt(id))
-      .then((d) => {
-        // setDisabled(false)
-        setTimeout(() => {
-          setVisibility((prev) => prev != prev);
-        }, 1000);
-      })
-      .catch((err) => {
-        // setDisabled(false)
-        console.log(err);
-      });
-  };
+  actor.updatePublicStatus(e.target.checked, BigInt(id)).then(d => {
+    // setDisabled(false)
+    setTimeout(() => {
+   setVisibility((prev) => prev != prev)
+  },1000)
+
+  }).catch(err => {
+      // setDisabled(false)
+    console.log(err)
+  
+
+  })
+
+}
+
 
   if (isLoading2) {
     return (
@@ -205,20 +201,16 @@ const MyEssayDetails = () => {
                       </div>
                     </div>
                   ) : (
-                    <Carousel
-                      showArrows={true}
-                      onChange={(e) =>
-                        handleCarouselChange(e)
-                      } /* onClickItem={onClickItem} onClickThumb={onClickThumb} */
-                    >
+                    <Carousel showArrows={true} onChange={(e) => handleCarouselChange(e)} /* onClickItem={onClickItem} onClickThumb={onClickThumb} */>
                       {annotations.map((review_) => (
-                        <ReviewCommentEditor review={review_.comments} />
-                      ))}
-                    </Carousel>
+                     <ReviewCommentEditor review={review_.comments} />
+                      ))
+                       }
+                      </Carousel>
                   )}
                 </div>
-                {/* for mobile view */}
-                {/* ----------------BEGINNING OF MOBILE-------------------------- */}
+            {  /* for mobile view */}     
+                 {/* ----------------BEGINNING OF MOBILE-------------------------- */}
 
                 <button
                   onClick={() => setShowComment(!showComment)}
@@ -227,44 +219,38 @@ const MyEssayDetails = () => {
                   Comment
                 </button>
 
-                {showComment && (
-                  <ShowComment
-                    annotationPosition={annotationPosition}
-                    setRateModal={setRateModal}
-                    setShowComment={setShowComment}
-                    essay={essay}
-                    setModalIsOpen={setModalIsOpen}
-                    handleDelete={handleDelete}
-                    deleting={deleting}
-                    unserialized={unserialized}
-                    rateModal={rateModal}
-                    ratingChanged={ratingChanged}
-                    submitRating={submitRating}
-                    rating={rating}
-                  />
+               {showComment && (
+              <ShowComment 
+              annotationPosition={annotationPosition} setRateModal={setRateModal} 
+              setShowComment={setShowComment} essay={essay} setModalIsOpen={setModalIsOpen} 
+              handleDelete={handleDelete} deleting={deleting} 
+              unserialized={unserialized}
+              rateModal={rateModal}
+              ratingChanged={ratingChanged}
+              submitRating={submitRating}
+              rating={rating}
+              />
                 )}
-                {/* ----------------END OF MOBILE-------------------------- */}
+          {/* ----------------END OF MOBILE-------------------------- */}
 
-                {annotations.length < 1 ? (
+                 {annotations.length < 1 ? (
                   <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
                     <div className="flex bg-[#F98E2D]x flex-col">
                       <div className="flex flex-row justify-between items-center ">
                         <div className="flex flex-row justify-center items-center">
-                          <p className="text-white">Public</p>
+                        <p className="text-white">Public</p>
                           <Toggle
-                            checked={visibility}
-                            onChange={(e) => handleSetVisibility(e)}
-                            disabled={disabled}
+                          checked={visibility}
+                          onChange={(e) => handleSetVisibility(e)}
+                          disabled={disabled}
                           />
                         </div>
 
                         <div className="flex flex-row justify-center items-center">
-                          <img
-                            src={`wood-log.png`}
-                            className="w-[2rem]"
-                            alt="token"
-                          />
+                        
+                          <img src={`token-icon.png`} alt="token" />
                           <p className="text-[#2F6FED] ml-1 text-base">3</p>
+                          
                         </div>
                       </div>
 
@@ -352,6 +338,8 @@ const MyEssayDetails = () => {
                         <></>
                       )}
                     </div>
+
+                 
 
                     <button
                       className="py-2 w-full text-sm text-center mt-8 mb-4 text-white bg-[#F98E2D] "
