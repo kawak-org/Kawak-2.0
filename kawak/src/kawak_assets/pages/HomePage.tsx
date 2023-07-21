@@ -397,6 +397,35 @@ export default function Page() {
     trackPageView(params);
   }, []);
 
+
+  // RUBBISH BEGINS
+  window.addEventListener('load', videoScroll);
+window.addEventListener('scroll', videoScroll);
+
+function videoScroll() {
+
+  if ( document.querySelectorAll('video[autoplay]').length > 0) {
+    var windowHeight = window.innerHeight,
+        videoEl: any = document.querySelectorAll('video[autoplay]');
+
+    for (var i = 0; i < videoEl.length; i++) {
+
+      var thisVideoEl = videoEl[i],
+          videoHeight = thisVideoEl.clientHeight,
+          videoClientRect = thisVideoEl.getBoundingClientRect().top;
+
+      if ( videoClientRect <= ( (windowHeight) - (videoHeight*.5) ) && videoClientRect >= ( 0 - ( videoHeight*.5 ) ) ) {
+        thisVideoEl.play();
+      } else {
+        thisVideoEl.pause();
+      }
+
+    }
+  }
+
+}
+// RUBBISH ENDS
+
   return (
     <div className="p-0 m-0">
       <section className="dark:bg-[#323f4b] bg-[#F98E2D]/10 h-screen  flex flex-col relative ">
@@ -854,41 +883,24 @@ export default function Page() {
             />
           </div> */}
            <div className="relative mt-[3.9rem">
-           <video /*  className="tag-content2" */ autoPlay muted controls>
-            <source src={`onboarding-videos/ForgeFinal.mp4`} type="video/mp4"/>
-            <source src={`onboarding-videos/ForgeFinal.ogg`} type="video/ogg"/>
+           <video  className="relative h-auto w-40% m-auto" autoPlay /* muted */ playsInline loop controls>
+            <source src={`onboarding-videos/Forge.mp4`} type="video/mp4"/>
+            <source src={`onboarding-videos/Forge.ogg`} type="video/ogg"/>
             Your browser does not support the video tag.
           </video>
           </div>
         </div>
 
-        <div className="flex flex-col-reverse md:flex-row items-center gap-[4rem] mt-[10rem]">
-          {/* <div className="relative mt-[3.9rem] anvil">
-            <img
-              className="z-20 anvil-content"
-              src={`text-editor.png`}
-              alt=""
-            />
-            <img
-              className="absolute z-[-20] bottom-0 left-[-13rem]"
-              src={`pink.png`}
-              alt=""
-            />
-            <img
-              className="absolute w-[10rem] sm:w-[20rem] lg:w-[24rem] z-[-20] top-[4rem] right-[-1rem] md:right-[-9rem]"
-              src={`pink.png`}
-              alt=""
-            />
-          </div> */}
+        <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-[4rem] mt-[10rem] ">
            <div className="relative mt-[3.9rem] ">
-           <video /* className="anvil-content" */ /* width="320" height="240" */autoPlay muted controls>
-            <source src={`onboarding-videos/Anvil.mp4`} type="video/mp4"/>
+           <video  className="relative h-auto w-40% m-auto" autoPlay /* muted */ playsInline loop controls>
+            <source /* className="w-[30%]" */ src={`onboarding-videos/Anvil.mp4`} type="video/mp4"/>
             <source src={`onboarding-videos/Anvil.ogg`} type="video/ogg"/>
             Your browser does not support the video tag.
           </video>
           </div>
 
-          <div className="flex flex-col anvil2">
+          <div className="flex flex-col anvil2 order-first md:order-last">
             <div className="text-[#F98E2D] bg-[#F98E2D]/20 w-fit font-semibold text-lg px-10 py-2 rounded-[10px] anvil-content2">
               Anvil
             </div>

@@ -79,6 +79,7 @@ const CraftEssay = () => {
   };
 
   const dispatchField = {
+    id:undefined,
     title,
     tags: tags.map((tag) => tag.text),
     essayCost,
@@ -118,7 +119,7 @@ const CraftEssay = () => {
           description
         )
         
-        .then((d) => {
+        .then((d:any) => {
           if (d) {
             // Track Create Essay Event
             trackEvent({
@@ -132,15 +133,15 @@ const CraftEssay = () => {
             dispatch(setTokenBalance(essayCost));
             dispatch(setnoOfEssays());
             if(visibility) {
-            dispatch(addToForge({ ...dispatchField, id: Number(d) - 1 }));
+            dispatch(addToForge({ ...dispatchField, id: Number(d.ok[0]) - 1 }));
           }
-            dispatch(addToMyEssay({ ...dispatchField, id: Number(d) - 1 }));
+            dispatch(addToMyEssay({ ...dispatchField, id: (Number(d.ok[0]) - 1) }));
             // set essay editor content to initial
             setStateEmpty();
             toast.success("Essay Created");
             dispatch(resetCount());
             localStorage.removeItem("last_essay");
-            console.log(d)
+            // console.log("value of d", d)
             navigate(`/forge`);
           }
         })

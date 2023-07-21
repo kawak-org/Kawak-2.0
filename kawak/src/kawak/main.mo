@@ -114,8 +114,6 @@ shared (msg) actor class Kawak(
     caller;
   };
 
-
-
   let _Users = Users.User({
     ProfileEntries = stableProfileEntries;
     // caller;
@@ -171,9 +169,9 @@ shared (msg) actor class Kawak(
     _Brew_DIP20.transfer(caller, to, value);
   };
 
-  // public shared ({caller}) func removeAdmin(principal : Principal) : async {
-  //   _Admins.removeAdmin(caller, principal);
-  // };
+  public shared ({caller}) func removeAdmin(principal : Principal) : async () {
+    _Admins.removeAdmin(caller, principal);
+  };
 
   let _Essays = Handlers.Essays({
     caller;
@@ -219,9 +217,9 @@ shared (msg) actor class Kawak(
     _Essays.GetAnnotation(id);
   };
 
-  // public shared ({caller}) func updateDescription(desc : Text, id : Nat) : async (){
-  //   _Essays.UpdateDescription(desc, id);
-  // };
+  public shared ({caller}) func updateDescription(desc : Text, id : Nat) : async (){
+    _Essays.UpdateDescription(desc, id);
+  };
 
   public shared ({ caller }) func getUserEssays(userName : Text) : async ?[HandlersTypes.EssayEntry] {
     _Essays.GetUserEssays(userName);
@@ -233,6 +231,10 @@ shared (msg) actor class Kawak(
 
   public shared func deleteEssay(id : Nat) : async Result.Result<Text, Text> {
     _Essays.DeleteEssay(id, caller);
+  };
+
+  public shared ({ caller }) func AddRating_(essayID : Nat, reviewID : Nat, rating : Nat) : async ?() {
+    _Essays.Rate(essayID, reviewID, rating, caller);
   };
 
   // public shared ({caller}) func createEssays(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Nat {
@@ -294,92 +296,92 @@ shared (msg) actor class Kawak(
     _Annotations.GetAnnotator(id);
   };
 
-  public shared ({ caller }) func AddRating(id : Nat, rating : Nat, caller : Principal) : async ?() {
-    var annotator = _Annotations.GetAnnotations(id);
-    switch (annotator) {
-      case (null) { null };
-      case (?annotator) {
-        var user = _Users.getUser(caller);
-        switch (user) {
-          case (null) { null };
-          case (?user) {
-            var updatedArray = Array.append(user.pastRatedFeedbacks, [rating]);
-            var i = 0;
-            var iterator = 0;
-            for (j in updatedArray.vals()) {
-              iterator := iterator + 1;
-              i := i + j;
-            };
-            var annoatorUpdate = {
-              userName = user.userName;
-              role = user.role;
-              token_balance = user.token_balance;
-              avatar = user.avatar;
-              userRating = Nat.div(i, iterator);
-              myEssays = user.myEssays;
-              myDrafts = user.myDrafts;
-              createdAt = user.createdAt;
-              reviewingEssay = user.reviewingEssay;
-              pastRatedFeedbacks = user.pastRatedFeedbacks;
-              onBoarding = user.onBoarding;
-              isAdmin = user.isAdmin;
-            };
-            var userEssayDetails = _Essays.GetEssay(id);
-            switch (userEssayDetails) {
-              case (null) { null };
-              case (?userEssayDetails) {
-                do ? {
-                  var cost = userEssayDetails.essayCost;
-                  var annotatorPrincipal = _Annotations.GetAnnotator(id)!;
-                  var _annotation = _Users.getUser(annotatorPrincipal)!;
-                  var _annotatorUpdate = {
-                    userName = _annotation.userName;
-                    role = _annotation.role;
-                    token_balance = _annotation.token_balance + cost;
-                    avatar = _annotation.avatar;
-                    userRating = _annotation.userRating;
-                    myEssays = _annotation.myEssays;
-                    myDrafts = _annotation.myDrafts;
-                    createdAt = _annotation.createdAt;
-                    reviewingEssay = _annotation.reviewingEssay;
-                    pastRatedFeedbacks = _annotation.pastRatedFeedbacks;
-                    onBoarding = _annotation.onBoarding;
-                    isAdmin = _annotation.isAdmin;
-                  };
-                  var replaced = _Users._updateUserProfile(annotator.user, _annotatorUpdate);
-                  var __replaced = _Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
-                  var transfer = _Brew_DIP20.transfer(caller, annotatorPrincipal, cost);
+  // public shared ({ caller }) func AddRating(id : Nat, rating : Nat, caller : Principal) : async ?() {
+  //   var annotator = _Annotations.GetAnnotations(id);
+  //   switch (annotator) {
+  //     case (null) { null };
+  //     case (?annotator) {
+  //       var user = _Users.getUser(caller);
+  //       switch (user) {
+  //         case (null) { null };
+  //         case (?user) {
+  //           var updatedArray = Array.append(user.pastRatedFeedbacks, [rating]);
+  //           var i = 0;
+  //           var iterator = 0;
+  //           for (j in updatedArray.vals()) {
+  //             iterator := iterator + 1;
+  //             i := i + j;
+  //           };
+  //           var annoatorUpdate = {
+  //             userName = user.userName;
+  //             role = user.role;
+  //             token_balance = user.token_balance;
+  //             avatar = user.avatar;
+  //             userRating = Nat.div(i, iterator);
+  //             myEssays = user.myEssays;
+  //             myDrafts = user.myDrafts;
+  //             createdAt = user.createdAt;
+  //             reviewingEssay = user.reviewingEssay;
+  //             pastRatedFeedbacks = user.pastRatedFeedbacks;
+  //             onBoarding = user.onBoarding;
+  //             isAdmin = user.isAdmin;
+  //           };
+  //           var userEssayDetails = _Essays.GetEssay(id);
+  //           switch (userEssayDetails) {
+  //             case (null) { null };
+  //             case (?userEssayDetails) {
+  //               do ? {
+  //                 var cost = userEssayDetails.essayCost;
+  //                 var annotatorPrincipal = _Annotations.GetAnnotator(id)!;
+  //                 var _annotation = _Users.getUser(annotatorPrincipal)!;
+  //                 var _annotatorUpdate = {
+  //                   userName = _annotation.userName;
+  //                   role = _annotation.role;
+  //                   token_balance = _annotation.token_balance + cost;
+  //                   avatar = _annotation.avatar;
+  //                   userRating = _annotation.userRating;
+  //                   myEssays = _annotation.myEssays;
+  //                   myDrafts = _annotation.myDrafts;
+  //                   createdAt = _annotation.createdAt;
+  //                   reviewingEssay = _annotation.reviewingEssay;
+  //                   pastRatedFeedbacks = _annotation.pastRatedFeedbacks;
+  //                   onBoarding = _annotation.onBoarding;
+  //                   isAdmin = _annotation.isAdmin;
+  //                 };
+  //                 var replaced = _Users._updateUserProfile(annotator.user, _annotatorUpdate);
+  //                 var __replaced = _Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
+  //                 var transfer = _Brew_DIP20.transfer(caller, annotatorPrincipal, cost);
 
-                  var annotated = _Annotations.GetAnnotations(id);
-                  switch (annotated) {
-                    case (null) {
-                      return null;
-                    };
-                    case (?annotated) {
-                      var update = {
-                        id = annotated.id;
-                        essayID = annotated.essayID;
-                        user = annotated.user;
-                        comments = annotated.comments;
-                        quote = annotated.quote;
-                        rated = true;
-                      };
-                      var updated = _Annotations.UpdateAnnoatation(update, id);
-                    };
-                  }
+  //                 var annotated = _Annotations.GetAnnotations(id);
+  //                 switch (annotated) {
+  //                   case (null) {
+  //                     return null;
+  //                   };
+  //                   case (?annotated) {
+  //                     var update = {
+  //                       id = annotated.id;
+  //                       essayID = annotated.essayID;
+  //                       user = annotated.user;
+  //                       comments = annotated.comments;
+  //                       quote = annotated.quote;
+  //                       rated = true;
+  //                     };
+  //                     var updated = _Annotations.UpdateAnnoatation(update, id);
+  //                   };
+  //                 }
 
-                };
-              };
-            };
-          };
-        };
-      };
-    };
-  };
+  //               };
+  //             };
+  //           };
+  //         };
+  //       };
+  //     };
+  //   };
+  // };
 
-  public shared ({ caller }) func addRating(id : Nat, rating : Nat, caller : Principal) : async ?() {
-    _Annotations.AddRating(id, rating, caller);
-  };
+  // public shared ({ caller }) func addRating(id : Nat, rating : Nat, caller : Principal) : async ?() {
+  //   _Annotations.AddRating(id, rating, caller);
+  // };
 
   public shared ({ caller }) func getAnnotation(id : Nat) : async ?HandlersTypes.AnnotationEntry {
     _Annotations.GetAnnotations(id);
@@ -439,9 +441,9 @@ shared (msg) actor class Kawak(
     _Market.mp_viewSellerListedNFTs(caller);
   };
 
-  public shared ({caller}) func ViewListedNFTs(itemID : Nat) : async Result.Result<MarketplaceTypes.Listing, Text> {
+  public shared ({ caller }) func ViewListedNFTs(itemID : Nat) : async Result.Result<MarketplaceTypes.Listing, Text> {
     _Market.mp_viewListedNFT(itemID);
-  }; 
+  };
 
   public shared ({ caller }) func GetListedNFTPrice(itemId : Nat) : async Result.Result<Nat64, Text> {
     _Market.mp_getListedNFTPrice(itemId);
