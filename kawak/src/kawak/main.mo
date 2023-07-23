@@ -233,7 +233,7 @@ shared (msg) actor class Kawak(
     _Essays.DeleteEssay(id, caller);
   };
 
-  public shared ({ caller }) func AddRating_(essayID : Nat, reviewID : Nat, rating : Nat) : async ?() {
+  public shared ({ caller }) func AddRating(essayID : Nat, reviewID : Nat, rating : Nat) : async ?() {
     _Essays.Rate(essayID, reviewID, rating, caller);
   };
 
