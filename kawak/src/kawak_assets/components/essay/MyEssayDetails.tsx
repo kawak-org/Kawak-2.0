@@ -123,19 +123,19 @@ const MyEssayDetails = () => {
   const submitRating = () => {
     setModalLoading(true);
     console.log(id, rating);
-    // actor.AddRating_(BigInt(id), BigInt(annotations[annotationPosition]?.id), BigInt(rating) /* annotations[annotationPosition]?.user */)
-    // 	// .addRating(BigInt(annotations[annotationPosition]?.id), BigInt(rating), annotations[annotationPosition]?.user)
-    // 	.then((data) => {
-    // 		console.log("add rating result", data);
-    // 		toast.success("User's rating successfully added");
-    // 		setModalLoading(false);
-    // 		navigate(-1);
-    // 	})
-    // 	.catch((err) => {
-    // 		console.log(err);
-    // 		setModalLoading(false);
-    // 		toast.error(err);
-    // 	});
+    actor.AddRatingNow(BigInt(id), BigInt(annotations[annotationPosition]?.id), BigInt(rating) /* annotations[annotationPosition]?.user */)
+    	// actor.AddRating(BigInt(id), BigInt(annotations[annotationPosition]?.id), BigInt(rating)/* , annotations[annotationPosition]?.user */)
+    	.then((data) => {
+    		console.log("add rating result", data);
+    		toast.success("User's rating successfully added");
+    		setModalLoading(false);
+    		navigate(-1);
+    	})
+    	.catch((err) => {
+    		console.log(err);
+    		setModalLoading(false);
+    		toast.error(err);
+    	});
   };
   const handleCarouselChange = (index:number) => {
     setAnnotationPosition(index)

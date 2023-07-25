@@ -883,7 +883,7 @@ function videoScroll() {
             />
           </div> */}
            <div className="relative mt-[3.9rem">
-           <video  className="relative h-auto w-40% m-auto" autoPlay /* muted */ playsInline loop controls>
+           <video  className="relative h-auto w-40% m-auto"  /* autoPlay  muted */ playsInline loop controls>
             <source src={`onboarding-videos/Forge.mp4`} type="video/mp4"/>
             <source src={`onboarding-videos/Forge.ogg`} type="video/ogg"/>
             Your browser does not support the video tag.
@@ -893,7 +893,7 @@ function videoScroll() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-[4rem] mt-[10rem] ">
            <div className="relative mt-[3.9rem] ">
-           <video  className="relative h-auto w-40% m-auto" autoPlay /* muted */ playsInline loop controls>
+           <video  className="relative h-auto w-40% m-auto" /* autoPlay  muted */ playsInline loop controls>
             <source /* className="w-[30%]" */ src={`onboarding-videos/Anvil.mp4`} type="video/mp4"/>
             <source src={`onboarding-videos/Anvil.ogg`} type="video/ogg"/>
             Your browser does not support the video tag.
