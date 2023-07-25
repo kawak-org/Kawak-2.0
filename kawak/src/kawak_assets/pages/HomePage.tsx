@@ -398,33 +398,48 @@ export default function Page() {
   }, []);
 
 
-  // RUBBISH BEGINS
-  window.addEventListener('load', videoScroll);
-window.addEventListener('scroll', videoScroll);
 
-function videoScroll() {
+const forgeVid:any = document.getElementById("forgeVid");
+const anvilVid:any = document.getElementById("anvilVid");
 
-  if ( document.querySelectorAll('video[autoplay]').length > 0) {
-    var windowHeight = window.innerHeight,
-        videoEl: any = document.querySelectorAll('video[autoplay]');
 
-    for (var i = 0; i < videoEl.length; i++) {
+function isElementInViewPort(el) {
+  // if(!ref.current) return
+  if(!el) return 
+  else {
+  const rect = el.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+}
+}
 
-      var thisVideoEl = videoEl[i],
-          videoHeight = thisVideoEl.clientHeight,
-          videoClientRect = thisVideoEl.getBoundingClientRect().top;
+function handleVidPlayback () {
 
-      if ( videoClientRect <= ( (windowHeight) - (videoHeight*.5) ) && videoClientRect >= ( 0 - ( videoHeight*.5 ) ) ) {
-        thisVideoEl.play();
-      } else {
-        thisVideoEl.pause();
-      }
-
-    }
+  if ((isElementInViewPort(forgeVid) && isElementInViewPort(anvilVid))) {
+    forgeVid.pause();
+    anvilVid.pause();
   }
 
+  else if (isElementInViewPort(forgeVid) && !isElementInViewPort(anvilVid)){
+    anvilVid.pause();
+  }
+  else if (isElementInViewPort(anvilVid) && !isElementInViewPort(forgeVid))
+  {
+    forgeVid.pause();
+  }
+  else if (forgeVid && !isElementInViewPort(forgeVid)) {
+    forgeVid.pause();
+  }
+  else if (anvilVid && !isElementInViewPort(anvilVid)) {
+    anvilVid.pause();
+  }
 }
-// RUBBISH ENDS
+
+document.addEventListener('scroll', handleVidPlayback);
 
   return (
     <div className="p-0 m-0">
@@ -883,7 +898,7 @@ function videoScroll() {
             />
           </div> */}
            <div className="relative mt-[3.9rem">
-           <video  className="relative h-auto w-40% m-auto"  /* autoPlay  muted */ playsInline loop controls>
+           <video id="forgeVid"  className="relative h-auto w-40% m-auto"  /* autoPlay  muted */ playsInline loop controls>
             <source src={`onboarding-videos/Forge.mp4`} type="video/mp4"/>
             <source src={`onboarding-videos/Forge.ogg`} type="video/ogg"/>
             Your browser does not support the video tag.
@@ -893,7 +908,7 @@ function videoScroll() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-[4rem] mt-[10rem] ">
            <div className="relative mt-[3.9rem] ">
-           <video  className="relative h-auto w-40% m-auto" /* autoPlay  muted */ playsInline loop controls>
+           <video  id="anvilVid" className="relative h-auto w-40% m-auto" /* autoPlay  muted */ playsInline loop controls>
             <source /* className="w-[30%]" */ src={`onboarding-videos/Anvil.mp4`} type="video/mp4"/>
             <source src={`onboarding-videos/Anvil.ogg`} type="video/ogg"/>
             Your browser does not support the video tag.
