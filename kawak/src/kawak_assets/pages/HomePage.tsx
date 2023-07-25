@@ -438,6 +438,17 @@ function handleVidPlayback () {
     anvilVid.pause();
   }
 }
+function setVideoStartTime(seconds) {
+  if (forgeVid && seconds <= forgeVid.duration) {
+    forgeVid.currentTime = seconds;
+  }
+  if ( anvilVid && seconds <= anvilVid.duration) {
+    anvilVid.currentTime = seconds;
+  }
+}
+
+// Call the function with the desired starting time (e.g., 30 seconds)
+setVideoStartTime(1);
 
 document.addEventListener('scroll', handleVidPlayback);
 
