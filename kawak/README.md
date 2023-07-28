@@ -6,19 +6,19 @@ In it's current state users earn the Wood token by providing feedback to others,
 
 Built on the [Internet Computer](https://internetcomputer.org/) in Motoko  
 
-## What's next?
+## What's next? 🏗️
 
 - Feedback functionality for larger sections of code. 
 - Marketplace for Authors to publish their work
 - Conversion into a DAO 
 
-## Contributing
+## Contributing 🌱
 
 Pull requests are more than welcome! For major changes/suggestions, please open an issue first. 
 
 Or drop us a message at contact@kawak.org 
 
 
-## License
+## License 📄
 
 [MIT](https://choosealicense.com/licenses/mit/)
