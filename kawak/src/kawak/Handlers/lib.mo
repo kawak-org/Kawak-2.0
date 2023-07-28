@@ -506,6 +506,8 @@ module {
         //     };
         // };
 
+
+        //  @Deprecated Function
         public func DeleteEssay(id : Nat, caller : Principal) : Result.Result<Text, Text> {
             if (IsEssayOwner(id, caller) == false){
                 return #err("You are not the owner of this essay")
