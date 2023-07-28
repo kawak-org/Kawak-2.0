@@ -1,5 +1,6 @@
-# KawaK <img width="317" alt="Mascot?" src="https://github.com/kawak-org/Kawak-2.0/assets/33438220/7108bbad-9b8f-4cf7-aac4-fed1426c8a6f">
+# KawaK 
 
+![Layer 1 (2)](https://github.com/kawak-org/Kawak-2.0/assets/33438220/272fc5cf-b714-4304-b800-c3e338fb6665)
 
 KawaK is an open source platform that provides access to peer-to-peer human feedback. [Check it out!](https://3ysab-rqaaa-aaaan-qaewq-cai.ic0.app)
 
