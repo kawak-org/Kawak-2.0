@@ -524,6 +524,41 @@ module {
         };
 
 
+        public func deleteEssay(id : Nat, caller : Principal) : () {
+            var user = state._Users.getUser(caller);
+            var essay = GetAllEssays();
+            var tempoRary : [Nat] = [];
+            switch(user){
+                case(null){};
+                case (?user){
+                    for (val in user.myEssays.vals()){
+                        if ((val == id)) {}
+                        else{
+                            tempoRary := Array.append(tempoRary, [val]);
+                        }
+                    };
+                    var updateUser = {
+                        userName = user.userName;
+                        role = user.role;
+                        token_balance = user.token_balance;
+                        avatar = user.avatar;
+                        userRating = user.userRating;
+                        myEssays = tempoRary;
+                        myDrafts = user.myDrafts;
+                        createdAt = user.createdAt;
+                        reviewingEssay = user.reviewingEssay;
+                        pastRatedFeedbacks = user.pastRatedFeedbacks;
+                        onBoarding = user.onBoarding;
+                        isAdmin = user.isAdmin;
+                    };
+                    var replaced = state._Users._updateUserProfile(caller, updateUser);
+                    EssayHashMap.delete(id);
+
+                };
+            };
+        };
+
+
 
 
         // public shared ({ caller }) func createEssay(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Result.Result<Text, Text> {
