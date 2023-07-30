@@ -62,7 +62,7 @@ const MyEssayDetails = () => {
   const handleDelete = () => {
     setDeleting(true);
     actor
-      .deleteEssay(BigInt(id))
+      .DeleteEssay(BigInt(id))
       .then((d) => {
         setDeleting(false);
         toast.success("Essay Deleted");

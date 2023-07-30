@@ -28,6 +28,7 @@ const EssayDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoading3, setIsLoading3] = useState(false);
   const [noEssay, setNoEssay] = useState(true);
+  const [disableSubmit, setDisableSubmit] = useState(true)
   const { trackEvent } = useMatomo();
   // const [data, setData] = useState<string>('')
   const navigate = useNavigate();
@@ -92,8 +93,16 @@ const EssayDetails = () => {
   // 		});
   // };
 
+  useEffect(() => {
+    if(annotation.length > 1 && HighlightEssay.length > 1) {
+      setDisableSubmit(false)
+    }
+  },[])
+
+
   const handleSubmit = () => {
     setIsLoading(true);
+
     actor
       .EssayAnnotate(BigInt(id), HighlightEssay, annotation)
       .then((d) => {
@@ -369,8 +378,9 @@ const EssayDetails = () => {
                   </div>
                   <div className=" z-10 fixed bottom-[3rem] right-[7rem]">
                     <button
-                      className="py-1 px-7 dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white text-sm text-center text-white bg-[#08172E] hover:bg-primary-light hover:text-black"
+                      className="py-1 px-7 disabled:bg-slate-300 dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white text-sm text-center text-white bg-[#08172E] hover:bg-primary-light hover:text-black"
                       onClick={handleSubmit}
+                      // disabled={annotation.length > 1 ? false : true}
                     >
                       {isLoading ? "submitting" : "Submit Review"}
                     </button>
