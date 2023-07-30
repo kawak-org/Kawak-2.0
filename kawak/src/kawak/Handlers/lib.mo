@@ -270,7 +270,7 @@ module {
                         rated = bool;
                     };
                     var thawed = Array.thaw<Types.AnnotationEntry>(annotation);
-                    thawed[reviewID-1] := uptReview;
+                    thawed[reviewID] := uptReview;
                     var frozen = Array.freeze<Types.AnnotationEntry>(thawed);
                     UpdateReview(essayID, frozen);
                     // vals.rated := true;
@@ -295,7 +295,7 @@ module {
         public func Rate(essayID : Nat, reviewID : Nat, rating : Nat, aid : Principal) : ?() {
             var essay = GetEssay(essayID);
             var annotation = GetAnnotation(essayID);
-            updatePastRating(essayID, reviewID, rating);
+            // var unknown = updatePastRating(essayID, reviewID, rating);
             switch(essay){
                 case(null){null};
                 case(?essay){
@@ -318,7 +318,7 @@ module {
                             isAdmin = _annotation.isAdmin;
                         };
                         var replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
-                        // var __replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
+                        var __replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
                         var transfer = state._Brew_DIP20.transfer(aid, annotatorPrincipal, cost);
                         updateRating(true, essayID, reviewID);
                     }
