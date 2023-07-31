@@ -54,8 +54,10 @@ const MyEssayDetails = () => {
   const [disabled, setDisabled] = useState(false)
   const [visibility, setVisibility] = useState(false)
   // const [openComment, setOpenComment] = useState(false);
-  var unserialized =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote);
+  // var unserialized:any =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote);
+  var unserialized:any =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote)
 
+console.log("unserialized",unserialized)
   const { trackEvent } = useMatomo();
 
   // const { deleting, handleDelete } = deleteEssay(BigInt(id));
@@ -83,7 +85,7 @@ const MyEssayDetails = () => {
             setVisibility(value[0]._public)
             // console.log(value)
             const rev: [ReviewType]  = [null]
-            console.log(d)
+            // console.log(d)
             dispatch(clearAnnotation())
             const dd = d[0]?.reviews.map((review) => {
               const val = {
@@ -97,7 +99,7 @@ const MyEssayDetails = () => {
               dispatch(addAnnotation(
                 val
               ))
-            
+            console.log(val)
 
             })
             console.log("essay", d)

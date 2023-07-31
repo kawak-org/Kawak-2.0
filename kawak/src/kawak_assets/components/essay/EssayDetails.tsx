@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import LexicalRichTextEditor from "../../src/RichText/LexicalRichTextEditor";
 import AddCommentEditor from "../../src/RichText/AddComment/AddCommentEditor";
 import { ChatIcon } from "@heroicons/react/solid";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setEssayToReviewed } from "../../redux/slice/forgeEssaySlice";
 import { setMyEssayToReviewed } from "../../redux/slice/myEssaySlice";
 import Navbar from "../../components/shared/navbar/Navbar";
@@ -16,6 +16,13 @@ import Loader from "../Loaders/Loader";
 import { useMatomo } from "@datapunt/matomo-tracker-react";
 import CustomPrompt from "../../utils/navigation-block/CustomPrompt";
 // import icon from '/assets/avatar.png'
+import {Carousel} from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css"; 
+import {addAnnotation, clearAnnotation} from "../../redux/slice/annotationSlice"
+import ReviewCommentEditor from "../../src/RichText/ReviewCommentEditor/ReviewCommentEditor";
+import ShowComment from "./ShowComment_";
+
+
 
 const EssayDetails = () => {
   const { actor } = useContext(UserContext);
@@ -28,11 +35,18 @@ const EssayDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoading3, setIsLoading3] = useState(false);
   const [noEssay, setNoEssay] = useState(true);
-  const [disableSubmit, setDisableSubmit] = useState(true)
+  const [screen, setScreen] = useState(1)
+  // const [disableSubmit, setDisableSubmit] = useState(true)
   const { trackEvent } = useMatomo();
   // const [data, setData] = useState<string>('')
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [annotationPosition, setAnnotationPosition] = useState(0)
+  const annotations = useAppSelector((state) => state.annotation)
+
+
+  var unserialized:any =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote);
+
 
   const { id }: any = useParams();
 
@@ -41,64 +55,8 @@ const EssayDetails = () => {
 
   const changeSection = () => {
     setReviewSection(true);
+    setScreen(2)
   };
-
-  // const handleClick = async () => {
-  // 	setIsLoading3(true);
-  // 	actor
-  // 		.addReviewingEssay(BigInt(id))
-  // 		.then((d) => {
-  // 			if (d) {
-  // 				// Track Add to Reviewing Essay
-  // 				trackEvent({
-  // 					category: "Annotation",
-  // 					action: `Added Essay with ${id} to Reviewing Essay`,
-  // 					documentTitle: "Essay Details Page",
-  // 					href: window.location.href,
-  // 				});
-  // 				setIsLoading3(false);
-  // 				return setAdded(true);
-  // 			}
-  // 			setIsLoading3(false);
-  // 			toast.error("something went wrong");
-  // 		})
-  // 		.catch((err) => {
-  // 			setIsLoading3(false);
-  // 			alert(err);
-  // 			return;
-  // 		});
-  // };
-
-  // const handleSubmit = () => {
-  // 	setIsLoading(true);
-  // 	actor
-  // 		?.submittReviewedEssay(BigInt(id), HighlightEssay, annotation)
-  // 		.then((res) => {
-  // 			// Track Annotation Event
-  // 			trackEvent({
-  // 				category: "Annotation",
-  // 				action: `Submitted an Annotation for Essay with id ${id}`,
-  // 				documentTitle: "Essay Details Page",
-  // 				href: window.location.href,
-  // 			});
-  // 			setIsLoading(false);
-  // 			dispatch(setEssayToReviewed(+id));
-  // 			dispatch(setMyEssayToReviewed(+id));
-  // 			toast.success("Annotation Submitted");
-  // 			navigate(-1);
-  // 		})
-  // 		.catch((err) => {
-  // 			setIsLoading(false);
-  // 			toast.error("something went wrong");
-  // 		});
-  // };
-
-  useEffect(() => {
-    if(annotation.length > 1 && HighlightEssay.length > 1) {
-      setDisableSubmit(false)
-    }
-  },[])
-
 
   const handleSubmit = () => {
     setIsLoading(true);
@@ -136,6 +94,24 @@ const EssayDetails = () => {
             value.push(d[0]);
             setEssay(value);
             setIsLoading2(false);
+
+            dispatch(clearAnnotation())
+            const dd = d[0]?.reviews.map((review) => {
+              const val = {
+                id: Number(review.id),
+                user: review.user,
+                quote: review.quote,
+                comments: review.comments,
+                rated:review.rated
+              }
+          
+              dispatch(addAnnotation(
+                val
+              ))
+            
+
+            })
+
             console.log(d)
             return;
           }
@@ -149,6 +125,10 @@ const EssayDetails = () => {
     };
     callOnMount();
   }, []);
+
+  const handleCarouselChange = (index:number) => {
+    setAnnotationPosition(index)
+  };
 
   if (isLoading2) {
     return (
@@ -173,7 +153,166 @@ const EssayDetails = () => {
           message="You gonna lose your data, are you sure?"
         /> */}
         <Navbar />
-        <div className="relative px-6 mb-8 mt-[6rem]">
+        {screen === 1 ? (
+           <div className="relative px-6 mb-8 mt-[6rem]">
+           <div className="flex flex-col">
+             <div className="mx-4 sm:ml-16 ">
+               <div className="flex flex-row gap-6 relative">
+                 <div className="xl:mr-16 w-full lg:w-[72%]  mt-8  ">
+                   <div
+                     onClick={() => navigate(-1)}
+                     className="flex flex-row absolute left-[-1.5rem] sm:left-[-3rem] top-[-.2rem] items-center cursor-pointer"
+                   >
+                     <BiArrowBack className="text-sm dark:text-white" />
+                     <p className="text-[#08172E] dark:text-white text-lg font-semibold ml-4 ">
+                       Back
+                     </p>
+                   </div>
+                   <h2 className="justify-center dark:text-white m-auto text-3xl font-bold mt-4">
+                     {essay[0].title}
+                   </h2>
+                   <div className="border-b-[1px] bg-gray-400 mt-3 mb-7" />
+                   {annotations.length < 1 ? (
+                     <div>
+                       <LexicalRichTextEditor essay={essay[0].text} />
+                       <div className="w-full flex justify-center items-center">
+                    
+                          <button
+                            onClick={changeSection}
+                            className="py-2 px-14 text-white bg-[#F98E2D] dark:bg-[#627D98] dark:hover:text-white dark:hover:bg-[#9AA5B1] hover:bg-[#F98E2D]/30 hover:text-black"
+                          >
+                            {isLoading3 ? "just a sec..." : "Review Essay"}
+                          </button>
+                          </div>
+                     </div>
+                   ) : (
+                    <div>
+                     <Carousel showArrows={true} onChange={(e) => handleCarouselChange(e)} /* onClickItem={onClickItem} onClickThumb={onClickThumb} */>
+                       {annotations.map((review_) => (
+                      <ReviewCommentEditor review={review_.comments} />
+                       ))
+                        }
+                       </Carousel>
+                       <div className="w-full flex justify-center items-center">
+                    
+                    <button
+                      onClick={changeSection}
+                      className="py-2 px-14 text-white bg-[#F98E2D] dark:bg-[#627D98] dark:hover:text-white dark:hover:bg-[#9AA5B1] hover:bg-[#F98E2D]/30 hover:text-black"
+                    >
+                      {isLoading3 ? "just a sec..." : "Add Review"}
+                    </button>
+                    </div>
+                       </div>
+                   )}
+                 </div>
+             {  /* for mobile view */}     
+                  {/* ----------------BEGINNING OF MOBILE-------------------------- */}
+                {annotations.length < 1 ? (
+                  <></>
+                ): (
+                 <button
+                   onClick={() => setShowComment(!showComment)}
+                   className="py-2 fixed dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white  top-[4.7rem] sm:top-[4.5rem] lg:hidden right-[1rem] px-8 text-white  bg-[#F98E2D] cursor-pointer"
+                 >
+                  {screen === 1 ? "View Comment" : "Add Review" }
+                 </button>
+
+)}
+ 
+                {showComment && (
+               <ShowComment
+               screen={screen}
+               annotationPosition={annotationPosition} 
+               setShowComment={setShowComment} essay={essay} 
+               unserialized={unserialized}
+               changeSection={changeSection}
+    
+               />
+                 )}
+           {/* ----------------END OF MOBILE-------------------------- */}
+ 
+                  {annotations.length < 1 ? (
+                   <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
+                     <div className="flex bg-[#F98E2D]x flex-col">
+            
+                       <div className="border-b-[1px] bg-gray-400 my-2" />
+ 
+                       <div className="flex flex-row justify-between items-center ">
+                         <p className="text-gray-400 text-xs">
+                           {Number(essay[0].wordCount)} words
+                         </p>
+                         <p className="text-[#EF4444]  text-sm font-medium ">
+                           Not Reviewed
+                         </p>
+                       </div>
+                     </div>
+ 
+                     <div className="w-full flex  flex-col  my-4">
+                       <button
+                         className="py-2 w-full text-sm text-center my-2 text-white bg-[#F98E2D] "
+                        onClick={changeSection}
+                       >
+                         Review Now
+                       </button>
+                     </div>
+                   </div>
+                 ) : (
+                   <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
+                     <div className="flebg-[#F98E2D]x flex-col">
+                       <div className="flex flex-row justify-between items-center ">
+                         <div className="flex flex-row"></div>
+ 
+                         <div className="flex flex-row justify-center items-center">
+                           <img src={`token-icon.png`} alt="token" />
+                           <p className="text-[#2F6FED] ml-1 text-base">
+                             {" "}
+                             {Number(essay[0].essayCost)}
+                           </p>
+                         </div>
+                       </div>
+ 
+                       <div className="border-b-[1px] bg-gray-400 my-2" />
+ 
+                       <div className="flex flex-row justify-between items-center ">
+                         <p className="text-gray-400 text-xs">
+                           {Number(essay[0].wordCount)} words
+                         </p>
+                         <p className="text-[#08875D]  text-sm font-medium ">
+                           Reviewed
+                         </p>
+                       </div>
+                     </div>
+ 
+                     <div className=" comment-scroll mt-3 overflow-y-scroll h-[20rem]">
+                       {unserialized ? (
+                         unserialized?.map((item) => {
+                           return (
+                             <div
+                               key={item.id}
+                               className="flex flex-col p-2 my-3 bg-white"
+                             >
+                               <p className="mt-1 font-medium rounded-md w-fit text-sm px-2 bg-[#FFFF00]/10">
+                                 {item.quote}
+                               </p>
+ 
+                               <p className="text-sm mt-2 ">
+                                 {item.comments[0].content}
+                               </p>
+                             </div>
+                           );
+                         })
+                       ) : (
+                         <></>
+                       )}
+                     </div>
+                   </div>
+                 )}
+               </div>
+             </div>
+           </div>
+         </div>
+        ): (
+          <div className="relative px-6 mb-8 mt-[6rem]">
           <div className="flex flex-col">
             <div className="mx-4 sm:ml-16 ">
               {!reviewSection ? (
@@ -390,6 +529,8 @@ const EssayDetails = () => {
             </div>
           </div>
         </div>
+        ) }
+        
       </div>
     );
   }
