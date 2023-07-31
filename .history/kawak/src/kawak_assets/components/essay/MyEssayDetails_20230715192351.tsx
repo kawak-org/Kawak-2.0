@@ -57,17 +57,18 @@ const MyEssayDetails = () => {
   const [disabled, setDisabled] = useState(false);
   const [visibility, setVisibility] = useState(false);
   // const [openComment, setOpenComment] = useState(false);
-  // var unserialized:any =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote);
-  var unserialized:any =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote)
+  var unserialized =
+    annotations[annotationPosition] == null
+      ? undefined
+      : JSON.parse(annotations[annotationPosition]?.quote);
 
-console.log("unserialized",unserialized)
   const { trackEvent } = useMatomo();
 
   // const { deleting, handleDelete } = deleteEssay(BigInt(id));
   const handleDelete = () => {
     setDeleting(true);
     actor
-      .DeleteEssay(BigInt(id))
+      .deleteEssay(BigInt(id))
       .then((d) => {
         setDeleting(false);
         toast.success("Essay Deleted");
@@ -87,22 +88,19 @@ console.log("unserialized",unserialized)
             setEssay(value);
             setVisibility(value[0]._public);
             // console.log(value)
-            const rev: [ReviewType]  = [null]
-            // console.log(d)
-            dispatch(clearAnnotation())
+            const rev: [ReviewType] = [null];
+            console.log(d);
+            dispatch(clearAnnotation());
             const dd = d[0]?.reviews.map((review) => {
               const val = {
                 id: Number(review.id),
                 user: review.user,
                 quote: review.quote,
                 comments: review.comments,
-                rated:review.rated
-              }
-          
-              dispatch(addAnnotation(
-                val
-              ))
-            
+                rated: review.rated,
+              };
+
+              dispatch(addAnnotation(val));
             });
             console.log("essay", d);
             setIsLoading2(false);
@@ -127,21 +125,6 @@ console.log("unserialized",unserialized)
   const submitRating = () => {
     setModalLoading(true);
     console.log(id, rating);
-<<<<<<< HEAD
-    actor.AddRatingNow(BigInt(id), BigInt(annotations[annotationPosition]?.id), BigInt(rating) /* annotations[annotationPosition]?.user */)
-    	// actor.AddRating(BigInt(id), BigInt(annotations[annotationPosition]?.id), BigInt(rating)/* , annotations[annotationPosition]?.user */)
-    	.then((data) => {
-    		console.log("add rating result", data);
-    		toast.success("User's rating successfully added");
-    		setModalLoading(false);
-    		navigate(-1);
-    	})
-    	.catch((err) => {
-    		console.log(err);
-    		setModalLoading(false);
-    		toast.error(err);
-    	});
-=======
     actor
       .addRating(
         BigInt(annotations[annotationPosition]?.id),
@@ -159,7 +142,6 @@ console.log("unserialized",unserialized)
         setModalLoading(false);
         toast.error(err);
       });
->>>>>>> 80c36e14b8e6f9ea8b4714ad124d6d1b3fff5698
   };
   const handleCarouselChange = (index: number) => {
     setAnnotationPosition(index);

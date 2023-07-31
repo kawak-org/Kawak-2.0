@@ -270,7 +270,7 @@ module {
                         rated = bool;
                     };
                     var thawed = Array.thaw<Types.AnnotationEntry>(annotation);
-                    thawed[reviewID-1] := uptReview;
+                    thawed[reviewID] := uptReview;
                     var frozen = Array.freeze<Types.AnnotationEntry>(thawed);
                     UpdateReview(essayID, frozen);
                     // vals.rated := true;
@@ -295,7 +295,7 @@ module {
         public func Rate(essayID : Nat, reviewID : Nat, rating : Nat, aid : Principal) : ?() {
             var essay = GetEssay(essayID);
             var annotation = GetAnnotation(essayID);
-            updatePastRating(essayID, reviewID, rating);
+            // var unknown = updatePastRating(essayID, reviewID, rating);
             switch(essay){
                 case(null){null};
                 case(?essay){
@@ -318,7 +318,7 @@ module {
                             isAdmin = _annotation.isAdmin;
                         };
                         var replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
-                        // var __replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
+                        var __replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
                         var transfer = state._Brew_DIP20.transfer(aid, annotatorPrincipal, cost);
                         updateRating(true, essayID, reviewID);
                     }
@@ -506,6 +506,8 @@ module {
         //     };
         // };
 
+
+        //  @Deprecated Function
         public func DeleteEssay(id : Nat, caller : Principal) : Result.Result<Text, Text> {
             if (IsEssayOwner(id, caller) == false){
                 return #err("You are not the owner of this essay")
@@ -521,6 +523,41 @@ module {
                 essays.add(essay)
             };
             return #ok("You have successfully deleted the essay")
+        };
+
+
+        public func deleteEssay(id : Nat, caller : Principal) : () {
+            var user = state._Users.getUser(caller);
+            var essay = GetAllEssays();
+            var tempoRary : [Nat] = [];
+            switch(user){
+                case(null){};
+                case (?user){
+                    for (val in user.myEssays.vals()){
+                        if ((val == id)) {}
+                        else{
+                            tempoRary := Array.append(tempoRary, [val]);
+                        }
+                    };
+                    var updateUser = {
+                        userName = user.userName;
+                        role = user.role;
+                        token_balance = user.token_balance;
+                        avatar = user.avatar;
+                        userRating = user.userRating;
+                        myEssays = tempoRary;
+                        myDrafts = user.myDrafts;
+                        createdAt = user.createdAt;
+                        reviewingEssay = user.reviewingEssay;
+                        pastRatedFeedbacks = user.pastRatedFeedbacks;
+                        onBoarding = user.onBoarding;
+                        isAdmin = user.isAdmin;
+                    };
+                    var replaced = state._Users._updateUserProfile(caller, updateUser);
+                    EssayHashMap.delete(id);
+
+                };
+            };
         };
 
 

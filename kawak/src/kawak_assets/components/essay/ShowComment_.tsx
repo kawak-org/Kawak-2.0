@@ -7,20 +7,15 @@ import FeedbackModal from "../../components/Modal/FeedbackModal";
 type Props = {
 setShowComment?:any;
 essay?: any;
-setModalIsOpen?: any;
-handleDelete?:any;
-deleting?: boolean;
 unserialized?: any;
 annotationPosition?: number;
-setRateModal?:any;
-rateModal?:any;
-ratingChanged?:any;
-submitRating?:any;
-rating?:any
+screen:number;
+changeSection:any
+
 
 }
 
-function ShowComment({setShowComment, rating, essay, ratingChanged, submitRating, rateModal, setModalIsOpen, handleDelete, deleting,unserialized , annotationPosition, setRateModal}:Props) {
+function ShowComment({setShowComment, screen, changeSection,essay,  unserialized , annotationPosition}:Props) {
   const annotations = useAppSelector((state) => state.annotation)
 
   return (
@@ -60,17 +55,9 @@ function ShowComment({setShowComment, rating, essay, ratingChanged, submitRating
         <div className="w-full flex  flex-col  my-2">
           <button
             className="py-2 w-full text-sm text-center my-2 text-white bg-[#F98E2D] "
-            onClick={() => setModalIsOpen(true)}
+            onClick={changeSection}
           >
-            Mint
-          </button>
-
-        
-          <button
-            className="py-2 w-full text-sm text-center my-2 text-[#B91C1C]  "
-            onClick={handleDelete}
-          >
-            {deleting ? "Deleting..." : "Delete"}
+            Add Review
           </button>
         </div>
       </div>
@@ -129,34 +116,6 @@ function ShowComment({setShowComment, rating, essay, ratingChanged, submitRating
           )}
         </div>
 
-        
-
-        <button
-          className="py-2 w-full text-sm text-center mt-8 mb-2 text-white bg-[#F98E2D] "
-          onClick={() => setModalIsOpen(true)}
-        >
-          Mint
-        </button>
-        {annotations[annotationPosition]?.rated === false ? (
-          <button
-            className="py-2 w-full text-sm text-center my-2 text-white bg-[#F98E2D] "
-            onClick={() => setRateModal(true)}
-          >
-            Rate Review
-          </button>
-        ) : (
-          <></>
-        )}
-
-
-
-        {rateModal && (
-          <FeedbackModal
-            rating={rating}
-            ratingChanged={ratingChanged}
-            submitRating={submitRating}
-          />
-        )}
       </div>
     )}
   </div>

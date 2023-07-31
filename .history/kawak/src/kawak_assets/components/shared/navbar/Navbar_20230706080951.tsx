@@ -420,7 +420,7 @@ const Navbar = () => {
 														 p-6"
             >
               <div className="flex ">
-                <img className="w-[2rem] " src={`wood-log.png`} />
+                <img className="" src={`token2.png`} />
                 <h1 className="text-[#141414] dark:text-white/60 font-bold text-lg sm:text-2x ml-2">
                   {user.tokenBalance}
                 </h1>
