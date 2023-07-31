@@ -49,8 +49,6 @@ const EssayCard = ({
     setRandomColor(selectedElement);
   }, []);
 
-  // console.log(tags)
-
   return (
     <div className="dark:bg-[#323f4b] bg-white shadow-xl rounded-[10px] py-3 px-4 max-w-sm hover:scale-105 transition-transform duration-200 ease-in-out">
       <div className="flex flex-row justify-between items-center mt-5">

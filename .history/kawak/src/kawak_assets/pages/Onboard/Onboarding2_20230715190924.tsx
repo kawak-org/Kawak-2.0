@@ -47,53 +47,46 @@ const Onboarding2 = () => {
     }, 4000);
   };
 
-	const handleSubmit = () => {
-		setCreating(true);
-		actor
-			?.createProfile(username, avatarUrl)
-			.then((d:any) => {
-				// chows error message if userrname is not unique
-				if(d.err) {
-					toast.error(d.err)
-					setCreating(false);
-					return
-				}
-				// Track click on button
-				// trackEvent({
-				// 	category: "Sign up",
-				// 	action: "click-event",
-				// 	documentTitle: "Onboarding Screen", // optional
-				// });
-				actor
-					?.logIn()
-					.then((d) => {
-						if (d) {
-							// Track click on button
-							trackEvent({
-								category: "Log in",
-								action: "click-event",
-								documentTitle: "Onboarding Screen", // optional
-							});
-							setCreating(true);
-							refreshPage();
-							return;
-						}
-						setCreating(false);
-						toast.error("could not log in");
-					})
-					.catch((err) => {
-						console.log(err);
-						setCreating(false);
-						toast.error(err.message);
-					});
-			})
-			.catch((err) => {
-				setCreating(false);
-				toast.error(err);
-				console.log(err);
-				// setCreating(false);
-			});
-	};
+  const handleSubmit = () => {
+    setCreating(true);
+    actor
+      ?.createProfile(username, avatarUrl)
+      .then((d) => {
+        // Track click on button
+        trackEvent({
+          category: "Sign up",
+          action: "click-event",
+          documentTitle: "Onboarding Screen", // optional
+        });
+        actor
+          ?.logIn()
+          .then((d) => {
+            if (d) {
+              // Track click on button
+              trackEvent({
+                category: "Log in",
+                action: "click-event",
+                documentTitle: "Onboarding Screen", // optional
+              });
+              setCreating(true);
+              refreshPage();
+              return;
+            }
+            // setCreating(false);
+            toast.error("could not log in");
+          })
+          .catch((err) => {
+            console.log(err);
+            // setCreating(false);
+            toast.error(err.message);
+          });
+      })
+      .catch((err) => {
+        toast.error(err);
+        console.log(err);
+        // setCreating(false);
+      });
+  };
 
   // let svg = createAvatar(style, {
   // 	seed: "custom-seed",

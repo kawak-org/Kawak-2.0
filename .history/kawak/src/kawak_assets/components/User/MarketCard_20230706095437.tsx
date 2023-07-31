@@ -27,7 +27,7 @@ const MarketCard = ({
           </span>
         </div>
 
-        <div className="border-b-[1px] dark:bg-gray-400/60 bg-gray-400 my-3" />
+        <div className="border-b-[1px] bg-gray-400 my-3" />
 
         <h4 className="#08172E dark:text-white/60  font-semibold text-base mb-3">
           {title}
@@ -37,15 +37,15 @@ const MarketCard = ({
           {content}
         </p>
 
-        <div className="border-b-[1px] dark:bg-gray-400/60 bg-gray-400 my-3" />
+        <div className="border-b-[1px] bg-gray-400 my-3" />
 
         <div className="flex flex-row justify-between items-center">
-          <h2 className=" text-[#08172E] dark:text-white/60  font-bold text-base">
+          <h2 className=" text-[#08172E] dark:text-white/90  font-bold text-base">
             #{id}
           </h2>
           <div className="flex flex-col justify-center items-center">
             <div className="flex flex-row justify-center items-center">
-              <img className="w-[2rem] " src={`wood-log.png`} alt="token" />
+              <img src={`token-icon.png`} alt="token" />
               <p className="text-[#2F6FED] ml-1 text-base">{price}</p>
             </div>
             <p className="text-[#141414]/60 ml-1 mt-1 text-xs dark:text-white/90 ">
