@@ -114,7 +114,7 @@ module {
             UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, [], _public, description));
         };
 
-        private func setReviewStatus(essayID : Nat, status : Bool){
+        public func setReviewStatus(essayID : Nat, status : Bool){
             var essay = GetEssay(essayID);
             var reviewStatus : Types.ReviewStatus = {
                 essayID;
@@ -130,7 +130,7 @@ module {
         };
 
 
-        
+
         // public func createEssays(title : Text, caller : Principal, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : Nat {
         //     var user = state._Users.getUser(caller);
         //     switch(user){
