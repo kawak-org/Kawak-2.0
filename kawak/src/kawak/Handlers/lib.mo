@@ -125,8 +125,12 @@ module {
         };
 
         
+        public func getReviewStatus(essayID : Nat) : ?Types.ReviewStatus {
+            ReviewStatusHash.get(essayID);
+        };
 
 
+        
         // public func createEssays(title : Text, caller : Principal, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : Nat {
         //     var user = state._Users.getUser(caller);
         //     switch(user){
