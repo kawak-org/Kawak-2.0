@@ -28,10 +28,12 @@ module {
 
         var EssayEntries : [(Nat, EssayEntry)] = [];
         var UserEssayEntries : [(Principal, EssayEntry)] = [];
+        var ReviewStatusEntries : [(Nat, Types.ReviewStatus)] = [];
 
         var EssayHashMap : HashMap.HashMap<Nat, EssayEntry> = HashMap.fromIter<Nat, EssayEntry>(EssayEntries.vals(), 1, Nat.equal, Hash.hash);
         var UserEssayHashMap : HashMap.HashMap<Principal, EssayEntry> = HashMap.fromIter<Principal, EssayEntry>(UserEssayEntries.vals(), 10, Principal.equal, Principal.hash); 
-    
+        var ReviewStatusHash : HashMap.HashMap<Nat, Types.ReviewStatus> = HashMap.fromIter<Nat, Types.ReviewStatus>(ReviewStatusEntries.vals(), 1, Nat.equal, Hash.hash);
+
         var essays : Buffer.Buffer<EssayEntry> = Buffer.Buffer(0);
 
         // for (essay in state.essays.vals()) {
@@ -112,6 +114,17 @@ module {
             UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, [], _public, description));
         };
 
+        private func setReviewStatus(essayID : Nat, status : Bool){
+            var essay = GetEssay(essayID);
+            var reviewStatus : Types.ReviewStatus = {
+                essayID;
+                essay;
+                status;
+            } ;
+            ReviewStatusHash.put(essayID, reviewStatus);
+        };
+
+        
 
 
         // public func createEssays(title : Text, caller : Principal, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : Nat {
