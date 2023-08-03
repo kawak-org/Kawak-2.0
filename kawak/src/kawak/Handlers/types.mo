@@ -53,7 +53,7 @@ module {
 
     public type ReviewStatus = {
         essayID : Nat;
-        essay : ?EssayEntry;
+        // essay : ?EssayEntry;
         status : Bool;
     };
 

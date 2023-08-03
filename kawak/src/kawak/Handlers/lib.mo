@@ -36,6 +36,29 @@ module {
 
         var essays : Buffer.Buffer<EssayEntry> = Buffer.Buffer(0);
 
+        var Rstatus : Buffer.Buffer<Types.ReviewStatus> = Buffer.Buffer(0);
+
+        func makeReview(essayID : Nat, status : Bool) : Types.ReviewStatus{
+            {
+                essayID;
+                status;
+            }
+        };
+
+        for ((i, j) in state.EssayEntries.vals()){
+            ReviewStatusHash.put(i, makeReview(j.id, true))
+        };
+
+        public func updateReviewStatus(id : Nat, bool : Bool) {
+            var rev = ReviewStatusHash.get(id);
+            switch(rev){
+                case(null){};
+                case(?rev){
+                    var replaced = ReviewStatusHash.replace(id, makeReview(id, bool));
+                };
+            };
+        };
+
         // for (essay in state.essays.vals()) {
         //     essays.add(essay);
         // };
@@ -129,6 +152,10 @@ module {
             ReviewStatusHash.get(essayID);
         };
 
+        public func getAllReviewStatus() : [(Nat, Types.ReviewStatus)]{
+            Iter.toArray(ReviewStatusHash.entries());
+        };
+
 
 
         // public func createEssays(title : Text, caller : Principal, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : Nat {
@@ -192,7 +219,7 @@ module {
         };
 
         
-
+        // @deprecated
         public func GetAllEssays_() : [Types.EssayEntry] {
             essays.toArray();
         };
