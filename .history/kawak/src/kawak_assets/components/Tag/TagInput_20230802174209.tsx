@@ -18,18 +18,18 @@ const TagInput = () => {
   const dispatch = useAppDispatch();
 
   const newHandleTag = (text) => {
-    // const lastId = tags.length + 2;
-    // const value = text.splice(-1).map((item: any, index: any) => {
-    //   for (let i = 0; i < item.length; i++) {
-    //     const data = {
-    //       id: lastId + 2,
-    //       text: item,
-    //     };
-    //   }
-    // });
-    // dispatch(addTag(value));
-    dispatch(addTag(text));
-    // console.log("value:", value);
+    const lastId = tags.length + 2;
+    const value = text.splice(-1).map((item: any, index: any) => {
+      for (let i = 0; i < item.length; i++) {
+        const data = {
+          id: lastId + 2,
+          item,
+        };
+        return data;
+      }
+    });
+
+    dispatch(addTag(value));
   };
 
   console.log("Tags :", tags);
@@ -43,19 +43,19 @@ const TagInput = () => {
     dispatch(addTag(data));
   };
 
-  // const handleTags = (e) => {
-  //   if (e.key !== "Enter") return;
-  //   const value = e.target.value;
-  //   const lastId = tags.length + 2;
+  const handleTags = (e) => {
+    if (e.key !== "Enter") return;
+    const value = e.target.value;
+    const lastId = tags.length + 2;
 
-  //   if (!value.trim()) return;
-  //   const data = {
-  //     id: lastId + 2,
-  //     text: value,
-  //   };
-  //   dispatch(addTag(data));
-  //   e.target.value = "";
-  // };
+    if (!value.trim()) return;
+    const data = {
+      id: lastId + 2,
+      text: value,
+    };
+    dispatch(addTag(data));
+    e.target.value = "";
+  };
 
   const removeTagFn = (index: any) => {
     dispatch(removeTag(index));
@@ -101,11 +101,10 @@ const TagInput = () => {
           className=".rs-theme-dark"
           data={data}
           style={{ width: 300 }}
-          value={tags}
-          onSelect={handleAddTag}
+          onChange={newHandleTag}
         />
 
-        {/* {items.map((item, index) => (
+        {items.map((item, index) => (
           <button
             key={index}
             // disabled={item.isBool}
@@ -123,16 +122,16 @@ const TagInput = () => {
           className="text-white dark:bg-[#627D98] rounded-[12px] hover:bg-[#1a2026] dark:hover:bg-[#9AA5B1] dark:hover:text-white bg-[#08172E] text-base py-3 px-5"
         >
           Create a Custom Tag
-        </button> */}
+        </button>
       </div>
-      {/* {showInputTag && (
+      {showInputTag && (
         <input
           onKeyDown={handleTags}
           type="text"
           className=" border dark:bg-[#323f4b] dark:border-[#3e5060] dark:text-white dark:placeholder:text-white/60 border-gray-200 border-solid  my-2 grow py-[.5em] px-3 outline-none "
           placeholder="Enter a Topic Tag "
         />
-      )} */}
+      )}
     </div>
   );
 };

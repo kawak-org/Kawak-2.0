@@ -17,22 +17,15 @@ const TagInput = () => {
   const tags = useAppSelector((state) => state.essayTags);
   const dispatch = useAppDispatch();
 
-  const newHandleTag = (text) => {
-    // const lastId = tags.length + 2;
-    // const value = text.splice(-1).map((item: any, index: any) => {
-    //   for (let i = 0; i < item.length; i++) {
-    //     const data = {
-    //       id: lastId + 2,
-    //       text: item,
-    //     };
-    //   }
-    // });
-    // dispatch(addTag(value));
-    dispatch(addTag(text));
-    // console.log("value:", value);
+  const newHandleTag = (newSelectedValue) => {
+    setSelectedValues((prevSelectedValues) => [
+      ...prevSelectedValues,
+      newSelectedValue,
+    ]);
+    dispatch(addTag(newSelectedValue));
   };
 
-  console.log("Tags :", tags);
+  console.log("Values :", selectedValues);
 
   const handleAddTag = (text: string) => {
     const lastId = tags.length + 2;
@@ -43,19 +36,19 @@ const TagInput = () => {
     dispatch(addTag(data));
   };
 
-  // const handleTags = (e) => {
-  //   if (e.key !== "Enter") return;
-  //   const value = e.target.value;
-  //   const lastId = tags.length + 2;
+  const handleTags = (e) => {
+    if (e.key !== "Enter") return;
+    const value = e.target.value;
+    const lastId = tags.length + 2;
 
-  //   if (!value.trim()) return;
-  //   const data = {
-  //     id: lastId + 2,
-  //     text: value,
-  //   };
-  //   dispatch(addTag(data));
-  //   e.target.value = "";
-  // };
+    if (!value.trim()) return;
+    const data = {
+      id: lastId + 2,
+      text: value,
+    };
+    dispatch(addTag(data));
+    e.target.value = "";
+  };
 
   const removeTagFn = (index: any) => {
     dispatch(removeTag(index));
@@ -74,7 +67,7 @@ const TagInput = () => {
 
   return (
     <div className=" flex flex-col gap-[.5em] flex-wrap  p-[.5em] rounded-[3px] w-full ">
-      {/* <div className="flex flex-row gap-[.5rem]">
+      <div className="flex flex-row gap-[.5rem]">
         {selectedValues.map((tag, index) => (
           <div
             key={index}
@@ -89,7 +82,7 @@ const TagInput = () => {
             </span>
           </div>
         ))}
-      </div> */}
+      </div>
       <div className="flex items-center flex-row gap-[.2rem]">
         <BsTags />
         <h2 className="text-black text-[1rem] px-1 dark:text-white/90 m-2 font-bold">
@@ -102,7 +95,7 @@ const TagInput = () => {
           data={data}
           style={{ width: 300 }}
           value={tags}
-          onSelect={handleAddTag}
+          onChange={newHandleTag}
         />
 
         {/* {items.map((item, index) => (
@@ -125,14 +118,14 @@ const TagInput = () => {
           Create a Custom Tag
         </button> */}
       </div>
-      {/* {showInputTag && (
+      {showInputTag && (
         <input
           onKeyDown={handleTags}
           type="text"
           className=" border dark:bg-[#323f4b] dark:border-[#3e5060] dark:text-white dark:placeholder:text-white/60 border-gray-200 border-solid  my-2 grow py-[.5em] px-3 outline-none "
           placeholder="Enter a Topic Tag "
         />
-      )} */}
+      )}
     </div>
   );
 };

@@ -102,7 +102,7 @@ const TagInput = () => {
           data={data}
           style={{ width: 300 }}
           value={tags}
-          onSelect={handleAddTag}
+          onKeyDown={newHandleTag}
         />
 
         {/* {items.map((item, index) => (

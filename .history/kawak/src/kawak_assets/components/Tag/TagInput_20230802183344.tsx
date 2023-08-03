@@ -18,18 +18,18 @@ const TagInput = () => {
   const dispatch = useAppDispatch();
 
   const newHandleTag = (text) => {
-    // const lastId = tags.length + 2;
-    // const value = text.splice(-1).map((item: any, index: any) => {
-    //   for (let i = 0; i < item.length; i++) {
-    //     const data = {
-    //       id: lastId + 2,
-    //       text: item,
-    //     };
-    //   }
-    // });
-    // dispatch(addTag(value));
-    dispatch(addTag(text));
-    // console.log("value:", value);
+    const lastId = tags.length + 2;
+    const value = text.splice(-1).map((item: any, index: any) => {
+      for (let i = 0; i < item.length; i++) {
+        console.log(item);
+        const data = {
+          id: lastId + 2,
+          item,
+        };
+        return data;
+      }
+    });
+    dispatch(addTag(value));
   };
 
   console.log("Tags :", tags);
@@ -102,7 +102,7 @@ const TagInput = () => {
           data={data}
           style={{ width: 300 }}
           value={tags}
-          onSelect={handleAddTag}
+          onChange={newHandleTag}
         />
 
         {/* {items.map((item, index) => (

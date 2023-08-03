@@ -128,12 +128,11 @@ const MyEssayDetails = () => {
     setModalLoading(true);
     console.log(id, rating);
     actor
-      .AddRatingNow(
-        BigInt(id),
+      .addRating(
         BigInt(annotations[annotationPosition]?.id),
-        BigInt(rating) /* annotations[annotationPosition]?.user */
+        BigInt(rating),
+        annotations[annotationPosition]?.user
       )
-      // actor.AddRating(BigInt(id), BigInt(annotations[annotationPosition]?.id), BigInt(rating)/* , annotations[annotationPosition]?.user */)
       .then((data) => {
         console.log("add rating result", data);
         toast.success("User's rating successfully added");
