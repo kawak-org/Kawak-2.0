@@ -94,7 +94,7 @@ const CraftEssay = () => {
   };
 
   const handleSubmit = async () => {
-    // console.log(essayEntry);
+    console.log(essayEntry);
     if (essayWords < 100) {
       toast.error("essay can't be lesser than a 100 words");
       return;

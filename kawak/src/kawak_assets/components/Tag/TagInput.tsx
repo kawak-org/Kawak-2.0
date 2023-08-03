@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { BsTags } from "react-icons/bs";
-import { addTag, removeTag } from "../../redux/slice/tagsSlice";
+import { addTag, removeTag ,clearTag, TagsState} from "../../redux/slice/tagsSlice";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { TagPicker } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
+
 
 const TagInput = () => {
   const [items, setItems] = useState([
@@ -34,13 +35,11 @@ const TagInput = () => {
 
   console.log("Tags :", tags);
 
-  const handleAddTag = (text: string) => {
-    const lastId = tags.length + 2;
-    const data = {
-      id: lastId + 2,
-      text,
-    };
-    dispatch(addTag(data));
+  const handleAddTag = (e: any, v:any) => {
+    dispatch(addTag({
+      id:tags.length + 1,
+      text: v.value
+    }));
   };
 
   // const handleTags = (e) => {
@@ -102,7 +101,7 @@ const TagInput = () => {
           data={data}
           style={{ width: 300 }}
           value={tags}
-          onSelect={handleAddTag}
+          onSelect={(e, v) => handleAddTag(e,v)}
         />
 
         {/* {items.map((item, index) => (
