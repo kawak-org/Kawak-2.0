@@ -241,6 +241,25 @@ shared (msg) actor class Kawak(
     _Essays.deleteEssay(id, caller);
   };
 
+  // @not necessary
+  public func SetReviewStatus(essayID : Nat, status : Bool){
+    _Essays.setReviewStatus(essayID, status);
+  };
+  
+  public func UpdateReviewStatus(essayID : Nat, status : Bool){
+    _Essays.updateReviewStatus(essayID, status);
+  };
+
+  public func GetReviewStatus(essayID : Nat) : async ?HandlersTypes.ReviewStatus{
+    _Essays.getReviewStatus(essayID);
+  };
+
+  public func GetAllReviewStatus() : async [(Nat, HandlersTypes.ReviewStatus)] {
+    _Essays.getAllReviewStatus();
+  };
+
+
+
   // public shared ({caller}) func createEssays(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Nat {
   //   if (essay_word_count < 100){
   //     throw Error.reject(" $ Oooops! Minimum number of words should be 100. # ");
