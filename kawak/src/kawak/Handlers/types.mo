@@ -51,6 +51,12 @@ module {
         draftedAT   : Int;
     };
 
+    public type ReviewStatus = {
+        essayID : Nat;
+        // essay : ?EssayEntry;
+        status : Bool;
+    };
+
     public type EssayEntry = {
         id : Nat;
         aid : Principal;

@@ -28,11 +28,36 @@ module {
 
         var EssayEntries : [(Nat, EssayEntry)] = [];
         var UserEssayEntries : [(Principal, EssayEntry)] = [];
+        var ReviewStatusEntries : [(Nat, Types.ReviewStatus)] = [];
 
         var EssayHashMap : HashMap.HashMap<Nat, EssayEntry> = HashMap.fromIter<Nat, EssayEntry>(EssayEntries.vals(), 1, Nat.equal, Hash.hash);
         var UserEssayHashMap : HashMap.HashMap<Principal, EssayEntry> = HashMap.fromIter<Principal, EssayEntry>(UserEssayEntries.vals(), 10, Principal.equal, Principal.hash); 
-    
+        var ReviewStatusHash : HashMap.HashMap<Nat, Types.ReviewStatus> = HashMap.fromIter<Nat, Types.ReviewStatus>(ReviewStatusEntries.vals(), 1, Nat.equal, Hash.hash);
+
         var essays : Buffer.Buffer<EssayEntry> = Buffer.Buffer(0);
+
+        var Rstatus : Buffer.Buffer<Types.ReviewStatus> = Buffer.Buffer(0);
+
+        func makeReview(essayID : Nat, status : Bool) : Types.ReviewStatus{
+            {
+                essayID;
+                status;
+            }
+        };
+
+        for ((i, j) in state.EssayEntries.vals()){
+            ReviewStatusHash.put(i, makeReview(j.id, true))
+        };
+
+        public func updateReviewStatus(id : Nat, bool : Bool) {
+            var rev = ReviewStatusHash.get(id);
+            switch(rev){
+                case(null){};
+                case(?rev){
+                    var replaced = ReviewStatusHash.replace(id, makeReview(id, bool));
+                };
+            };
+        };
 
         // for (essay in state.essays.vals()) {
         //     essays.add(essay);
@@ -112,6 +137,25 @@ module {
             UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, [], _public, description));
         };
 
+        public func setReviewStatus(essayID : Nat, status : Bool){
+            var essay = GetEssay(essayID);
+            var reviewStatus : Types.ReviewStatus = {
+                essayID;
+                essay;
+                status;
+            } ;
+            ReviewStatusHash.put(essayID, reviewStatus);
+        };
+
+        
+        public func getReviewStatus(essayID : Nat) : ?Types.ReviewStatus {
+            ReviewStatusHash.get(essayID);
+        };
+
+        public func getAllReviewStatus() : [(Nat, Types.ReviewStatus)]{
+            Iter.toArray(ReviewStatusHash.entries());
+        };
+
 
 
         // public func createEssays(title : Text, caller : Principal, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : Nat {
@@ -175,7 +219,7 @@ module {
         };
 
         
-
+        // @deprecated
         public func GetAllEssays_() : [Types.EssayEntry] {
             essays.toArray();
         };
