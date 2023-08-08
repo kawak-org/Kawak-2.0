@@ -310,7 +310,7 @@ module {
                         essayID = vals.essayID;
                         user = vals.user;
                         comments = vals.comments;
-                        quote = vals.comments;
+                        quote = vals.quote;
                         rated = bool;
                     };
                     var thawed = Array.thaw<Types.AnnotationEntry>(annotation);
