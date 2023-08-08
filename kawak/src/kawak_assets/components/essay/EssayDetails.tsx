@@ -58,8 +58,8 @@ const EssayDetails = () => {
     setScreen(2)
   };
 
-  console.log(typeof unserialized);
-  
+  console.log("typeof", typeof unserialized);
+
   const handleSubmit = () => {
     setIsLoading(true);
 
