@@ -56,6 +56,7 @@ const MyEssayDetails = () => {
   const [annotationPosition, setAnnotationPosition] = useState(0);
   const [disabled, setDisabled] = useState(false);
   const [visibility, setVisibility] = useState(false);
+  const [reviewStatus, setReviewStatus] = useState(true);
   // const [openComment, setOpenComment] = useState(false);
   // var unserialized:any =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote);
   var unserialized: any =
@@ -104,8 +105,6 @@ const MyEssayDetails = () => {
 
               dispatch(addAnnotation(val));
             });
-            console.log("essay",d)
-            console.log("review", annotations)
             setIsLoading2(false);
             setReview(rev);
           }
@@ -115,15 +114,23 @@ const MyEssayDetails = () => {
         });
     };
 
-    const getAnnonation = () => {
-      actor.getAnnotation_EssayID(BigInt(id)).then(a => {
-       console.log("annotation",a) 
+
+    const getReviewStatus = () => {
+      actor?.GetReviewStatus(BigInt(id)).then(d => {
+        if(d.length === 0) {
+          return
+        }
+        // else {
+        console.log("status", d);
+        setReviewStatus(d[0].status);
+      // }
       }).catch(err => {
         console.log(err)
+        // toast.error(err)
       })
     }
     callOnMount();
-    getAnnonation();
+    getReviewStatus();
   }, []);
 
   const ratingChanged = (val: number) => {
@@ -175,6 +182,22 @@ const MyEssayDetails = () => {
       });
   };
 
+  const handleSetReviewVisibility = (e: any) => {
+    // setDisabled(true)
+    actor
+      .SetReviewStatus(BigInt(id),e.target.checked)
+      .then((d) => {
+        // setDisabled(false)
+        setTimeout(() => {
+          setReviewStatus((prev) => prev != prev);
+        }, 1000);
+      })
+      .catch((err) => {
+        // setDisabled(false)
+        console.log(err);
+      });
+  };
+
   if (isLoading2) {
     return (
       <div>
@@ -188,7 +211,6 @@ const MyEssayDetails = () => {
     return (
       <div className="">
         <Navbar />
-
         <div className="relative px-6 mb-8 mt-[6rem]">
           <div className="flex flex-col">
             <div className="mx-4 sm:ml-16 ">
@@ -207,7 +229,7 @@ const MyEssayDetails = () => {
                     {essay[0].title}
                   </h2>
                   <div className="border-b-[1px] bg-gray-400 mt-3 mb-7" />
-                  {annotations.length < 1 ? (
+                  {annotations?.length < 1 ? (
                     <div>
                       <LexicalRichTextEditor essay={essay[0].text} />
                       <div className="w-full flex justify-center items-center">
@@ -221,11 +243,12 @@ const MyEssayDetails = () => {
                       showArrows={true}
                       onChange={(e) =>
                         handleCarouselChange(e)
-                      } /* onClickItem={onClickItem} onClickThumb={onClickThumb} */
+                      } 
                     >
-                      {annotations.map((review_) => (
-                        <ReviewCommentEditor review={review_.comments} />
-                      ))}
+                      {annotations?.map(review_ => (
+                        <ReviewCommentEditor key={review_.comments} review={review_.comments} />
+                      ))
+                      }
                     </Carousel>
                   )}
                 </div>
@@ -257,7 +280,7 @@ const MyEssayDetails = () => {
                 )}
                 {/* ----------------END OF MOBILE-------------------------- */}
 
-                {annotations.length < 1 ? (
+                {annotations?.length < 1 ? (
                   <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
                     <div className="flex bg-[#F98E2D]x flex-col">
                       <div className="flex flex-row justify-end items-center ">
@@ -288,8 +311,8 @@ const MyEssayDetails = () => {
                         <div className="flex flex-row justify-center items-center">
                           <p className="text-white pr-1">Review Status</p>
                           <Toggle
-                            checked={visibility}
-                            onChange={(e) => handleSetVisibility(e)}
+                            checked={reviewStatus}
+                            onChange={(e) => handleSetReviewVisibility(e)}
                             disabled={disabled}
                           />
                         </div>
@@ -385,7 +408,7 @@ const MyEssayDetails = () => {
                       Mint
                     </button>
 
-                    {annotations[0]?.rated === false ? (
+                    {annotations[annotationPosition]?.rated === false ? (
                       <button
                         className="py-2 w-full text-sm text-center mt-4 mb-4 text-white bg-[#F98E2D] "
                         onClick={() => setRateModal(true)}
@@ -418,6 +441,7 @@ const MyEssayDetails = () => {
           </div>
         </div>
       </div>
+                  
     );
   } else {
     return (
