@@ -58,6 +58,8 @@ const EssayDetails = () => {
     setScreen(2)
   };
 
+  console.log(typeof unserialized);
+  
   const handleSubmit = () => {
     setIsLoading(true);
 
@@ -287,7 +289,7 @@ const EssayDetails = () => {
                      </div>
  
                      <div className=" comment-scroll mt-3 overflow-y-scroll h-[20rem]">
-                       {unserialized ? (
+                       {typeof unserialized ==="object" ? (
                          unserialized?.map((item) => {
                            return (
                              <div
