@@ -209,6 +209,10 @@ shared (msg) actor class Kawak(
     _Essays.GetFilteredEssays(topics);
   };
 
+  public func ClearReview(essayID : Nat) : (){
+    _Essays.deleteReview(essayID);
+  };
+
   public shared ({ caller }) func EssayAnnotate(id : Nat, comments : Text, quote : Text) : () {
     _Essays.EssayAnnotate(caller, id, comments, quote);
   };
