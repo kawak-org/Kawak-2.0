@@ -127,7 +127,6 @@ console.log("unserialized",unserialized)
   const submitRating = () => {
     setModalLoading(true);
     console.log(id, rating);
-<<<<<<< HEAD
     actor.AddRatingNow(BigInt(id), BigInt(annotations[annotationPosition]?.id), BigInt(rating) /* annotations[annotationPosition]?.user */)
     	// actor.AddRating(BigInt(id), BigInt(annotations[annotationPosition]?.id), BigInt(rating)/* , annotations[annotationPosition]?.user */)
     	.then((data) => {
@@ -141,25 +140,6 @@ console.log("unserialized",unserialized)
     		setModalLoading(false);
     		toast.error(err);
     	});
-=======
-    actor
-      .addRating(
-        BigInt(annotations[annotationPosition]?.id),
-        BigInt(rating),
-        annotations[annotationPosition]?.user
-      )
-      .then((data) => {
-        console.log("add rating result", data);
-        toast.success("User's rating successfully added");
-        setModalLoading(false);
-        navigate(-1);
-      })
-      .catch((err) => {
-        console.log(err);
-        setModalLoading(false);
-        toast.error(err);
-      });
->>>>>>> 80c36e14b8e6f9ea8b4714ad124d6d1b3fff5698
   };
   const handleCarouselChange = (index: number) => {
     setAnnotationPosition(index);
