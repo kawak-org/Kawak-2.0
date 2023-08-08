@@ -64,6 +64,9 @@ const MyEssayDetails = () => {
       ? undefined
       : JSON.parse(annotations[annotationPosition]?.quote);
 
+
+    console.log(typeof unserialized);
+
   console.log("unserialized", unserialized, "annotation", annotations);
   const { trackEvent } = useMatomo();
 
@@ -245,6 +248,7 @@ const MyEssayDetails = () => {
                         handleCarouselChange(e)
                       } 
                     >
+                      
                       {annotations?.map(review_ => (
                         <ReviewCommentEditor key={review_.comments} review={review_.comments} />
                       ))
@@ -379,7 +383,7 @@ const MyEssayDetails = () => {
                     </div>
 
                     <div className=" comment-scroll mt-3 overflow-y-scroll h-[20rem]">
-                      {unserialized ? (
+                      {typeof unserialized  === "object" ? (
                         unserialized?.map((item) => {
                           return (
                             <div
