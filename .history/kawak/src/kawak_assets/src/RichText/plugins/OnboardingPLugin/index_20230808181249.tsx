@@ -781,6 +781,7 @@ function CommentsPanel({
             <button
               onClick={handleClick}
               className="py-2 w-full text-sm text-center text-white bg-[#08172E] "
+              disabled={comments.length < 0 ? true : false}
             >
               Submit Review
             </button>

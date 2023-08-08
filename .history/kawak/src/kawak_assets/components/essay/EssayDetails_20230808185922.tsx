@@ -530,7 +530,7 @@ const EssayDetails = () => {
                       <button
                         className="py-1 px-7 disabled:bg-slate-300 dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white text-sm text-center text-white bg-[#08172E] hover:bg-primary-light hover:text-black"
                         onClick={handleSubmit}
-                        disabled={commentStatus.length > 0 ? false : true}
+                        disabled={commentStatus.length >= 1 ? false : true}
                       >
                         {isLoading ? "submitting" : "Submit Review"}
                       </button>

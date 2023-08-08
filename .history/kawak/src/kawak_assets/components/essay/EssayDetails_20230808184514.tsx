@@ -44,7 +44,7 @@ const EssayDetails = () => {
   const dispatch = useAppDispatch();
   const [annotationPosition, setAnnotationPosition] = useState(0);
   const annotations = useAppSelector((state) => state.annotation);
-  const [commentStatus, setCommentStatus] = useState("");
+
   var unserialized: any =
     annotations[annotationPosition] == null
       ? undefined
@@ -521,7 +521,6 @@ const EssayDetails = () => {
                           HighlightEssay = data;
                         }}
                         commentData={(comment) => {
-                          setCommentStatus(comment);
                           annotation = JSON.stringify(comment);
                         }}
                       />
@@ -530,7 +529,7 @@ const EssayDetails = () => {
                       <button
                         className="py-1 px-7 disabled:bg-slate-300 dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white text-sm text-center text-white bg-[#08172E] hover:bg-primary-light hover:text-black"
                         onClick={handleSubmit}
-                        disabled={commentStatus.length > 0 ? false : true}
+                        disabled={annotation.length > 1 ? false : true}
                       >
                         {isLoading ? "submitting" : "Submit Review"}
                       </button>
