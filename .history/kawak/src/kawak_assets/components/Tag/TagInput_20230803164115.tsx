@@ -22,19 +22,9 @@ const TagInput = () => {
   const tags = useAppSelector((state) => state.essayTags);
   const dispatch = useAppDispatch();
 
-  // console.log("Tags :", tags);
+  console.log("Tags :", tags);
 
   const handleAddTag = (e: any, v: any) => {
-if(tags.length > 0) {
-
-
-    const exist = tags?.filter(t => t.text === v.value);
-    if (exist.length > 0) {
-      removeTagFn(exist[0].id)
-      return
-    }
-  }
-
     dispatch(
       addTag({
         id: tags.length + 1,

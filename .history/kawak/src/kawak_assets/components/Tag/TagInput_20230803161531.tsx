@@ -22,19 +22,9 @@ const TagInput = () => {
   const tags = useAppSelector((state) => state.essayTags);
   const dispatch = useAppDispatch();
 
-  // console.log("Tags :", tags);
+  console.log("Tags :", tags);
 
   const handleAddTag = (e: any, v: any) => {
-if(tags.length > 0) {
-
-
-    const exist = tags?.filter(t => t.text === v.value);
-    if (exist.length > 0) {
-      removeTagFn(exist[0].id)
-      return
-    }
-  }
-
     dispatch(
       addTag({
         id: tags.length + 1,
@@ -48,49 +38,14 @@ if(tags.length > 0) {
   };
 
   const data = [
-    "Music",
-    "Art",
-    "Politics",
-    "Environment",
-    "Health",
-    "Architecture",
-    "Sport",
-    "History",
-    "Education",
-    "Religion",
-    "Literature",
-    "Journalism",
-    "Mythology",
-    "Drama",
-    "Philosophy",
-    "Psychology",
-    "Sociology",
-    "Communication",
-    "Epistemology",
-    "Posthumanism",
-    "Law",
-    "Economics",
-    "Ethics",
-    "Science",
-    "Chemistry",
-    "Biology",
-    "Physics",
-    "Mathematics",
-    "Neuroscience",
-    "Anthropology",
-    "Ontology",
-    "Coding",
-    "Technology",
-    "Web",
-    "Cybersecurity",
-    "Gaming",
-    "UX",
-    "UI",
-    "Cryptography",
-    "Blockchain",
-    "Software",
-    "Frontend",
-    "Backend",
+    "Eugenia",
+    "Bryan",
+    "Linda",
+    "Nancy",
+    "Lloyd",
+    "Alice",
+    "Julia",
+    "Albert",
   ].map((item) => ({ label: item, value: item }));
 
   return (

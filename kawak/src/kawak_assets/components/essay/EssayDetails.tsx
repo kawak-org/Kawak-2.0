@@ -112,7 +112,8 @@ const EssayDetails = () => {
 
             })
 
-            console.log(d)
+            console.log("essay",d)
+            console.log("review", annotations)
             return;
           }
           setNoEssay(true);
@@ -172,7 +173,7 @@ const EssayDetails = () => {
                      {essay[0].title}
                    </h2>
                    <div className="border-b-[1px] bg-gray-400 mt-3 mb-7" />
-                   {annotations.length < 1 ? (
+                   {annotations?.length < 1 ? (
                      <div>
                        <LexicalRichTextEditor essay={essay[0].text} />
                        <div className="w-full flex justify-center items-center">
@@ -187,8 +188,10 @@ const EssayDetails = () => {
                      </div>
                    ) : (
                     <div>
-                     <Carousel showArrows={true} onChange={(e) => handleCarouselChange(e)} /* onClickItem={onClickItem} onClickThumb={onClickThumb} */>
-                       {annotations.map((review_) => (
+                     <Carousel showArrows={true}
+                      onChange={(e) => handleCarouselChange(e)}
+                       >
+                       {annotations?.map((review_) => (
                       <ReviewCommentEditor review={review_.comments} />
                        ))
                         }
@@ -516,6 +519,7 @@ const EssayDetails = () => {
                       essay={essay[0].text}
                       handleData={(htmlString) => {
                         const data: string = htmlString;
+                      
                         HighlightEssay = data;
                       }}
                       commentData={(comment) => {
