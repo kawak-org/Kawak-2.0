@@ -63,7 +63,7 @@ const MyEssayDetails = () => {
       ? undefined
       : JSON.parse(annotations[annotationPosition]?.quote);
 
-  console.log("unserialized", unserialized);
+  console.log("unserialized", unserialized, "annotation", annotations);
   const { trackEvent } = useMatomo();
 
   // const { deleting, handleDelete } = deleteEssay(BigInt(id));
@@ -104,7 +104,8 @@ const MyEssayDetails = () => {
 
               dispatch(addAnnotation(val));
             });
-            console.log("essay", d);
+            console.log("essay",d)
+            console.log("review", annotations)
             setIsLoading2(false);
             setReview(rev);
           }
@@ -114,7 +115,15 @@ const MyEssayDetails = () => {
         });
     };
 
+    const getAnnonation = () => {
+      actor.getAnnotation_EssayID(BigInt(id)).then(a => {
+       console.log("annotation",a) 
+      }).catch(err => {
+        console.log(err)
+      })
+    }
     callOnMount();
+    getAnnonation();
   }, []);
 
   const ratingChanged = (val: number) => {
@@ -251,15 +260,8 @@ const MyEssayDetails = () => {
                 {annotations.length < 1 ? (
                   <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
                     <div className="flex bg-[#F98E2D]x flex-col">
-                      <div className="flex flex-row justify-between items-center ">
-                        <div className="flex flex-row justify-center items-center">
-                          <p className="text-white">Public</p>
-                          <Toggle
-                            checked={visibility}
-                            onChange={(e) => handleSetVisibility(e)}
-                            disabled={disabled}
-                          />
-                        </div>
+                      <div className="flex flex-row justify-end items-center ">
+        
 
                         <div className="flex flex-row justify-center items-center">
                           <img
@@ -272,6 +274,26 @@ const MyEssayDetails = () => {
                       </div>
 
                       <div className="border-b-[1px] bg-gray-400 my-2" />
+
+                      <div className="flex flex-row justify-between items-center py-4 ">
+                        <div className="flex flex-row justify-center items-center mx-1">
+                          <p className="text-white pr-1">Essay Status</p>
+                          <Toggle
+                            checked={visibility}
+                            onChange={(e) => handleSetVisibility(e)}
+                            disabled={disabled}
+                          />
+                        </div>
+
+                        <div className="flex flex-row justify-center items-center">
+                          <p className="text-white pr-1">Review Status</p>
+                          <Toggle
+                            checked={visibility}
+                            onChange={(e) => handleSetVisibility(e)}
+                            disabled={disabled}
+                          />
+                        </div>
+                      </div>
 
                       <div className="flex flex-row justify-between items-center ">
                         <p className="text-gray-400 text-xs">
@@ -335,7 +357,7 @@ const MyEssayDetails = () => {
 
                     <div className=" comment-scroll mt-3 overflow-y-scroll h-[20rem]">
                       {unserialized ? (
-                        unserialized.map((item) => {
+                        unserialized?.map((item) => {
                           return (
                             <div
                               key={item.id}

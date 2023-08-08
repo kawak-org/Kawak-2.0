@@ -112,7 +112,8 @@ const EssayDetails = () => {
 
             })
 
-            console.log(d)
+            console.log("essay",d)
+            console.log("review", annotations)
             return;
           }
           setNoEssay(true);
@@ -516,6 +517,7 @@ const EssayDetails = () => {
                       essay={essay[0].text}
                       handleData={(htmlString) => {
                         const data: string = htmlString;
+                      
                         HighlightEssay = data;
                       }}
                       commentData={(comment) => {

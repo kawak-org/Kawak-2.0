@@ -22,7 +22,7 @@ const TagInput = () => {
   const tags = useAppSelector((state) => state.essayTags);
   const dispatch = useAppDispatch();
 
-  console.log("Tags :", tags);
+  // console.log("Tags :", tags);
 
   const handleAddTag = (e: any, v: any) => {
 if(tags.length > 0) {
