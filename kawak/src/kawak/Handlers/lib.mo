@@ -467,6 +467,34 @@ module {
             return filteredEssays;  
         };
 
+        public func deleteReview(essayId : Nat) : (){
+            var essay = EssayHashMap.get(essayId);
+            switch(essay){
+                case(null){};
+                case(?essay){
+                    var update = {
+                        id = essay.id;
+                        aid = essay.aid;
+                        owner = essay.owner;
+                        title = essay.title;
+                        topic = essay.topic;
+                        wordCount = essay.wordCount;
+                        //createdAt : Time;
+                        reviewTimes : Nat32 = 0;
+                        reviewed = false;
+                        essayCost = essay.essayCost;
+                        submittedAt = essay.submittedAt;
+                        text = essay.text;
+                        userDetails = essay.userDetails;
+                        reviews = [];
+                        _public = essay._public;
+                        description = essay.description;
+                    };
+                    var updated = UpdateEssay(essayId, update); 
+                }
+            };
+        };
+
         // temp independent func
         public func UpdateEssay(id : Nat, update : Types.EssayEntry) : ?Types.EssayEntry {
             EssayHashMap.replace(id, update);
