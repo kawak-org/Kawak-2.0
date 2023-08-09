@@ -693,6 +693,7 @@ module {
         _restore(state);
 
 
+        // @deprecated function
         public func AddAnnotation(id : Nat, caller : Principal, comments : Text, quote : Text) : () {
             var user = state._Users.getUser(caller);
             switch (user) {
@@ -777,6 +778,7 @@ module {
             };
         };
 
+        // @deprecated function
         public func AddRating(id : Nat, rating : Nat, caller : Principal) : ?() {
             var annotator = AnnotationHashMap.get(id);
             switch(annotator){
