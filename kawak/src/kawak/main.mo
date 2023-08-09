@@ -451,7 +451,7 @@ shared (msg) actor class Kawak(
     _Brew_DIP721.TransferNFTto(to, caller, tokenId);
   };
 
-  let _Market = Marketplace.Market({
+  let _Market = Marketplace.Market({ 
     _Admins;
     _Users;
     _Brew_DIP721;
