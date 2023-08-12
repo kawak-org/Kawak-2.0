@@ -169,6 +169,10 @@ shared (msg) actor class Kawak(
     _Brew_DIP20.transfer(caller, to, value);
   };
 
+  public shared ({caller}) func GetBalance() : async Nat{
+    _Brew_DIP20.getBalanceOf(caller);
+  };
+
   public shared ({ caller }) func removeAdmin(principal : Principal) : async () {
     _Admins.removeAdmin(caller, principal);
   };
