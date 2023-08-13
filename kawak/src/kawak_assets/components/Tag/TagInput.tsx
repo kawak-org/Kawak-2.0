@@ -107,6 +107,9 @@ if(tags.length > 0) {
           data={data}
           style={{ width: 300 }}
           onSelect={(e, v) => handleAddTag(e, v)}
+          value={tags.map(tag => (
+            tag.text
+          ))}
         />
       </div>
     </div>
