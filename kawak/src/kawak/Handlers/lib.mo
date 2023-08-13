@@ -338,7 +338,7 @@ module {
 
         public func Rate(essayID : Nat, reviewID : Nat, rating : Nat, aid : Principal) : ?() {
             var essay = GetEssay(essayID);
-            var annotation = GetAnnotation(essayID);
+            // var annotation = GetAnnotation(essayID);
             // var unknown = updatePastRating(essayID, reviewID, rating);
             switch(essay){
                 case(null){null};
@@ -362,7 +362,7 @@ module {
                             isAdmin = _annotation.isAdmin;
                         };
                         var replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
-                        var __replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
+                        // var __replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
                         var transfer = state._Brew_DIP20.transfer(aid, annotatorPrincipal, cost);
                         updateRating(true, essayID, reviewID);
                     }
@@ -440,6 +440,8 @@ module {
             };
         };
 
+        
+
         public func GetAnnotation(id : Nat) : [Types.AnnotationEntry] {
             var tempAnnotation : [Types.AnnotationEntry] = [];
             for ((i, j) in EssayHashMap.entries()){
@@ -447,6 +449,8 @@ module {
             };
             return tempAnnotation;
         };
+
+        // public func GetAnnotation2(reviewID : Nat) : Types.AnnotationEnt
 
         // filter function to search for essay
         public func GetFilteredEssays(topics : [Text]) : [Types.EssayEntry] {
