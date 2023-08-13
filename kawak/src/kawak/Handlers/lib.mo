@@ -45,9 +45,9 @@ module {
             }
         };
 
-        for ((i, j) in state.EssayEntries.vals()){
-            ReviewStatusHash.put(i, makeReview(j.id, true))
-        };
+        // for ((i, j) in state.EssayEntries.vals()){
+        //     ReviewStatusHash.put(i, makeReview(j.id, true))
+        // };
 
         public func updateReviewStatus(id : Nat, bool : Bool) {
             var rev = ReviewStatusHash.get(id);
