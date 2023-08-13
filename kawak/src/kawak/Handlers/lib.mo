@@ -357,7 +357,7 @@ module {
                             myDrafts = _annotation.myDrafts;
                             createdAt = _annotation.createdAt;
                             reviewingEssay = _annotation.reviewingEssay;
-                            pastRatedFeedbacks = _annotation.pastRatedFeedbacks;
+                            pastRatedFeedbacks = Array.append(_annotation.pastRatedFeedbacks, [rating]);
                             onBoarding = _annotation.onBoarding;
                             isAdmin = _annotation.isAdmin;
                         };
