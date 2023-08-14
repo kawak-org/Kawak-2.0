@@ -169,6 +169,10 @@ shared (msg) actor class Kawak(
     _Brew_DIP20.transfer(caller, to, value);
   };
 
+  public shared ({caller}) func GetBalance() : async Nat{
+    _Brew_DIP20.getBalanceOf(caller);
+  };
+
   public shared ({ caller }) func removeAdmin(principal : Principal) : async () {
     _Admins.removeAdmin(caller, principal);
   };
@@ -200,6 +204,14 @@ shared (msg) actor class Kawak(
   public shared ({ caller }) func getAllEssays() : async [HandlersTypes.EssayEntry] {
     _Essays.GetAllEssays();
   };
+
+  public shared ({ caller }) func GetPageEssay(page : Nat) : async [HandlersTypes.EssayEntry] {
+    _Essays.GetPageEssay(page);
+  };
+
+  // public func GetAllEssays() : async [HandlersTypes.EssayEntry] {
+  //   _Essays.GetAllEssays_();
+  // };
 
   public shared ({ caller }) func updatePublicStatus(pub : Bool, id : Nat) {
     _Essays.UpdatePublicStatus(pub, id);
@@ -451,7 +463,7 @@ shared (msg) actor class Kawak(
     _Brew_DIP721.TransferNFTto(to, caller, tokenId);
   };
 
-  let _Market = Marketplace.Market({
+  let _Market = Marketplace.Market({ 
     _Admins;
     _Users;
     _Brew_DIP721;
