@@ -10,6 +10,7 @@ import marketPlace from "./slice/marketPlace/marketPlaceSlice";
 import marketPlaceDetail from "./slice/marketPlace/nftDetailsMPSlice";
 import essayTags from "./slice/tagsSlice"
 import annotation from "./slice/annotationSlice"
+import myEssayDetailsSlice from "./slice/myEssayDetailsSlice";
 
 export const store = configureStore({
 	reducer: {
@@ -23,7 +24,8 @@ export const store = configureStore({
 		marketPlace,
 		marketPlaceDetail,
 		essayTags,
-		annotation
+		annotation,
+		myEssayDetailsSlice
 	},
 });
 

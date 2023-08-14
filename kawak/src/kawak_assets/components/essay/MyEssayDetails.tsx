@@ -26,6 +26,7 @@ import ShowComment from "./ShowComment";
 import FeedbackModal from "../../components/Modal/FeedbackModal";
 import Toggle from "react-toggle";
 import "react-toggle/style.css";
+import { setEssayVisibility, setReviewVisibility } from "../../redux/slice/myEssayDetailsSlice";
 
 type ReviewType = {
   id: number;
@@ -55,8 +56,10 @@ const MyEssayDetails = () => {
   const dispatch = useAppDispatch();
   const [annotationPosition, setAnnotationPosition] = useState(0);
   const [disabled, setDisabled] = useState(false);
-  const [visibility, setVisibility] = useState(false);
+  const [disabled_, setDisabled_] = useState(false);
+  // const [visibility, setVisibility] = useState(false);
   const [reviewStatus, setReviewStatus] = useState(true);
+  const myEssay = useAppSelector(state => state.myEssayDetailsSlice)
   // const [openComment, setOpenComment] = useState(false);
   // var unserialized:any =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote);
   var unserialized: any =
@@ -92,7 +95,8 @@ const MyEssayDetails = () => {
           if (d) {
             value.push(d[0]);
             setEssay(value);
-            setVisibility(value[0]._public);
+            dispatch(setEssayVisibility(value[0]._public))
+            // setVisibility(value[0]._public);
             // console.log(value)
             const rev: [ReviewType] = [null];
             // console.log(d)
@@ -113,6 +117,7 @@ const MyEssayDetails = () => {
           }
         })
         .catch((err) => {
+          console.log(err)
           toast.error("could not get an essay with this id");
         });
     };
@@ -124,8 +129,9 @@ const MyEssayDetails = () => {
           return
         }
         // else {
-        console.log("status", d);
-        setReviewStatus(d[0].status);
+        console.log("review status", d);
+        dispatch(setReviewVisibility(d[0].status))
+        // setReviewStatus(d[0].status);
       // }
       }).catch(err => {
         console.log(err)
@@ -170,33 +176,30 @@ const MyEssayDetails = () => {
   };
 
   const handleSetVisibility = (e: any) => {
-    // setDisabled(true)
+    setDisabled(true)
     actor
       .updatePublicStatus(e.target.checked, BigInt(id))
       .then((d) => {
-        // setDisabled(false)
-        setTimeout(() => {
-          setVisibility((prev) => prev != prev);
-        }, 1000);
+        setDisabled(false)
+        dispatch(setEssayVisibility(!myEssay.visibility.essay))
       })
       .catch((err) => {
-        // setDisabled(false)
+        setDisabled(false)
         console.log(err);
       });
   };
 
   const handleSetReviewVisibility = (e: any) => {
-    // setDisabled(true)
+    setDisabled_(true)
     actor
       .SetReviewStatus(BigInt(id),e.target.checked)
       .then((d) => {
-        // setDisabled(false)
-        setTimeout(() => {
-          setReviewStatus((prev) => prev != prev);
-        }, 1000);
+        setDisabled_(false)
+        dispatch(setReviewVisibility(!myEssay.visibility.review))
+
       })
       .catch((err) => {
-        // setDisabled(false)
+        setDisabled_(false)
         console.log(err);
       });
   };
@@ -286,6 +289,7 @@ const MyEssayDetails = () => {
 
                 {annotations?.length < 1 ? (
                   <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
+                    
                     <div className="flex bg-[#F98E2D]x flex-col">
                       <div className="flex flex-row justify-end items-center ">
         
@@ -302,11 +306,12 @@ const MyEssayDetails = () => {
 
                       <div className="border-b-[1px] bg-gray-400 my-2" />
 
+                      {myEssay &&
                       <div className="flex flex-row justify-between items-center py-4 ">
                         <div className="flex flex-row justify-center items-center mx-1">
                           <p className="text-white pr-1">Essay Status</p>
                           <Toggle
-                            checked={visibility}
+                            checked={myEssay.visibility?.essay}
                             onChange={(e) => handleSetVisibility(e)}
                             disabled={disabled}
                           />
@@ -315,13 +320,13 @@ const MyEssayDetails = () => {
                         <div className="flex flex-row justify-center items-center">
                           <p className="text-white pr-1">Review Status</p>
                           <Toggle
-                            checked={reviewStatus}
+                            checked={myEssay.visibility?.review}
                             onChange={(e) => handleSetReviewVisibility(e)}
-                            disabled={disabled}
+                            disabled={disabled_}
                           />
                         </div>
                       </div>
-
+  }
                       <div className="flex flex-row justify-between items-center ">
                         <p className="text-gray-400 text-xs">
                           {Number(essay[0].wordCount)} words
@@ -330,8 +335,8 @@ const MyEssayDetails = () => {
                           Not Reviewed
                         </p>
                       </div>
-                    </div>
 
+                    </div>
                     <div className="w-full flex  flex-col  my-4">
                       <button
                         className="py-2 w-full text-sm text-center my-2 text-white bg-[#F98E2D] "
@@ -357,7 +362,7 @@ const MyEssayDetails = () => {
                   </div>
                 ) : (
                   <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
-                    <div className="flebg-[#F98E2D]x flex-col">
+                    {/* <div className="flebg-[#F98E2D]x flex-col">
                       <div className="flex flex-row justify-between items-center ">
                         <div className="flex flex-row"></div>
 
@@ -377,6 +382,52 @@ const MyEssayDetails = () => {
                           {Number(essay[0].wordCount)} words
                         </p>
                         <p className="text-[#08875D]  text-sm font-medium ">
+                          Reviewed
+                        </p>
+                      </div>
+                    </div> */}
+                    <div className="flex bg-[#F98E2D]x flex-col">
+                      <div className="flex flex-row justify-end items-center ">
+        
+
+                        <div className="flex flex-row justify-center items-center">
+                          <img
+                            src={`wood-log.png`}
+                            className="w-[2rem]"
+                            alt="token"
+                          />
+                          <p className="text-[#2F6FED] ml-1 text-base">3</p>
+                        </div>
+                      </div>
+
+                      <div className="border-b-[1px] bg-gray-400 my-2" />
+
+                      {myEssay &&
+                       <div className="flex flex-row justify-between items-center py-4 ">
+                        <div className="flex flex-row justify-center items-center mx-1">
+                          <p className="text-white pr-1">Essay Status</p>
+                          <Toggle
+                            checked={myEssay.visibility?.essay}
+                            onChange={(e) => handleSetVisibility(e)}
+                            disabled={disabled}
+                          />
+                        </div>
+
+                        <div className="flex flex-row justify-center items-center">
+                          <p className="text-white pr-1">Review Status</p>
+                          <Toggle
+                            checked={myEssay.visibility?.review}
+                            onChange={(e) => handleSetReviewVisibility(e)}
+                            disabled={disabled_}
+                          />
+                        </div>
+                      </div>
+  }
+                      <div className="flex flex-row justify-between items-center ">
+                        <p className="text-gray-400 text-xs">
+                          {Number(essay[0].wordCount)} words
+                        </p>
+                        <p className="text-[#EF4444]  text-sm font-medium ">
                           Reviewed
                         </p>
                       </div>
