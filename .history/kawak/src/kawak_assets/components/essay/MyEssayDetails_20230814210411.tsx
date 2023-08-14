@@ -26,10 +26,6 @@ import ShowComment from "./ShowComment";
 import FeedbackModal from "../../components/Modal/FeedbackModal";
 import Toggle from "react-toggle";
 import "react-toggle/style.css";
-import {
-  setEssayVisibility,
-  setReviewVisibility,
-} from "../../redux/slice/myEssayDetailsSlice";
 
 type ReviewType = {
   id: number;
@@ -59,10 +55,8 @@ const MyEssayDetails = () => {
   const dispatch = useAppDispatch();
   const [annotationPosition, setAnnotationPosition] = useState(0);
   const [disabled, setDisabled] = useState(false);
-  const [disabled_, setDisabled_] = useState(false);
-  // const [visibility, setVisibility] = useState(false);
+  const [visibility, setVisibility] = useState(false);
   const [reviewStatus, setReviewStatus] = useState(true);
-  const myEssay = useAppSelector((state) => state.myEssayDetailsSlice);
   // const [openComment, setOpenComment] = useState(false);
   // var unserialized:any =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote);
   var unserialized: any =
@@ -97,8 +91,7 @@ const MyEssayDetails = () => {
           if (d) {
             value.push(d[0]);
             setEssay(value);
-            dispatch(setEssayVisibility(value[0]._public));
-            // setVisibility(value[0]._public);
+            setVisibility(value[0]._public);
             // console.log(value)
             const rev: [ReviewType] = [null];
             // console.log(d)
@@ -119,7 +112,6 @@ const MyEssayDetails = () => {
           }
         })
         .catch((err) => {
-          console.log(err);
           toast.error("could not get an essay with this id");
         });
     };
@@ -132,9 +124,8 @@ const MyEssayDetails = () => {
             return;
           }
           // else {
-          console.log("review status", d);
-          dispatch(setReviewVisibility(d[0].status));
-          // setReviewStatus(d[0].status);
+          console.log("status", d);
+          setReviewStatus(d[0].status);
           // }
         })
         .catch((err) => {
@@ -180,29 +171,33 @@ const MyEssayDetails = () => {
   };
 
   const handleSetVisibility = (e: any) => {
-    setDisabled(true);
+    // setDisabled(true)
     actor
       .updatePublicStatus(e.target.checked, BigInt(id))
       .then((d) => {
-        setDisabled(false);
-        dispatch(setEssayVisibility(!myEssay.visibility.essay));
+        // setDisabled(false)
+        setTimeout(() => {
+          setVisibility((prev) => prev != prev);
+        }, 1000);
       })
       .catch((err) => {
-        setDisabled(false);
+        // setDisabled(false)
         console.log(err);
       });
   };
 
   const handleSetReviewVisibility = (e: any) => {
-    setDisabled_(true);
+    // setDisabled(true)
     actor
       .SetReviewStatus(BigInt(id), e.target.checked)
       .then((d) => {
-        setDisabled_(false);
-        dispatch(setReviewVisibility(!myEssay.visibility.review));
+        // setDisabled(false)
+        setTimeout(() => {
+          setReviewStatus((prev) => prev != prev);
+        }, 1000);
       })
       .catch((err) => {
-        setDisabled_(false);
+        // setDisabled(false)
         console.log(err);
       });
   };
@@ -305,31 +300,30 @@ const MyEssayDetails = () => {
 
                       <div className="border-b-[1px] bg-gray-400 my-2" />
 
-                      {myEssay && (
-                        <div className="flex flex-col gap-4 py-4 ">
-                          <div className="flex flex-row gap-4 justify-start items-center ">
-                            <p className="dark:text-white text-black pr-1">
-                              Essay Status
-                            </p>
-                            <Toggle
-                              checked={myEssay.visibility?.essay}
-                              onChange={(e) => handleSetVisibility(e)}
-                              disabled={disabled}
-                            />
-                          </div>
-
-                          <div className="flex flex-row gap-4  justify-start items-center">
-                            <p className="dark:text-white text-black ">
-                              Review Status
-                            </p>
-                            <Toggle
-                              checked={myEssay.visibility?.review}
-                              onChange={(e) => handleSetReviewVisibility(e)}
-                              disabled={disabled_}
-                            />
-                          </div>
+                      <div className="flex flex-col gap-4  py-4 ">
+                        <div className="flex flex-row justify-start items-center mx-1">
+                          <p className="dark:text-white text-black pr-1">
+                            Essay Status
+                          </p>
+                          <Toggle
+                            checked={visibility}
+                            onChange={(e) => handleSetVisibility(e)}
+                            disabled={disabled}
+                          />
                         </div>
-                      )}
+
+                        <div className="flex flex-row justify-start items-center">
+                          <p className="dark:text-white text-black pr-1">
+                            Review Status
+                          </p>
+                          <Toggle
+                            checked={reviewStatus}
+                            onChange={(e) => handleSetReviewVisibility(e)}
+                            disabled={disabled}
+                          />
+                        </div>
+                      </div>
+
                       <div className="flex flex-row justify-between items-center ">
                         <p className="text-gray-400 text-xs">
                           {Number(essay[0].wordCount)} words
@@ -339,6 +333,7 @@ const MyEssayDetails = () => {
                         </p>
                       </div>
                     </div>
+
                     <div className="w-full flex  flex-col  my-4">
                       <button
                         className="py-2 w-full text-sm text-center my-2 text-white bg-[#F98E2D] "
@@ -364,7 +359,7 @@ const MyEssayDetails = () => {
                   </div>
                 ) : (
                   <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
-                    {/* <div className="flebg-[#F98E2D]x flex-col">
+                    <div className="flebg-[#F98E2D]x flex-col">
                       <div className="flex flex-row justify-between items-center ">
                         <div className="flex flex-row"></div>
 
@@ -384,50 +379,6 @@ const MyEssayDetails = () => {
                           {Number(essay[0].wordCount)} words
                         </p>
                         <p className="text-[#08875D]  text-sm font-medium ">
-                          Reviewed
-                        </p>
-                      </div>
-                    </div> */}
-                    <div className="flex bg-[#F98E2D]x flex-col">
-                      <div className="flex flex-row justify-end items-center ">
-                        <div className="flex flex-row justify-center items-center">
-                          <img
-                            src={`wood-log.png`}
-                            className="w-[2rem]"
-                            alt="token"
-                          />
-                          <p className="text-[#2F6FED] ml-1 text-base">3</p>
-                        </div>
-                      </div>
-
-                      <div className="border-b-[1px] bg-gray-400 my-2" />
-
-                      {myEssay && (
-                        <div className="flex flex-row justify-between items-center py-4 ">
-                          <div className="flex flex-row justify-center items-center mx-1">
-                            <p className="text-white pr-1">Essay Status</p>
-                            <Toggle
-                              checked={myEssay.visibility?.essay}
-                              onChange={(e) => handleSetVisibility(e)}
-                              disabled={disabled}
-                            />
-                          </div>
-
-                          <div className="flex flex-row justify-center items-center">
-                            <p className="text-white pr-1">Review Status</p>
-                            <Toggle
-                              checked={myEssay.visibility?.review}
-                              onChange={(e) => handleSetReviewVisibility(e)}
-                              disabled={disabled_}
-                            />
-                          </div>
-                        </div>
-                      )}
-                      <div className="flex flex-row justify-between items-center ">
-                        <p className="text-gray-400 text-xs">
-                          {Number(essay[0].wordCount)} words
-                        </p>
-                        <p className="text-[#EF4444]  text-sm font-medium ">
                           Reviewed
                         </p>
                       </div>

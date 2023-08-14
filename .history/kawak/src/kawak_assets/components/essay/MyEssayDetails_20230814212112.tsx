@@ -306,8 +306,8 @@ const MyEssayDetails = () => {
                       <div className="border-b-[1px] bg-gray-400 my-2" />
 
                       {myEssay && (
-                        <div className="flex flex-col gap-4 py-4 ">
-                          <div className="flex flex-row gap-4 justify-start items-center ">
+                        <div className="flex flex-col gap-4 items-center py-4 ">
+                          <div className="flex flex-row gap-4 justify-center items-center ">
                             <p className="dark:text-white text-black pr-1">
                               Essay Status
                             </p>

@@ -10,7 +10,7 @@ import type {
 } from "lexical";
 import type { Doc } from "yjs";
 
-import "./index.css";
+import "./main.css";
 
 import {
   $createMarkNode,
@@ -61,9 +61,7 @@ import CommentEditorTheme from "../../themes/CommentEditorTheme";
 import Button from "../../ui/Button";
 import ContentEditable from "../../ui/ContentEditable";
 import Placeholder from "../../ui/Placeholder";
-import CountDownTimer from "../../../../pages/Onboard/CountDownTimer";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand();
 
@@ -106,7 +104,7 @@ function AddCommentBox({
   return (
     <div className="CommentPlugin_AddCommentBox" ref={boxRef}>
       <button
-        className="CommentPlugin_AddCommentBox_button"
+        className="CommentPlugin_AddCommentBox_button dark:bg-[#495561]"
         onClick={onAddComment}
       >
         <i className="icon add-comment" />
@@ -330,23 +328,26 @@ function CommentInputBox({
   const onChange = useOnChange(setContent, setCanSubmit);
 
   return (
-    <div className="CommentPlugin_CommentInputBox" ref={boxRef}>
+    <div
+      className="CommentPlugin_CommentInputBox dark:before:border-[#415160] dark:border-white/30 dark:bg-[#415160] "
+      ref={boxRef}
+    >
       <PlainTextEditor
-        className="CommentPlugin_CommentInputBox_Editor"
+        className="CommentPlugin_CommentInputBox_Editor dark:focus:outline-white/30 dark:placeholder:text-white/90 dark:bg-[#425363] dark:border dark:border-solid dark:border-white/30 dark:text-white/90"
         onEscape={onEscape}
         onChange={onChange}
       />
       <div className="CommentPlugin_CommentInputBox_Buttons">
         <Button
           onClick={cancelAddComment}
-          className="CommentPlugin_CommentInputBox_Button"
+          className="CommentPlugin_CommentInputBox_Button dark:text-white/90 dark:bg-white/20 dark:hover:dark:bg-white/20"
         >
           Cancel
         </Button>
         <Button
           onClick={submitComment}
           disabled={!canSubmit}
-          className="CommentPlugin_CommentInputBox_Button primary"
+          className="CommentPlugin_CommentInputBox_Button  dark:bg-[#323f4b] dark:text-white/90 dark:hover:bg-[#323f4b]"
         >
           Comment
         </Button>
@@ -471,39 +472,41 @@ function CommentsPanelListComment({
   return (
     <li className="CommentPlugin_CommentsPanel_List_Comment">
       {/* <div className="CommentPlugin_CommentsPanel_List_Details">
-          <span className="CommentPlugin_CommentsPanel_List_Comment_Author">
-            {comment.author}
-          </span>
-          <span className="CommentPlugin_CommentsPanel_List_Comment_Time">
-            · {seconds > -10 ? 'Just now' : rtf.format(minutes, 'minute')}
-          </span>
-        </div> */}
+        <span className="CommentPlugin_CommentsPanel_List_Comment_Author">
+          {comment.author}
+        </span>
+        <span className="CommentPlugin_CommentsPanel_List_Comment_Time">
+          · {seconds > -10 ? 'Just now' : rtf.format(minutes, 'minute')}
+        </span>
+      </div> */}
       <p
         className={
-          comment.deleted ? "CommentPlugin_CommentsPanel_DeletedComment" : ""
+          comment.deleted
+            ? "CommentPlugin_CommentsPanel_DeletedComment dark:text-white/90"
+            : " dark:text-white/90"
         }
       >
         {comment.content}
       </p>
       {/* {!comment.deleted && (
-          <>
-            <Button
-              onClick={() => {
-                showModal('Delete Comment', (onClose) => (
-                  <ShowDeleteCommentOrThreadDialog
-                    commentOrThread={comment}
-                    deleteCommentOrThread={deleteComment}
-                    thread={thread}
-                    onClose={onClose}
-                  />
-                ));
-              }}
-              className="CommentPlugin_CommentsPanel_List_DeleteButton">
-              <i className="delete" />
-            </Button>
-            {modal}
-          </>
-        )} */}
+        <>
+          <Button
+            onClick={() => {
+              showModal('Delete Comment', (onClose) => (
+                <ShowDeleteCommentOrThreadDialog
+                  commentOrThread={comment}
+                  deleteCommentOrThread={deleteComment}
+                  thread={thread}
+                  onClose={onClose}
+                />
+              ));
+            }}
+            className="CommentPlugin_CommentsPanel_List_DeleteButton">
+            <i className="delete" />
+          </Button>
+          {modal}
+        </>
+      )} */}
     </li>
   );
 }
@@ -593,13 +596,17 @@ function CommentsPanelList({
             <li
               key={id}
               onClick={handleClickThread}
-              className={`CommentPlugin_CommentsPanel_List_Thread ${
-                markNodeMap.has(id) ? "interactive" : ""
+              className={`CommentPlugin_CommentsPanel_List_Thread dark:bg-[#495561] active:dark:bg-[#495561] dark:hover:bg-[#495561]   ${
+                markNodeMap.has(id)
+                  ? "interactive dark:bg-[#495561] active:dark:bg-[#495561]"
+                  : ""
               } ${activeIDs.indexOf(id) === -1 ? "" : "active"}`}
             >
               <div className="CommentPlugin_CommentsPanel_List_Thread_QuoteBox">
-                <blockquote className="CommentPlugin_CommentsPanel_List_Thread_Quote">
-                  <span>{commentOrThread.quote}</span>
+                <blockquote className="CommentPlugin_CommentsPanel_List_Thread_Quote  ">
+                  <span className="dark:bg-[#5e6d7b] dark:text-white/90 p-2">
+                    {commentOrThread.quote}
+                  </span>
                 </blockquote>
                 {/* INTRODUCE DELETE THREAD HERE*/}
                 <Button
@@ -612,13 +619,14 @@ function CommentsPanelList({
                       />
                     ));
                   }}
-                  className="CommentPlugin_CommentsPanel_List_DeleteButton"
+                  className="CommentPlugin_CommentsPanel_List_DeleteButton "
                 >
-                  <i className="delete" />
+                  {/* <i className="delete dark:text-white" /> */}
+                  <RiDeleteBin6Line className="delete dark:text-white text-black" />
                 </Button>
                 {modal}
               </div>
-              <ul className="CommentPlugin_CommentsPanel_List_Thread_Comments">
+              <ul className="CommentPlugin_CommentsPanel_List_Thread_Comments ">
                 {commentOrThread.comments.map((comment) => (
                   <CommentsPanelListComment
                     key={comment.id}
@@ -630,12 +638,12 @@ function CommentsPanelList({
                 ))}
               </ul>
               {/* <div className="CommentPlugin_CommentsPanel_List_Thread_Editor">
-                  <CommentsComposer
-                    submitAddComment={submitAddComment}
-                    thread={commentOrThread}
-                    placeholder="Reply to comment..."
-                  />
-                </div> */}
+                <CommentsComposer
+                  submitAddComment={submitAddComment}
+                  thread={commentOrThread}
+                  placeholder="Reply to comment..."
+                />
+              </div> */}
             </li>
           );
         }
@@ -674,85 +682,60 @@ function CommentsPanel({
 }): JSX.Element {
   const listRef = useRef<HTMLUListElement>(null);
   const isEmpty = comments.length === 0;
-  const navigate = useNavigate();
-
-  const [message, setMessage] = useState("");
-  let updated = message.toLowerCase();
-
-  let subString = "blue";
-  let substring1 = "blue.";
-
-  const handleValue = (event) => {
-    setMessage(event.target.value);
-  };
-
-  const handleClick = () => {
-    if (updated.includes(subString) || updated.includes(substring1)) {
-      navigate("/onboarding3");
-      toast.success("Success, You are correct!");
-    } else {
-      toast.error(
-        "You entered an incorrect answer!, pls read the instructions again."
-      );
-    }
-    // {updated == 'rice'  || 'bean' ? navigate('/onboarding3') : toast.error('You entered an incorrect answer, pls read the instructions again.');}
-  };
 
   return (
-    <div className="CommentPlugin_CommentsPanel comment-scroll h-[90vh] overflow-y-scroll">
-      <div className="bg-[#F98E2D]/10 z-50 rounded-[10px] h-[90vh] mb-24 w-[20rem] py-8 px-4  ">
-        <div className="flex flex-col">
-          <div className="flex flex-row justify-between items-center ">
-            <div className="flex flex-row">
-              <img
-                className="w-[40px] h-[40px]"
-                src={`avatar.png`}
-                alt="avatar"
-              />
-              <span className="ml-3 flex flex-col justify-between ">
-                <h2 className=" text-[#08172E] font-bold text-sm">
-                  Deonatricks
-                </h2>
+    <div className="CommentPlugin_CommentsPanel">
+      <div className="bg-white">
+        <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 z-50 mt-[1rem] rounded-[10px] h-[100vh] md:h-[88vh] mb-24 w-[20rem] py-8 px-4  ">
+          <div className="flex flex-col">
+            <div className="flex flex-row justify-between items-center ">
+              <div className="flex flex-row">
+                <img
+                  className="w-[40px] h-[40px]"
+                  src={`avatar.png`}
+                  alt="avatar"
+                />
+                <span className="ml-3 flex flex-col justify-between ">
+                  <h2 className=" text-[#08172E] font-bold text-sm"></h2>
 
-                <p className="text-gray-400 text-xs">Author</p>
-              </span>
+                  <p className="text-gray-400 text-xs">Author</p>
+                </span>
+              </div>
+
+              <div className="flex flex-row justify-center items-center">
+                {/* <img
+                src={`token-icon.png`}
+                alt="token" />
+              <p className="text-[#2F6FED] ml-1 text-base">3</p> */}
+              </div>
             </div>
 
-            <div>
-              <CountDownTimer hours={0} minutes={0} seconds={10} />
+            <div className="border-b-2 bg-gray-400 my-2" />
+
+            <div className="flex flex-row justify-between items-center ">
+              <p className="text-gray-400 text-xs">words</p>
+              <p className="text-[#EF4444]  text-sm font-medium "></p>
             </div>
-          </div>
 
-          <div className="border-b-[1px] bg-gray-400 my-2" />
-
-          <div className="flex flex-row justify-between items-center ">
-            <p className="text-gray-400 text-xs">words</p>
-            {/* <p className="text-[#EF4444]  text-sm font-medium ">
-                                                  Not Reviewed
-                                              </p> */}
-          </div>
-
-          <div className="comment-scroll overflow-y-scroll">
             <div className="flex flex-col mt-3 ">
               <h4 className="text-[#F98E2D] text-base font-bold mb-2 ">
                 Note:
               </h4>
               <div className="flex flex-row  mb-2">
                 <div className=" w-1 mt-[6px] p-1 h-1 rounded-full  justify-center items-center bg-[#F98E2D] "></div>
-                <p className="text-[#08172E] text-xs font-medium ml-2">
-                  Read the essay carefully, and highlight words or phases you
-                  want to give a feedback on.
+                <p className=" dark:text-white/60 text-[#08172E] text-xs font-medium ml-2">
+                  Read the essay and highlight suggestions and feedbacks
                 </p>
               </div>
               <div className="flex flex-row  mb-2">
                 <div className=" w-1 mt-[6px] p-1 h-1 rounded-full justify-center items-center bg-[#F98E2D] "></div>
-                <p className="text-[#08172E] text-xs font-medium ml-2">
-                  After reading through the essay be sure to give your feedback
-                  and answer in the box below.
+                <p className="text-[#08172E] dark:text-white/60 text-xs font-medium ml-2">
+                  After reading through the essay be sure to give your overall
+                  feedback
                 </p>
               </div>
             </div>
-            <div className=" comment-scroll overflow-y-scroll h-[152px]">
+            <div className=" comment-scroll overflow-y-scroll mt-4 h-[350px]">
               <CommentsPanelList
                 activeIDs={activeIDs}
                 comments={comments}
@@ -763,30 +746,32 @@ function CommentsPanel({
               />
             </div>
           </div>
-
-          <div className="mt-4">
-            <h4 className="text-[#08172E] font-semibold text-sm">
-              Input your feedback and answer here
-            </h4>
-            <textarea
-              placeholder="Enter review"
-              style={{ resize: "none" }}
-              className="w-[100%] h-[130px] p-3 text-xs mt-2 placeholder:text-xs "
-              onChange={handleValue}
-              value={message}
-            />
-          </div>
-
-          <div className="my-3 flex justify-center items-center ">
-            <button
-              onClick={handleClick}
-              className="py-2 w-full text-sm text-center text-white bg-[#08172E] "
-            >
-              Submit Review
-            </button>
-          </div>
         </div>
+
+        {/* <div className="mt-4">
+          <h4 className="text-[#08172E] font-semibold text-sm">
+            Overall Feedback
+          </h4>
+          <textarea
+            placeholder='Enter review'
+            style={{ resize: 'none' }}
+            className='w-[100%] h-[130px] p-3 text-xs mt-2 placeholder:text-xs '
+          />
+        </div> */}
       </div>
+      {/* <h2 className="CommentPlugin_CommentsPanel_Heading">Comments</h2>
+      {isEmpty ? (
+        <div className="CommentPlugin_CommentsPanel_Empty">No Comments</div>
+      ) : (
+        <CommentsPanelList
+          activeIDs={activeIDs}
+          comments={comments}
+          deleteCommentOrThread={deleteCommentOrThread}
+          listRef={listRef}
+          submitAddComment={submitAddComment}
+          markNodeMap={markNodeMap}
+        />
+      )} */}
     </div>
   );
 }
@@ -1068,7 +1053,7 @@ function CommentPlugin(Props: Props): JSX.Element {
         )}
       {createPortal(
         <Button
-          className={`CommentPlugin_ShowCommentsButton lg:hidden flex ${
+          className={`CommentPlugin_ShowCommentsButton dark:active:bg-[#495561] dark:hover:bg-[#495561] lg:hidden  flex ${
             showComments ? "active" : ""
           }`}
           onClick={() => setShowComments(!showComments)}

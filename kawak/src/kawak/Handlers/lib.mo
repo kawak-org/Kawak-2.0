@@ -24,6 +24,7 @@ module {
         public type EssayEntry = Types.EssayEntry;
 
         public var essayPK : Nat = 0;
+        public var annotationPK : Nat = 0;
       
 
         var EssayEntries : [(Nat, EssayEntry)] = [];
@@ -45,9 +46,9 @@ module {
             }
         };
 
-        for ((i, j) in state.EssayEntries.vals()){
-            ReviewStatusHash.put(i, makeReview(j.id, true))
-        };
+        // for ((i, j) in state.EssayEntries.vals()){
+        //     ReviewStatusHash.put(i, makeReview(j.id, true))
+        // };
 
         public func updateReviewStatus(id : Nat, bool : Bool) {
             var rev = ReviewStatusHash.get(id);
@@ -152,6 +153,7 @@ module {
             ReviewStatusHash.get(essayID);
         };
 
+
         public func getAllReviewStatus() : [(Nat, Types.ReviewStatus)]{
             Iter.toArray(ReviewStatusHash.entries());
         };
@@ -218,11 +220,27 @@ module {
             buffer.toArray();
         };
 
+        public func GetPageEssay(page : Nat) : [EssayEntry] {
+            var buffer = Buffer.Buffer<EssayEntry>(0);
+            var chunk = Buffer.Buffer<EssayEntry>(0);
+            for ((i, j) in EssayHashMap.entries()){
+                if (j._public == true){
+                    buffer.add(j);
+                };
+            };
+            for (vals in Iter.fromArray(buffer.toArray())){
+                if (((page * 8) - 8) <= vals.id  and (vals.id < (page * 8))){
+                    chunk.add(vals);
+                };
+            };
+            return  chunk.toArray();
+        };
+
         
         // @deprecated
-        public func GetAllEssays_() : [Types.EssayEntry] {
-            essays.toArray();
-        };
+        // public func GetAllEssays_() : [Types.EssayEntry] {
+        //     // EssayHashMap.entries().toArray();
+        // };
 
         public func IsEssayOwner(id : Nat, caller : Principal) : Bool {
             var decision = false;
@@ -302,7 +320,7 @@ module {
         };
 
         public func updateRating(bool : Bool, essayID : Nat, reviewID : Nat ) : () {
-             var annotation = GetAnnotation(essayID);
+            var annotation = GetAnnotation(essayID);
             for (vals in Iter.fromArray(annotation)){
                 if (vals.id == reviewID){
                     var uptReview = {
@@ -338,7 +356,7 @@ module {
 
         public func Rate(essayID : Nat, reviewID : Nat, rating : Nat, aid : Principal) : ?() {
             var essay = GetEssay(essayID);
-            var annotation = GetAnnotation(essayID);
+            // var annotation = GetAnnotation(essayID);
             // var unknown = updatePastRating(essayID, reviewID, rating);
             switch(essay){
                 case(null){null};
@@ -357,12 +375,12 @@ module {
                             myDrafts = _annotation.myDrafts;
                             createdAt = _annotation.createdAt;
                             reviewingEssay = _annotation.reviewingEssay;
-                            pastRatedFeedbacks = _annotation.pastRatedFeedbacks;
+                            pastRatedFeedbacks = Array.append(_annotation.pastRatedFeedbacks, [rating]);
                             onBoarding = _annotation.onBoarding;
                             isAdmin = _annotation.isAdmin;
                         };
                         var replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
-                        var __replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
+                        // var __replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
                         var transfer = state._Brew_DIP20.transfer(aid, annotatorPrincipal, cost);
                         updateRating(true, essayID, reviewID);
                     }
@@ -398,7 +416,6 @@ module {
 
         public func EssayAnnotate(caller : Principal, essayID : Nat, comments : Text, quote : Text) : (){
             var user = state._Users.getUser(caller);
-            var annotationPK : Nat = 0;
             switch (user){
                 case(null){};
                 case(?user){
@@ -440,6 +457,8 @@ module {
             };
         };
 
+        
+
         public func GetAnnotation(id : Nat) : [Types.AnnotationEntry] {
             var tempAnnotation : [Types.AnnotationEntry] = [];
             for ((i, j) in EssayHashMap.entries()){
@@ -447,6 +466,8 @@ module {
             };
             return tempAnnotation;
         };
+
+        // public func GetAnnotation2(reviewID : Nat) : Types.AnnotationEnt
 
         // filter function to search for essay
         public func GetFilteredEssays(topics : [Text]) : [Types.EssayEntry] {
@@ -693,6 +714,7 @@ module {
         _restore(state);
 
 
+        // @deprecated function
         public func AddAnnotation(id : Nat, caller : Principal, comments : Text, quote : Text) : () {
             var user = state._Users.getUser(caller);
             switch (user) {
@@ -777,6 +799,7 @@ module {
             };
         };
 
+        // @deprecated function
         public func AddRating(id : Nat, rating : Nat, caller : Principal) : ?() {
             var annotator = AnnotationHashMap.get(id);
             switch(annotator){

@@ -14,6 +14,7 @@ export type EssayType = {
   public: boolean;
   description: string;
   tags: string[];
+ 
 };
 
 // Define the initial state using that type
@@ -29,7 +30,7 @@ export const myEssaySlice = createSlice({
     },
     setMyEssayToReviewed: (state, action: PayloadAction<number>) => {
       console.log("should set reveiwed to true");
-    },
+    }
   },
 });
 
