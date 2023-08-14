@@ -213,8 +213,6 @@ shared (msg) actor class Kawak(
   //   _Essays.GetAllEssays_();
   // };
 
-
-
   public shared ({ caller }) func updatePublicStatus(pub : Bool, id : Nat) {
     _Essays.UpdatePublicStatus(pub, id);
   };

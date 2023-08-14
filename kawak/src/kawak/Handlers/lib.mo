@@ -24,6 +24,7 @@ module {
         public type EssayEntry = Types.EssayEntry;
 
         public var essayPK : Nat = 0;
+        public var annotationPK : Nat = 0;
       
 
         var EssayEntries : [(Nat, EssayEntry)] = [];
@@ -151,6 +152,7 @@ module {
         public func getReviewStatus(essayID : Nat) : ?Types.ReviewStatus {
             ReviewStatusHash.get(essayID);
         };
+
 
         public func getAllReviewStatus() : [(Nat, Types.ReviewStatus)]{
             Iter.toArray(ReviewStatusHash.entries());
@@ -318,7 +320,7 @@ module {
         };
 
         public func updateRating(bool : Bool, essayID : Nat, reviewID : Nat ) : () {
-             var annotation = GetAnnotation(essayID);
+            var annotation = GetAnnotation(essayID);
             for (vals in Iter.fromArray(annotation)){
                 if (vals.id == reviewID){
                     var uptReview = {
@@ -414,7 +416,6 @@ module {
 
         public func EssayAnnotate(caller : Principal, essayID : Nat, comments : Text, quote : Text) : (){
             var user = state._Users.getUser(caller);
-            var annotationPK : Nat = 0;
             switch (user){
                 case(null){};
                 case(?user){
