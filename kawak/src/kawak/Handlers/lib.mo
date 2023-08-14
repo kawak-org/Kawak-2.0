@@ -218,11 +218,27 @@ module {
             buffer.toArray();
         };
 
+        public func GetPageEssay(page : Nat) : [EssayEntry] {
+            var buffer = Buffer.Buffer<EssayEntry>(0);
+            var chunk = Buffer.Buffer<EssayEntry>(0);
+            for ((i, j) in EssayHashMap.entries()){
+                if (j._public == true){
+                    buffer.add(j);
+                };
+            };
+            for (vals in Iter.fromArray(buffer.toArray())){
+                if (((page * 8) - 8) <= vals.id  and (vals.id < (page * 8))){
+                    chunk.add(vals);
+                };
+            };
+            return  chunk.toArray();
+        };
+
         
         // @deprecated
-        public func GetAllEssays_() : [Types.EssayEntry] {
-            essays.toArray();
-        };
+        // public func GetAllEssays_() : [Types.EssayEntry] {
+        //     // EssayHashMap.entries().toArray();
+        // };
 
         public func IsEssayOwner(id : Nat, caller : Principal) : Bool {
             var decision = false;
