@@ -301,7 +301,7 @@ const MyEssayDetails = () => {
                       <div className="border-b-[1px] bg-gray-400 my-2" />
 
                       <div className="flex flex-col gap-4  py-4 ">
-                        <div className="flex flex-row gap-4 justify-start items-center">
+                        <div className="flex flex-row justify-start items-center mx-1">
                           <p className="dark:text-white text-black">
                             Essay Status
                           </p>
@@ -312,8 +312,8 @@ const MyEssayDetails = () => {
                           />
                         </div>
 
-                        <div className="flex flex-row gap-4  justify-start items-center">
-                          <p className="dark:text-white text-black ">
+                        <div className="flex flex-row justify-start items-center">
+                          <p className="dark:text-white text-black pr-1">
                             Review Status
                           </p>
                           <Toggle
