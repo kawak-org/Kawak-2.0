@@ -2,7 +2,10 @@ import Array "mo:base/Array";
 import Blob "mo:base/Blob";
 import Cycles "mo:base/ExperimentalCycles";
 import Error "mo:base/Error";
+import Float "mo:base/Float";
 import Nat "mo:base/Nat";
+import Nat64 "mo:base/Nat64";
+import Int64 "mo:base/Int64";
 import Principal "mo:base/Principal";
 import Result "mo:base/Result";
 
@@ -274,7 +277,12 @@ shared (msg) actor class Kawak(
     _Essays.getAllReviewStatus();
   };
 
-
+   public func Test(num : Nat, cost : Nat) : async Float {
+    var num_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(num)));
+    var cost_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(cost)));
+    var answer = Float.nearest((num_/5) * cost_);
+    return answer;
+   };
 
   // public shared ({caller}) func createEssays(title : Text, topic : Text, essay_word_count : Nat, essayCost : Nat, text : Text) : async Nat {
   //   if (essay_word_count < 100){

@@ -277,6 +277,9 @@ module {
         };
     };
 
+    
+
+
     /// Transfers value amount of tokens to Principal to.
     public func transfer(caller : Principal, to: Principal, value: Nat) :  Types.TxReceipt {
       if (_balanceOf(caller) < value + fee) { return #Err(#InsufficientBalance); };
