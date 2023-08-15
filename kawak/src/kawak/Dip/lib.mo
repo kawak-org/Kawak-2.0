@@ -277,7 +277,26 @@ module {
         };
     };
 
-    
+    public func burn(amount : Nat, caller : Principal) : Types.TxReceipt {
+        let from_balance = _balanceOf(caller);
+        if (from_balance < amount) {
+            return #Err(#InsufficientBalance);
+        };
+        totalSupply_ -= amount;
+        balances.put(caller, from_balance - amount);
+        let txid = addRecord(
+            ?caller,
+            #burn,
+            caller,
+            blackhole,
+            amount,
+            0,
+            Time.now(),
+            #succeeded,
+        );
+        return #Ok(txid);
+    };
+
 
 
     /// Transfers value amount of tokens to Principal to.

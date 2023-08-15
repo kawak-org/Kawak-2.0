@@ -389,8 +389,8 @@ module {
                             isAdmin = _annotation.isAdmin;
                         };
                         var replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
-                        // var __replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
                         var transfer = state._Brew_DIP20.transfer(aid, annotatorPrincipal, cost);
+                        var burned = state._Brew_DIP20.burn(remainder, aid);
                         updateRating(true, essayID, reviewID);
                     }
                 }
