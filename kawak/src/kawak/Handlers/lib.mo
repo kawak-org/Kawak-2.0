@@ -462,7 +462,9 @@ module {
         public func GetAnnotation(id : Nat) : [Types.AnnotationEntry] {
             var tempAnnotation : [Types.AnnotationEntry] = [];
             for ((i, j) in EssayHashMap.entries()){
-                tempAnnotation := Array.append(tempAnnotation, j.reviews);
+                if (id == j.id){
+                    tempAnnotation := Array.append(tempAnnotation, j.reviews);
+                };   
             };
             return tempAnnotation;
         };
