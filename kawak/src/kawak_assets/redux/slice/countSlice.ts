@@ -4,18 +4,20 @@ import { useHTMLtoTextConverter } from "../../utils/htmlToText";
 
 export interface CountState {
 	words: number | undefined;
+	forgeLength: number
 }
 
 // Define the initial state using that type
 const initialState: CountState = {
 	words: 0,
+	forgeLength: 0
 };
 
 export const essaySlice = createSlice({
 	name: "essayCount",
 	initialState,
 	reducers: {
-		setEssayCount: (state, { payload }: PayloadAction<CountState>) => {
+		setEssayCount: (state) => {
 			const text = localStorage.getItem("last_essay");
 			const text_ = useHTMLtoTextConverter(text);
 			const noOfWords: number = text_.split(" ").length;
@@ -24,10 +26,15 @@ export const essaySlice = createSlice({
 		resetCount: (state) => {
 			state.words = 0;
 		},
+
+		setForgeLength : (state, { payload }: PayloadAction<number>) => {
+			state.forgeLength = payload;
+
+		}
 	},
 });
 
-export const { setEssayCount, resetCount } = essaySlice.actions;
+export const { setEssayCount, resetCount, setForgeLength } = essaySlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 // export const selectCount = (state: RootState) => state.counter.value;

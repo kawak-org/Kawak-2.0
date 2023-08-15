@@ -4,7 +4,7 @@ import EssayCard from "../essay/EssayCard";
 import EssayBar from "../shared/essay/EssayBar";
 import { ShepherdTourContext } from "react-shepherd";
 import { useAppSelector } from "../../redux/hooks";
-import { useGetAllEssays, useGetRecentForge } from "../../functions/contract";
+import {  useGetRecentForge , useGetPaginatedForge, useForgeLength} from "../../functions/contract";
 import ReactPaginate from "react-paginate";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -18,9 +18,11 @@ const DashboardViewLayout = ({ heading }: Props) => {
   // const tour = useContext(ShepherdTourContext);
   const user = useAppSelector((state) => state.profile);
   const essays = useAppSelector((state) => state.forge);
+  const count = useAppSelector((state) => state.essay)
   // const loading = false;
-  const { fetchData, loading } = useGetAllEssays();
+  const { fetchData, loading } = useGetPaginatedForge();
   const { fetchData: updateData, loading: updating } = useGetRecentForge();
+  const {countForge} = useForgeLength()
   const [pageNumber, setPageNumber] = useState(0);
   const essaysPerPage: number = 8;
   const essaysViewed: number = pageNumber * essaysPerPage;
@@ -67,21 +69,30 @@ const DashboardViewLayout = ({ heading }: Props) => {
 
   useEffect(() => {
     if (essays?.length < 1) {
-      fetchData();
+      fetchData(1);
+      countForge();
       return;
     }
-    updateData();
+    updateData(1);
+    countForge();
+    
   }, []);
 
-  //TODO: handle with state management
-  // if (user?.onboarding === false) {
-  // tour?.start();
-  // }
-  // console.log(essays)
 
-  const pageCount: number = Math.ceil(essays?.length / essaysPerPage);
+  const pageCount: number = Math.ceil(count?.forgeLength / essaysPerPage);
+  //  i need a function to get the pagecount, i
   const changePage = ({ selected }) => {
     setPageNumber(selected);
+    if (essays.length < (selected + 1) * essaysPerPage) {
+      updateData(1);
+      setTimeout (() => {
+        for (let i = 1; i < pageCount; i++) {
+          fetchData(i + 1)
+        }
+      
+
+      }, 1000)
+    } 
   };
 
   return (
@@ -123,7 +134,7 @@ const DashboardViewLayout = ({ heading }: Props) => {
         </div>
       )}
       <div className=" flex flex-row justify-end items-center ">
-        {essays?.length >= 5 && (
+        {essays?.length >= 8 && (
           <ReactPaginate
             previousLabel={<MdKeyboardArrowLeft className="text-xl" />}
             nextLabel={<MdKeyboardArrowRight className="text-xl" />}

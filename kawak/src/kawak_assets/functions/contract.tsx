@@ -29,6 +29,7 @@ import {
   ItemType,
 } from "../redux/slice/marketPlace/marketPlaceSlice";
 import { addMarketPlaceDetail } from "../redux/slice/marketPlace/nftDetailsMPSlice";
+import { setForgeLength } from "../redux/slice/countSlice";
 // const Contract = useActor();
 // if (Contract_ != undefined|| null) {
 // 	console.log(Contract)
@@ -77,15 +78,80 @@ export const useFetchProfile = () => {
   }
 };
 
-export const useGetAllEssays = () => {
+// DEPRECEATED
+// export const useGetAllEssays = () => {
+//   const [loading, setLoading] = useState(false);
+//   const { actor } = useContext(UserContext);
+//   const dispatch = useAppDispatch();
+//   try {
+//     const fetchData = async () => {
+//       setLoading(true);
+//       const data = await actor?.getAllEssays();
+//       if (data) {
+//         for (let i = 0; i < data.length; i++) {
+//           const val = data[i];
+
+//           var val_: EssayType = {
+//             id: Number(val.id),
+//             essayCost: Number(val.essayCost),
+//             wordCount: Number(val.wordCount),
+//             owner: val.owner,
+//             avatar: val.userDetails.avatar,
+//             reviewed: val.reviewed,
+//             text: val.text,
+//             title: val.title,
+//             reviewTimes: Number(val.reviewTimes),
+//             public: val._public,
+//             description: val.description,
+//             tags: val.topic,
+//           };
+//           dispatch(addToForge(val_));
+//         }
+//         setLoading(false);
+//       }
+//       setLoading(false);
+//     };
+//     return { fetchData, loading };
+//   } catch (err) {
+//     toast.error("something went wrong");
+//     setLoading(false);
+//     console.log(err);
+//   }
+// };
+
+export  const useForgeLength = () => {
   const [loading, setLoading] = useState(false);
   const { actor } = useContext(UserContext);
   const dispatch = useAppDispatch();
   try {
-    const fetchData = async () => {
+    const countForge = async () => {
       setLoading(true);
       const data = await actor?.getAllEssays();
       if (data) {
+        dispatch(setForgeLength(data.length))
+        setLoading(false);
+      }
+      setLoading(false);
+    };
+    return { countForge, loading };
+  } catch (err) {
+    toast.error("something went wrong");
+    setLoading(false);
+    console.log(err);
+  }
+}
+
+export const useGetPaginatedForge = () => {
+  const [loading, setLoading] = useState(false);
+  const { actor } = useContext(UserContext);
+  const dispatch = useAppDispatch();
+
+  try {
+    const fetchData = async (pag:number) => {
+      setLoading(true)
+     const data = await actor?.GetPageEssay(BigInt(pag))
+      if (data) {
+        console.log("pagination data",data)
         for (let i = 0; i < data.length; i++) {
           const val = data[i];
 
@@ -108,14 +174,18 @@ export const useGetAllEssays = () => {
         setLoading(false);
       }
       setLoading(false);
-    };
-    return { fetchData, loading };
-  } catch (err) {
+
+    }
+
+
+    return {fetchData, loading}
+  }
+  catch (err) {
     toast.error("something went wrong");
     setLoading(false);
     console.log(err);
   }
-};
+}
 
 export const useGetRecentForge = () => {
   const [loading, setLoading] = useState(false);
@@ -125,9 +195,9 @@ export const useGetRecentForge = () => {
   const newEssays: EssayType[] = [];
   const forge = useAppSelector((state) => state.forge);
   try {
-    const fetchData = async () => {
+    const fetchData = async (pag:number) => {
       setLoading(true);
-      const data = await actor?.getAllEssays();
+      const data = await actor?.GetPageEssay(BigInt(pag));
       if (data) {
         console.log(data);
         for (let i = 0; i < data.length; i++) {
