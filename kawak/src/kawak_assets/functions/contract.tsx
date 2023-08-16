@@ -197,7 +197,8 @@ export const useGetRecentForge = () => {
   try {
     const fetchData = async (pag:number) => {
       setLoading(true);
-      const data = await actor?.GetPageEssay(BigInt(pag));
+      // const data = await actor?.GetPageEssay(BigInt(pag));
+      const data = await actor?.getAllEssays()
       if (data) {
         console.log(data);
         for (let i = 0; i < data.length; i++) {

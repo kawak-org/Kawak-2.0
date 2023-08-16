@@ -73,7 +73,7 @@ const DashboardViewLayout = ({ heading }: Props) => {
       countForge();
       return;
     }
-    updateData(1);
+    updateData();
     countForge();
     
   }, []);
