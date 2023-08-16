@@ -195,7 +195,7 @@ export const useGetRecentForge = () => {
   const newEssays: EssayType[] = [];
   const forge = useAppSelector((state) => state.forge);
   try {
-    const fetchData = async (pag:number) => {
+    const fetchData = async () => {
       setLoading(true);
       // const data = await actor?.GetPageEssay(BigInt(pag));
       const data = await actor?.getAllEssays()
