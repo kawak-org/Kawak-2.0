@@ -232,12 +232,19 @@ module {
                     buffer.add(j);
                 };
             };
-            for (vals in Iter.fromArray(buffer.toArray())){
-                if (((page * 8) - 8) <= vals.id  and (vals.id < (page * 8))){
-                    chunk.add(vals);
-                };
-            };
-            return  chunk.toArray();
+            var mutable : [EssayEntry] = buffer.toArray(); 
+            return mutable;
+
+
+            // for (vals in Iter.range(mutable[((page * 8) - 8)])){
+            //     // if (vals in )
+            //     // for ( )
+            //     chunks.add(mutable[])
+            //     // if ((((page * 8) - 8) <= mutable[8]) and (vals.id < (page * 8))){
+            //     //     chunk.add(vals);
+            //     // };
+            // };
+            // return  chunk.toArray();
         };
 
         
