@@ -4,7 +4,7 @@ import EssayCard from "../essay/EssayCard";
 import EssayBar from "../shared/essay/EssayBar";
 import { ShepherdTourContext } from "react-shepherd";
 import { useAppSelector } from "../../redux/hooks";
-import {  useGetRecentForge , useGetPaginatedForge, useForgeLength} from "../../functions/contract";
+import {  useGetRecentForge ,useGetAllEssays, useForgeLength} from "../../functions/contract";
 import ReactPaginate from "react-paginate";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -20,7 +20,7 @@ const DashboardViewLayout = ({ heading }: Props) => {
   const essays = useAppSelector((state) => state.forge);
   const count = useAppSelector((state) => state.essay)
   // const loading = false;
-  const { fetchData, loading } = useGetPaginatedForge();
+  const { fetchData, loading } = useGetAllEssays();
   const { fetchData: updateData, loading: updating } = useGetRecentForge();
   const {countForge} = useForgeLength()
   const [pageNumber, setPageNumber] = useState(0);
@@ -69,11 +69,11 @@ const DashboardViewLayout = ({ heading }: Props) => {
 
   useEffect(() => {
     if (essays?.length < 1) {
-      fetchData(1);
+      fetchData();
       countForge();
       return;
     }
-    updateData(1);
+    updateData();
     countForge();
     
   }, []);
@@ -81,19 +81,33 @@ const DashboardViewLayout = ({ heading }: Props) => {
 
   const pageCount: number = Math.ceil(count?.forgeLength / essaysPerPage);
   //  i need a function to get the pagecount, i
+
   const changePage = ({ selected }) => {
     setPageNumber(selected);
-    if (essays.length < (selected + 1) * essaysPerPage) {
-      updateData(1);
-      setTimeout (() => {
-        for (let i = 1; i < pageCount; i++) {
-          fetchData(i + 1)
-        }
+    // if (essays.length < (selected + 1) * essaysPerPage) {
+    //   updateData(1);
+    //   setTimeout (() => {
+    //     for (let i = 1; i < pageCount; i++) {
+    //       fetchData(i + 1)
+    //     }
       
 
-      }, 1000)
-    } 
+    //   }, 1000)
+    // } 
   };
+  // const changePage_ = ({ selected }) => {
+  //   setPageNumber(selected);
+  //   if (essays.length < (selected + 1) * essaysPerPage) {
+  //     updateData(1);
+  //     setTimeout (() => {
+  //       for (let i = 1; i < pageCount; i++) {
+  //         fetchData(i + 1)
+  //       }
+      
+
+  //     }, 1000)
+  //   } 
+  // };
 
   return (
     <div className="dark:bg-[#1f2933] mx-4 sm:mx-8 mb-6 mt-28">

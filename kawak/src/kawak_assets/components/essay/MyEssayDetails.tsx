@@ -309,7 +309,7 @@ const MyEssayDetails = () => {
                         <div className="flex flex-col gap-4 py-4 ">
                           <div className="flex flex-row gap-4 justify-start items-center ">
                             <p className="dark:text-white text-black pr-1">
-                              Essay Status
+                              Essay visibility
                             </p>
                             <Toggle
                               checked={myEssay.visibility?.essay}
@@ -320,7 +320,7 @@ const MyEssayDetails = () => {
 
                           <div className="flex flex-row gap-4  justify-start items-center">
                             <p className="dark:text-white text-black ">
-                              Review Status
+                              Comment visibility
                             </p>
                             <Toggle
                               checked={myEssay.visibility?.review}
@@ -406,7 +406,7 @@ const MyEssayDetails = () => {
                         <div className="flex flex-col gap-4 py-4 ">
                           <div className="flex flex-row gap-4 justify-start items-center ">
                             <p className="dark:text-white text-black pr-1">
-                              Essay Status
+                              Essay Visibility
                             </p>
                             <Toggle
                               checked={myEssay.visibility?.essay}
@@ -417,7 +417,7 @@ const MyEssayDetails = () => {
 
                           <div className="flex flex-row gap-4  justify-start items-center">
                             <p className="dark:text-white text-black ">
-                              Review Status
+                              Review Visibility
                             </p>
                             <Toggle
                               checked={myEssay.visibility?.review}
