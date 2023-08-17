@@ -179,7 +179,7 @@ const EssayDetails = () => {
                         <div className="w-full flex justify-center items-center">
                           <button
                             onClick={changeSection}
-                            className="py-2 px-14 text-white bg-[#F98E2D] dark:bg-[#627D98] dark:hover:text-white dark:hover:bg-[#9AA5B1] hover:bg-[#F98E2D]/30 hover:text-black"
+                            className="mt-4 py-2 px-14 text-white bg-[#F98E2D] dark:bg-[#627D98] dark:hover:text-white dark:hover:bg-[#9AA5B1] hover:bg-[#F98E2D]/30 hover:text-black"
                           >
                             {isLoading3 ? "just a sec..." : "Review Essay"}
                           </button>

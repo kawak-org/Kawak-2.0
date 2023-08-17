@@ -403,9 +403,11 @@ const MyEssayDetails = () => {
                       <div className="border-b-[1px] bg-gray-400 my-2" />
 
                       {myEssay && (
-                        <div className="flex flex-row justify-between items-center py-4 ">
-                          <div className="flex flex-row justify-center items-center mx-1">
-                            <p className="text-white pr-1">Essay Status</p>
+                        <div className="flex flex-col gap-4 py-4 ">
+                          <div className="flex flex-row gap-4 justify-start items-center ">
+                            <p className="dark:text-white text-black pr-1">
+                              Essay Status
+                            </p>
                             <Toggle
                               checked={myEssay.visibility?.essay}
                               onChange={(e) => handleSetVisibility(e)}
@@ -413,8 +415,10 @@ const MyEssayDetails = () => {
                             />
                           </div>
 
-                          <div className="flex flex-row justify-center items-center">
-                            <p className="text-white pr-1">Review Status</p>
+                          <div className="flex flex-row gap-4  justify-start items-center">
+                            <p className="dark:text-white text-black ">
+                              Review Status
+                            </p>
                             <Toggle
                               checked={myEssay.visibility?.review}
                               onChange={(e) => handleSetReviewVisibility(e)}

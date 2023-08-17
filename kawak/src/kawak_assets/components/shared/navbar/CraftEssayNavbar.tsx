@@ -12,6 +12,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { IoIosMenu } from "react-icons/io";
 // import SignOutModal from "../../Modal/SignOutModal";
 import { EssayEditorContext } from "../../../context/EssayEditorContext";
+import SignOutModal from "../../Modal/SignOutModal";
 
 const Navbar = () => {
   const [activePage, setActivePage] = useState(0);
@@ -301,9 +302,9 @@ const Navbar = () => {
           </div>
         </div>
       )}
-      {/* {modalIsOpen && (
-				<SignOutModal modal={setModalIsOpen} handleSignOut={handleSignOut} />
-			)} */}
+      {modalIsOpen && (
+        <SignOutModal modal={setModalIsOpen} handleSignOut={handleSignOut} />
+      )}
     </div>
   );
 };

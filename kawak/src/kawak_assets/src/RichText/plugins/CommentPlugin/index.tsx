@@ -41,7 +41,14 @@ import {
   createCommand,
   KEY_ESCAPE_COMMAND,
 } from "lexical";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import React from "react";
 import { createPortal } from "react-dom";
 import useLayoutEffect from "../../shared/folder/useLayoutEffect";
@@ -62,6 +69,8 @@ import Button from "../../ui/Button";
 import ContentEditable from "../../ui/ContentEditable";
 import Placeholder from "../../ui/Placeholder";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { UserContext } from "../../../../context/userContext";
+import { useParams } from "react-router-dom";
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand();
 
@@ -682,6 +691,25 @@ function CommentsPanel({
 }): JSX.Element {
   const listRef = useRef<HTMLUListElement>(null);
   const isEmpty = comments.length === 0;
+  const { actor } = useContext(UserContext);
+  const { id } = useParams();
+  const value = [];
+  const [essay, setEssay] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const onMount = () => {
+      actor.getessay(BigInt(id)).then((d) => {
+        if (d) {
+          value.push(d[0]);
+          setEssay(value);
+          setLoading(false);
+          console.log("from index: ", value);
+          console.log("description: ", value[0].description);
+        }
+      });
+    };
+    onMount();
+  }, []);
 
   return (
     <div className="CommentPlugin_CommentsPanel">
@@ -720,22 +748,27 @@ function CommentsPanel({
             </div>
 
             <div className="flex flex-col mt-3 ">
-              <h4 className="text-[#F98E2D] text-base font-bold mb-2 ">
-                Note:
+              <h4 className="text-[#F98E2D] dark:text-[#F98E2D]/60 text-base font-bold mb-2 ">
+                Description:
               </h4>
               <div className="flex flex-row  mb-2">
-                <div className=" w-1 mt-[6px] p-1 h-1 rounded-full  justify-center items-center bg-[#F98E2D] "></div>
-                <p className=" dark:text-white/60 text-[#08172E] text-xs font-medium ml-2">
-                  Read the essay and highlight suggestions and feedbacks
-                </p>
+                <div className=" w-1 mt-[6px] p-1 h-1 rounded-full  justify-center items-center dark:text-[#F98E2D]/50 bg-[#F98E2D] "></div>
+                {(loading == false && essay[0].description !== null) ||
+                undefined ? (
+                  <p className="text-[#08172E] dark:text-gray-400  ml-2 text-xs font-medium mt-[1px]">
+                    {essay[0].description}
+                  </p>
+                ) : (
+                  <p>Essay has no description</p>
+                )}
               </div>
-              <div className="flex flex-row  mb-2">
-                <div className=" w-1 mt-[6px] p-1 h-1 rounded-full justify-center items-center bg-[#F98E2D] "></div>
-                <p className="text-[#08172E] dark:text-white/60 text-xs font-medium ml-2">
-                  After reading through the essay be sure to give your overall
-                  feedback
-                </p>
-              </div>
+              {/* <div className="flex flex-row  mb-2">
+                              <div className=" w-1 mt-[6px] p-1 h-1 rounded-full justify-center items-center dark:text-[#F98E2D]/50 bg-[#F98E2D] "></div>
+                              <p className="text-[#08172E] dark:text-gray-400 text-xs font-medium ml-2">
+                                After reading through the essay be sure to give
+                                your overall feedback
+                              </p>
+                            </div> */}
             </div>
             <div className=" comment-scroll overflow-y-scroll mt-4 h-[350px]">
               <CommentsPanelList

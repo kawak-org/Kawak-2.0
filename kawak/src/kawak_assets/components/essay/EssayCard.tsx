@@ -72,7 +72,7 @@ const EssayCard = ({
             className="flex flex-row flex-wrap
           "
           >
-            {tags.slice(0, 6).map((tag, index) => (
+            {tags.slice(0, 3).map((tag, index) => (
               <Tag
                 key={index}
                 color={
