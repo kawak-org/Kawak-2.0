@@ -232,10 +232,14 @@ module {
                     buffer.add(j);
                 };
             };
-            var mutable : [EssayEntry] = buffer.toArray(); 
-            return mutable;
-
-
+            var init : Nat = ((page * 8) - 8);
+            var dest : Nat = (page * 8);
+            while (init < dest){
+                chunk.add(buffer.toArray()[init]);
+                init += 1;
+            };
+            return chunk.toArray();
+            
             // for (vals in Iter.range(mutable[((page * 8) - 8)])){
             //     // if (vals in )
             //     // for ( )
