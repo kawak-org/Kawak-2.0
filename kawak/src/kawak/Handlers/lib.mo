@@ -237,9 +237,6 @@ module {
                 };
             };
             // var TemporaryHash = HashMap.HashMap<Nat, EssayEntry>(5, Nat.equal, Hash.hash);
-
-
-
             var init : Nat = ((page * 8) - 8);
             var dest : Nat = (page * 8);
 
@@ -248,13 +245,12 @@ module {
                     chunk.add(payload)
                 };
             };
-            while (init < dest){
-                if (buffer.toArray()[init] )
-                chunk.add(buffer.toArray()[init]);
-                init += 1;
-            };
+            // while (init < dest){
+            //     if (buffer.toArray()[init] )
+            //     chunk.add(buffer.toArray()[init]);
+            //     init += 1;
+            // };
             return chunk.toArray();
-            
             // for (vals in Iter.range(mutable[((page * 8) - 8)])){
             //     // if (vals in )
             //     // for ( )
