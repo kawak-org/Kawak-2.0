@@ -141,51 +141,51 @@ export  const useForgeLength = () => {
   }
 }
 
-// export const useGetPaginatedForge = () => {
-//   const [loading, setLoading] = useState(false);
-//   const { actor } = useContext(UserContext);
-//   const dispatch = useAppDispatch();
+export const useGetPaginatedForge = () => {
+  const [loading, setLoading] = useState(false);
+  const { actor } = useContext(UserContext);
+  const dispatch = useAppDispatch();
 
-//   try {
-//     const fetchData = async (pag:number) => {
-//       setLoading(true)
-//      const data = await actor?.GetPageEssay(BigInt(pag))
-//       if (data) {
-//         console.log("pagination data",data)
-//         for (let i = 0; i < data.length; i++) {
-//           const val = data[i];
+  try {
+    const fetchData = async (pag:number) => {
+      setLoading(true)
+     const data = await actor?.GetPageEssay(BigInt(pag))
+      if (data) {
+        console.log("pagination data",data)
+        for (let i = 0; i < data.length; i++) {
+          const val = data[i];
 
-//           var val_: EssayType = {
-//             id: Number(val.id),
-//             essayCost: Number(val.essayCost),
-//             wordCount: Number(val.wordCount),
-//             owner: val.owner,
-//             avatar: val.userDetails.avatar,
-//             reviewed: val.reviewed,
-//             text: val.text,
-//             title: val.title,
-//             reviewTimes: Number(val.reviewTimes),
-//             public: val._public,
-//             description: val.description,
-//             tags: val.topic,
-//           };
-//           dispatch(addToForge(val_));
-//         }
-//         setLoading(false);
-//       }
-//       setLoading(false);
+          var val_: EssayType = {
+            id: Number(val.id),
+            essayCost: Number(val.essayCost),
+            wordCount: Number(val.wordCount),
+            owner: val.owner,
+            avatar: val.userDetails.avatar,
+            reviewed: val.reviewed,
+            text: val.text,
+            title: val.title,
+            reviewTimes: Number(val.reviewTimes),
+            public: val._public,
+            description: val.description,
+            tags: val.topic,
+          };
+          dispatch(addToForge(val_));
+        }
+        setLoading(false);
+      }
+      setLoading(false);
 
-//     }
+    }
 
 
-//     return {fetchData, loading}
-//   }
-//   catch (err) {
-//     toast.error("something went wrong");
-//     setLoading(false);
-//     console.log(err);
-//   }
-// }
+    return {fetchData, loading}
+  }
+  catch (err) {
+    toast.error("something went wrong");
+    setLoading(false);
+    console.log(err);
+  }
+}
 
 export const useGetRecentForge = () => {
   const [loading, setLoading] = useState(false);
@@ -195,10 +195,10 @@ export const useGetRecentForge = () => {
   const newEssays: EssayType[] = [];
   const forge = useAppSelector((state) => state.forge);
   try {
-    const fetchData = async () => {
+    const fetchData = async (pag:number) => {
       setLoading(true);
-      // const data = await actor?.GetPageEssay(BigInt(pag));
-      const data = await actor?.getAllEssays()
+      const data = await actor?.GetPageEssay(BigInt(pag));
+      // const data = await actor?.getAllEssays()
       if (data) {
         console.log(data);
         for (let i = 0; i < data.length; i++) {

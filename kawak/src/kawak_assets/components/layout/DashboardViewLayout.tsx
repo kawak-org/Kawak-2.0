@@ -4,7 +4,7 @@ import EssayCard from "../essay/EssayCard";
 import EssayBar from "../shared/essay/EssayBar";
 import { ShepherdTourContext } from "react-shepherd";
 import { useAppSelector } from "../../redux/hooks";
-import {  useGetRecentForge ,useGetAllEssays, useForgeLength} from "../../functions/contract";
+import {  useGetRecentForge ,useGetPaginatedForge, useGetAllEssays, useForgeLength} from "../../functions/contract";
 import ReactPaginate from "react-paginate";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -20,8 +20,10 @@ const DashboardViewLayout = ({ heading }: Props) => {
   const essays = useAppSelector((state) => state.forge);
   const count = useAppSelector((state) => state.essay)
   // const loading = false;
-  const { fetchData, loading } = useGetAllEssays();
+  // const { fetchData, loading } = useGetAllEssays();
+  const { fetchData, loading } = useGetPaginatedForge();
   const { fetchData: updateData, loading: updating } = useGetRecentForge();
+
   const {countForge} = useForgeLength()
   const [pageNumber, setPageNumber] = useState(0);
   const essaysPerPage: number = 8;
@@ -69,11 +71,11 @@ const DashboardViewLayout = ({ heading }: Props) => {
 
   useEffect(() => {
     if (essays?.length < 1) {
-      fetchData();
+      fetchData(1);
       countForge();
       return;
     }
-    updateData();
+    updateData(1);
     countForge();
     
   }, []);
@@ -83,17 +85,18 @@ const DashboardViewLayout = ({ heading }: Props) => {
   //  i need a function to get the pagecount, i
 
   const changePage = ({ selected }) => {
+    console.log(selected);
     setPageNumber(selected);
-    // if (essays.length < (selected + 1) * essaysPerPage) {
-    //   updateData(1);
-    //   setTimeout (() => {
-    //     for (let i = 1; i < pageCount; i++) {
-    //       fetchData(i + 1)
-    //     }
+    if (essays.length < (selected + 1) * essaysPerPage) {
+      updateData(1);
+      setTimeout (() => {
+        for (let i = 1; i < pageCount; i++) {
+          fetchData(i + 1)
+        }
       
 
-    //   }, 1000)
-    // } 
+      }, 2000)
+    } 
   };
   // const changePage_ = ({ selected }) => {
   //   setPageNumber(selected);
