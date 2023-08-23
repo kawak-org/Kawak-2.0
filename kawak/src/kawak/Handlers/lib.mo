@@ -239,7 +239,6 @@ module {
             // var TemporaryHash = HashMap.HashMap<Nat, EssayEntry>(5, Nat.equal, Hash.hash);
             var init : Nat = ((page * 8) - 8);
             var dest : Nat = (page * 8);
-
             for ((pk, payload) in TemporaryHash.entries()){
                 if ((init  <= pk) and pk < dest){
                     chunk.add(payload)
