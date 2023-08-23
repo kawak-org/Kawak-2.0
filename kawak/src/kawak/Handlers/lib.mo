@@ -227,19 +227,29 @@ module {
         public func GetPageEssay(page : Nat) : [EssayEntry] {
             var buffer = Buffer.Buffer<EssayEntry>(0);
             var chunk = Buffer.Buffer<EssayEntry>(0);
+            var temp_pk = 0;
+            var TemporaryHash = HashMap.HashMap<Nat, EssayEntry>(10, Nat.equal, Hash.hash);
             for ((i, j) in EssayHashMap.entries()){
                 if (j._public == true){
                     buffer.add(j);
+                    TemporaryHash.put(temp_pk, j);
+                    temp_pk += 1;
                 };
             };
+            // var TemporaryHash = HashMap.HashMap<Nat, EssayEntry>(5, Nat.equal, Hash.hash);
             var init : Nat = ((page * 8) - 8);
             var dest : Nat = (page * 8);
-            while (init < dest){
-                chunk.add(buffer.toArray()[init]);
-                init += 1;
+            for ((pk, payload) in TemporaryHash.entries()){
+                if ((init  <= pk) and pk < dest){
+                    chunk.add(payload)
+                };
             };
+            // while (init < dest){
+            //     if (buffer.toArray()[init] )
+            //     chunk.add(buffer.toArray()[init]);
+            //     init += 1;
+            // };
             return chunk.toArray();
-            
             // for (vals in Iter.range(mutable[((page * 8) - 8)])){
             //     // if (vals in )
             //     // for ( )
