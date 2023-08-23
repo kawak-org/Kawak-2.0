@@ -3,7 +3,7 @@ all: build
 
 .PHONY: kawak
 .SILENT: kawak
-puzzle:
+kawak:
 	$(eval kawakCanisterID=$(shell dfx canister id kawak))
 	echo kawakCanisterID = $(kawakCanisterID)
 	dfx deploy kawak --argument="(principal \"$(kawakCanister)\") " 
