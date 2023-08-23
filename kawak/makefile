@@ -16,6 +16,8 @@ kawak:
 	echo kawakCanisterID = $(kawakCanisterID)
 	@echo "http://127.0.0.1:8000/?canisterId=$(candidID)&id=$(kawakCanisterID)"
 
+kawak_assets : 
+	
 
 .PHONY: clean-
 .SILENT: clean
