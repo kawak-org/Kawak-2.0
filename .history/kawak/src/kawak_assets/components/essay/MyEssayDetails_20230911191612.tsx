@@ -153,51 +153,28 @@ const MyEssayDetails = () => {
     }, 500);
   };
 
-  // const submitRating = () => {
-  //   setModalLoading(true);
-  //   console.log("id: ", id, "Rating:", rating);
-  //   console.log("Annotation:", annotations[annotationPosition]?.id);
-  //   actor
-  //     .AddRatingNow(
-  //       BigInt(id),
-  //       BigInt(annotations[annotationPosition]?.id),
-  //       BigInt(rating) /* annotations[annotationPosition]?.user */
-  //     )
-  //     // actor.AddRating(BigInt(id), BigInt(annotations[annotationPosition]?.id), BigInt(rating)/* , annotations[annotationPosition]?.user */)
-  //     .then((data) => {
-  //       console.log("add rating result: ", data);
-  //       toast.success("User's rating successfully added");
-  //       setModalLoading(false);
-  //       navigate(-1);
-  //     })
-  //     .catch((err) => {
-  //       console.log("Error message: ", err);
-  //       setModalLoading(false);
-  //       toast.error(err);
-  //     });
-  // };
-
-  const submitRating = async () => {
+  const submitRating = () => {
     setModalLoading(true);
-    try {
-      console.log("id: ", id, "Rating:", rating);
-      console.log("Annotation:", annotations[annotationPosition]?.id);
-      const data = await actor.AddRatingNow(
+    console.log("id: ", id, "Rating:", rating);
+    actor
+      .AddRatingNow(
         BigInt(id),
         BigInt(annotations[annotationPosition]?.id),
-        BigInt(rating)
-      );
-      console.log("add rating result: ", data);
-      toast.success("User's rating successfully added");
-      setModalLoading(false);
-      navigate(-1);
-    } catch (err) {
-      console.error("Error message: ", err);
-      setModalLoading(false);
-      toast.error(err.message || "An error occurred");
-    }
+        BigInt(rating) /* annotations[annotationPosition]?.user */
+      )
+      // actor.AddRating(BigInt(id), BigInt(annotations[annotationPosition]?.id), BigInt(rating)/* , annotations[annotationPosition]?.user */)
+      .then((data) => {
+        console.log("add rating result: ", data);
+        toast.success("User's rating successfully added");
+        setModalLoading(false);
+        navigate(-1);
+      })
+      .catch((err) => {
+        console.log(err);
+        setModalLoading(false);
+        toast.error(err);
+      });
   };
-
   const handleCarouselChange = (index: number) => {
     setAnnotationPosition(index);
   };

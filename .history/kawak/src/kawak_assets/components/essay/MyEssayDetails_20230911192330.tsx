@@ -14,15 +14,22 @@ import LexicalRichTextEditor from "../../src/RichText/LexicalRichTextEditor";
 import { BiArrowBack } from "react-icons/bi";
 import { useMatomo } from "@datapunt/matomo-tracker-react";
 import Loader from "../Loaders/Loader";
-import {Carousel} from 'react-responsive-carousel';
+import { Carousel } from "react-responsive-carousel";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
-import {addAnnotation, clearAnnotation} from "../../redux/slice/annotationSlice"
+import {
+  addAnnotation,
+  clearAnnotation,
+} from "../../redux/slice/annotationSlice";
 // import CustomPrompt from "../../utils/navigation-block/CustomPrompt";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; 
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import ShowComment from "./ShowComment";
 import FeedbackModal from "../../components/Modal/FeedbackModal";
-import Toggle from 'react-toggle'
-import "react-toggle/style.css" 
+import Toggle from "react-toggle";
+import "react-toggle/style.css";
+import {
+  setEssayVisibility,
+  setReviewVisibility,
+} from "../../redux/slice/myEssayDetailsSlice";
 
 type ReviewType = {
   id: number;
@@ -47,22 +54,32 @@ const MyEssayDetails = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [rateModal, setRateModal] = useState(false);
   const [showComment, setShowComment] = useState(false);
-  const [reviewId, setReviewId] = useState(null)
-  const annotations = useAppSelector((state) => state.annotation)
-  const dispatch = useAppDispatch()
-  const [annotationPosition, setAnnotationPosition] = useState(0)
-  const [disabled, setDisabled] = useState(false)
-  const [visibility, setVisibility] = useState(false)
+  const [reviewId, setReviewId] = useState(null);
+  const annotations = useAppSelector((state) => state.annotation);
+  const dispatch = useAppDispatch();
+  const [annotationPosition, setAnnotationPosition] = useState(0);
+  const [disabled, setDisabled] = useState(false);
+  const [disabled_, setDisabled_] = useState(false);
+  // const [visibility, setVisibility] = useState(false);
+  const [reviewStatus, setReviewStatus] = useState(true);
+  const myEssay = useAppSelector((state) => state.myEssayDetailsSlice);
   // const [openComment, setOpenComment] = useState(false);
-  var unserialized =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote);
+  // var unserialized:any =  annotations[annotationPosition] == null ? undefined : JSON.parse(annotations[annotationPosition]?.quote);
+  var unserialized: any =
+    annotations[annotationPosition] == null
+      ? undefined
+      : JSON.parse(annotations[annotationPosition]?.quote);
 
+  console.log(typeof unserialized);
+
+  // console.log("unserialized", unserialized, "annotation", annotations);
   const { trackEvent } = useMatomo();
 
   // const { deleting, handleDelete } = deleteEssay(BigInt(id));
   const handleDelete = () => {
     setDeleting(true);
     actor
-      .deleteEssay(BigInt(id))
+      .DeleteEssay(BigInt(id))
       .then((d) => {
         setDeleting(false);
         toast.success("Essay Deleted");
@@ -80,37 +97,53 @@ const MyEssayDetails = () => {
           if (d) {
             value.push(d[0]);
             setEssay(value);
-            setVisibility(value[0]._public)
+            dispatch(setEssayVisibility(value[0]._public));
+            // setVisibility(value[0]._public);
             // console.log(value)
-            const rev: [ReviewType]  = [null]
-            console.log(d)
-            dispatch(clearAnnotation())
+            const rev: [ReviewType] = [null];
+            // console.log(d)
+            dispatch(clearAnnotation());
             const dd = d[0]?.reviews.map((review) => {
               const val = {
                 id: Number(review.id),
                 user: review.user,
                 quote: review.quote,
                 comments: review.comments,
-                rated:review.rated
-              }
-          
-              dispatch(addAnnotation(
-                val
-              ))
-            
+                rated: review.rated,
+              };
 
-            })
-            console.log("essay", d)
+              dispatch(addAnnotation(val));
+            });
             setIsLoading2(false);
-            setReview(rev)
+            setReview(rev);
           }
         })
         .catch((err) => {
+          console.log(err);
           toast.error("could not get an essay with this id");
         });
     };
-  
+
+    const getReviewStatus = () => {
+      actor
+        ?.GetReviewStatus(BigInt(id))
+        .then((d) => {
+          if (d.length === 0) {
+            return;
+          }
+          // else {
+          console.log("review status", d);
+          dispatch(setReviewVisibility(d[0].status));
+          // setReviewStatus(d[0].status);
+          // }
+        })
+        .catch((err) => {
+          console.log(err);
+          // toast.error(err)
+        });
+    };
     callOnMount();
+    getReviewStatus();
   }, []);
 
   const ratingChanged = (val: number) => {
@@ -122,42 +155,58 @@ const MyEssayDetails = () => {
 
   const submitRating = () => {
     setModalLoading(true);
-    console.log(id, rating);
+    console.log("id: ", id, "Rating:", rating);
+    console.log("Annotation:", annotations[annotationPosition]?.id);
     actor
-    	.addRating(BigInt(annotations[annotationPosition]?.id), BigInt(rating), annotations[annotationPosition]?.user)
-    	.then((data) => {
-    		console.log("add rating result", data);
-    		toast.success("User's rating successfully added");
-    		setModalLoading(false);
-    		navigate(-1);
-    	})
-    	.catch((err) => {
-    		console.log(err);
-    		setModalLoading(false);
-    		toast.error(err);
-    	});
+      .AddRatingNow(
+        BigInt(id),
+        BigInt(annotations[annotationPosition]?.id),
+        BigInt(rating) /* annotations[annotationPosition]?.user */
+      )
+      // actor.AddRating(BigInt(id), BigInt(annotations[annotationPosition]?.id), BigInt(rating)/* , annotations[annotationPosition]?.user */)
+      .then((data) => {
+        console.log("add rating result: ", data);
+        toast.success("User's rating successfully added");
+        setModalLoading(false);
+        navigate(-1);
+      })
+      .catch((err) => {
+        console.log(err);
+        setModalLoading(false);
+        toast.error(err);
+      });
   };
-  const handleCarouselChange = (index:number) => {
-    setAnnotationPosition(index)
+  const handleCarouselChange = (index: number) => {
+    setAnnotationPosition(index);
   };
 
-  const handleSetVisibility = (e:any) => {
-    // setDisabled(true)
-  actor.updatePublicStatus(e.target.checked, BigInt(id)).then(d => {
-    // setDisabled(false)
-    setTimeout(() => {
-   setVisibility((prev) => prev != prev)
-  },1000)
+  const handleSetVisibility = (e: any) => {
+    setDisabled(true);
+    actor
+      .updatePublicStatus(e.target.checked, BigInt(id))
+      .then((d) => {
+        setDisabled(false);
+        dispatch(setEssayVisibility(!myEssay.visibility.essay));
+      })
+      .catch((err) => {
+        setDisabled(false);
+        console.log(err);
+      });
+  };
 
-  }).catch(err => {
-      // setDisabled(false)
-    console.log(err)
-  
-
-  })
-
-}
-
+  const handleSetReviewVisibility = (e: any) => {
+    setDisabled_(true);
+    actor
+      .SetReviewStatus(BigInt(id), e.target.checked)
+      .then((d) => {
+        setDisabled_(false);
+        dispatch(setReviewVisibility(!myEssay.visibility.review));
+      })
+      .catch((err) => {
+        setDisabled_(false);
+        console.log(err);
+      });
+  };
 
   if (isLoading2) {
     return (
@@ -172,7 +221,6 @@ const MyEssayDetails = () => {
     return (
       <div className="">
         <Navbar />
-
         <div className="relative px-6 mb-8 mt-[6rem]">
           <div className="flex flex-col">
             <div className="mx-4 sm:ml-16 ">
@@ -191,7 +239,7 @@ const MyEssayDetails = () => {
                     {essay[0].title}
                   </h2>
                   <div className="border-b-[1px] bg-gray-400 mt-3 mb-7" />
-                  {annotations.length < 1 ? (
+                  {annotations?.length < 1 ? (
                     <div>
                       <LexicalRichTextEditor essay={essay[0].text} />
                       <div className="w-full flex justify-center items-center">
@@ -201,16 +249,21 @@ const MyEssayDetails = () => {
                       </div>
                     </div>
                   ) : (
-                    <Carousel showArrows={true} onChange={(e) => handleCarouselChange(e)} /* onClickItem={onClickItem} onClickThumb={onClickThumb} */>
-                      {annotations.map((review_) => (
-                     <ReviewCommentEditor review={review_.comments} />
-                      ))
-                       }
-                      </Carousel>
+                    <Carousel
+                      showArrows={true}
+                      onChange={(e) => handleCarouselChange(e)}
+                    >
+                      {annotations?.map((review_) => (
+                        <ReviewCommentEditor
+                          key={review_.comments}
+                          review={review_.comments}
+                        />
+                      ))}
+                    </Carousel>
                   )}
                 </div>
-            {  /* for mobile view */}     
-                 {/* ----------------BEGINNING OF MOBILE-------------------------- */}
+                {/* for mobile view */}
+                {/* ----------------BEGINNING OF MOBILE-------------------------- */}
 
                 <button
                   onClick={() => setShowComment(!showComment)}
@@ -219,43 +272,65 @@ const MyEssayDetails = () => {
                   Comment
                 </button>
 
-               {showComment && (
-              <ShowComment 
-              annotationPosition={annotationPosition} setRateModal={setRateModal} 
-              setShowComment={setShowComment} essay={essay} setModalIsOpen={setModalIsOpen} 
-              handleDelete={handleDelete} deleting={deleting} 
-              unserialized={unserialized}
-              rateModal={rateModal}
-              ratingChanged={ratingChanged}
-              submitRating={submitRating}
-              rating={rating}
-              />
+                {showComment && (
+                  <ShowComment
+                    annotationPosition={annotationPosition}
+                    setRateModal={setRateModal}
+                    setShowComment={setShowComment}
+                    essay={essay}
+                    setModalIsOpen={setModalIsOpen}
+                    handleDelete={handleDelete}
+                    deleting={deleting}
+                    unserialized={unserialized}
+                    rateModal={rateModal}
+                    ratingChanged={ratingChanged}
+                    submitRating={submitRating}
+                    rating={rating}
+                  />
                 )}
-          {/* ----------------END OF MOBILE-------------------------- */}
+                {/* ----------------END OF MOBILE-------------------------- */}
 
-                 {annotations.length < 1 ? (
+                {annotations?.length < 1 ? (
                   <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
                     <div className="flex bg-[#F98E2D]x flex-col">
-                      <div className="flex flex-row justify-between items-center ">
+                      <div className="flex flex-row justify-end items-center ">
                         <div className="flex flex-row justify-center items-center">
-                        <p className="text-white">Public</p>
-                          <Toggle
-                          checked={visibility}
-                          onChange={(e) => handleSetVisibility(e)}
-                          disabled={disabled}
+                          <img
+                            src={`wood-log.png`}
+                            className="w-[2rem]"
+                            alt="token"
                           />
-                        </div>
-
-                        <div className="flex flex-row justify-center items-center">
-                        
-                          <img src={`token-icon.png`} alt="token" />
                           <p className="text-[#2F6FED] ml-1 text-base">3</p>
-                          
                         </div>
                       </div>
 
                       <div className="border-b-[1px] bg-gray-400 my-2" />
 
+                      {myEssay && (
+                        <div className="flex flex-col gap-4 py-4 ">
+                          <div className="flex flex-row gap-4 justify-start items-center ">
+                            <p className="dark:text-white text-black pr-1">
+                              Essay visibility
+                            </p>
+                            <Toggle
+                              checked={myEssay.visibility?.essay}
+                              onChange={(e) => handleSetVisibility(e)}
+                              disabled={disabled}
+                            />
+                          </div>
+
+                          <div className="flex flex-row gap-4  justify-start items-center">
+                            <p className="dark:text-white text-black ">
+                              Comment visibility
+                            </p>
+                            <Toggle
+                              checked={myEssay.visibility?.review}
+                              onChange={(e) => handleSetReviewVisibility(e)}
+                              disabled={disabled_}
+                            />
+                          </div>
+                        </div>
+                      )}
                       <div className="flex flex-row justify-between items-center ">
                         <p className="text-gray-400 text-xs">
                           {Number(essay[0].wordCount)} words
@@ -265,7 +340,6 @@ const MyEssayDetails = () => {
                         </p>
                       </div>
                     </div>
-
                     <div className="w-full flex  flex-col  my-4">
                       <button
                         className="py-2 w-full text-sm text-center my-2 text-white bg-[#F98E2D] "
@@ -291,7 +365,7 @@ const MyEssayDetails = () => {
                   </div>
                 ) : (
                   <div className="dark:bg-[#323f4b] bg-[#F98E2D]/10 rounded-[10px] hidden lg:flex flex-col h-[37rem] w-[25%] py-8 px-4 mt-[.4rem] ">
-                    <div className="flebg-[#F98E2D]x flex-col">
+                    {/* <div className="flebg-[#F98E2D]x flex-col">
                       <div className="flex flex-row justify-between items-center ">
                         <div className="flex flex-row"></div>
 
@@ -314,11 +388,59 @@ const MyEssayDetails = () => {
                           Reviewed
                         </p>
                       </div>
+                    </div> */}
+                    <div className="flex bg-[#F98E2D]x flex-col">
+                      <div className="flex flex-row justify-end items-center ">
+                        <div className="flex flex-row justify-center items-center">
+                          <img
+                            src={`wood-log.png`}
+                            className="w-[2rem]"
+                            alt="token"
+                          />
+                          <p className="text-[#2F6FED] ml-1 text-base">3</p>
+                        </div>
+                      </div>
+
+                      <div className="border-b-[1px] bg-gray-400 my-2" />
+
+                      {myEssay && (
+                        <div className="flex flex-col gap-4 py-4 ">
+                          <div className="flex flex-row gap-4 justify-start items-center ">
+                            <p className="dark:text-white text-black pr-1">
+                              Essay Visibility
+                            </p>
+                            <Toggle
+                              checked={myEssay.visibility?.essay}
+                              onChange={(e) => handleSetVisibility(e)}
+                              disabled={disabled}
+                            />
+                          </div>
+
+                          <div className="flex flex-row gap-4  justify-start items-center">
+                            <p className="dark:text-white text-black ">
+                              Review Visibility
+                            </p>
+                            <Toggle
+                              checked={myEssay.visibility?.review}
+                              onChange={(e) => handleSetReviewVisibility(e)}
+                              disabled={disabled_}
+                            />
+                          </div>
+                        </div>
+                      )}
+                      <div className="flex flex-row justify-between items-center ">
+                        <p className="text-gray-400 text-xs">
+                          {Number(essay[0].wordCount)} words
+                        </p>
+                        <p className="text-[#EF4444]  text-sm font-medium ">
+                          Reviewed
+                        </p>
+                      </div>
                     </div>
 
                     <div className=" comment-scroll mt-3 overflow-y-scroll h-[20rem]">
-                      {unserialized ? (
-                        unserialized.map((item) => {
+                      {typeof unserialized === "object" ? (
+                        unserialized?.map((item) => {
                           return (
                             <div
                               key={item.id}
@@ -339,8 +461,6 @@ const MyEssayDetails = () => {
                       )}
                     </div>
 
-                 
-
                     <button
                       className="py-2 w-full text-sm text-center mt-8 mb-4 text-white bg-[#F98E2D] "
                       onClick={() => setModalIsOpen(true)}
@@ -348,7 +468,7 @@ const MyEssayDetails = () => {
                       Mint
                     </button>
 
-                    {annotations[0]?.rated === false ? (
+                    {annotations[annotationPosition]?.rated === false ? (
                       <button
                         className="py-2 w-full text-sm text-center mt-4 mb-4 text-white bg-[#F98E2D] "
                         onClick={() => setRateModal(true)}
