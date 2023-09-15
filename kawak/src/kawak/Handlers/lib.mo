@@ -368,14 +368,14 @@ module {
             return user;
         };
 
-        private func actualCost(rating : Nat, cost : Nat) : Nat {
+        private func actualCost(rating : Nat, cost : Nat) : async  Nat {
             var rating_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(rating)));
             var cost_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(cost)));
             return Nat64.toNat(Int64.toNat64(Float.toInt64(Float.nearest((rating_ / 5) * cost_))));
 
 };
 
-        public func Rate(essayID : Nat, reviewID : Nat, rating : Nat, aid : Principal) : ?() {
+        public func Rate(essayID : Nat, reviewID : Nat, rating : Nat, aid : Principal) : async ?() {
             var essay = GetEssay(essayID);
             // var annotation = GetAnnotation(essayID);
             // var unknown = updatePastRating(essayID, reviewID, rating);
@@ -386,13 +386,13 @@ module {
                         var cost = essay.essayCost;
                         var annotatorPrincipal = getAnnotatorPrincipal(essayID, reviewID)!;
                         var _annotation = state._Users.getUser(annotatorPrincipal)!;
-                        
-                        var remainder : Nat = cost - actualCost(rating, cost);
+                        var cost_ = await actualCost(rating, cost);
+                        var remainder : Nat = cost - cost_;
                         // var actual_cost = ((rating/5) * cost);
                         var _annotatorUpdate = {
                             userName = _annotation.userName;
                             role = _annotation.role;
-                            token_balance = _annotation.token_balance + actualCost(rating, cost);
+                            token_balance = _annotation.token_balance + cost_;
                             avatar = _annotation.avatar;
                             userRating = _annotation.userRating;
                             myEssays = _annotation.myEssays;
@@ -405,7 +405,10 @@ module {
                         };
                         var replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
                         var transfer = state._Brew_DIP20.transfer(aid, annotatorPrincipal, cost);
-                        var burned = state._Brew_DIP20.burn(remainder, aid);
+                        if (remainder != 0){
+                          var finalize = await state._Brew_DIP20.burn(remainder, aid);
+                        };
+                        
                         updateRating(true, essayID, reviewID);
                     };
                 };
@@ -481,8 +484,9 @@ module {
         public func GetAnnotation(id : Nat) : [Types.AnnotationEntry] {
             var tempAnnotation : [Types.AnnotationEntry] = [];
             for ((i, j) in EssayHashMap.entries()) {
-                if (id == j.id) {
+                if (i == id) {
                     tempAnnotation := Array.append(tempAnnotation, j.reviews);
+                    
                 };
             };
             return tempAnnotation;

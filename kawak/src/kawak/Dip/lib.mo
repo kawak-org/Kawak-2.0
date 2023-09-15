@@ -277,7 +277,7 @@ module {
         };
     };
 
-    public func burn(amount : Nat, caller : Principal) : Types.TxReceipt {
+    public func burn(amount : Nat, caller : Principal) : async Types.TxReceipt {
         let from_balance = _balanceOf(caller);
         if (from_balance < amount) {
             return #Err(#InsufficientBalance);
