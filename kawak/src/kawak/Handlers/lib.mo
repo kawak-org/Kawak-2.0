@@ -404,7 +404,7 @@ module {
                             isAdmin = _annotation.isAdmin;
                         };
                         var replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
-                        var transfer = state._Brew_DIP20.transfer(aid, annotatorPrincipal, cost);
+                        var transfer = await state._Brew_DIP20.transfer(aid, annotatorPrincipal, cost);
                         if (remainder != 0){
                           var finalize = await state._Brew_DIP20.burn(remainder, aid);
                         };
@@ -817,7 +817,7 @@ module {
         };
 
         // @deprecated function
-        public func AddRating(id : Nat, rating : Nat, caller : Principal) : ?() {
+        public func AddRating(id : Nat, rating : Nat, caller : Principal) : async ?() {
             var annotator = AnnotationHashMap.get(id);
             switch (annotator) {
                 case (null) {
@@ -876,7 +876,7 @@ module {
                                         };
                                         var replaced = state._Users._updateUserProfile(annotator.user, annotatorUpdate);
                                         var __replaced = state._Users._updateUserProfile(annotatorPrincipal, _annotatorUpdate);
-                                        var transfer = state._Brew_DIP20.transfer(caller, annotatorPrincipal, cost);
+                                        var transfer = await state._Brew_DIP20.transfer(caller, annotatorPrincipal, cost);
 
                                         var annotated = AnnotationHashMap.get(id);
                                         switch (annotated) {

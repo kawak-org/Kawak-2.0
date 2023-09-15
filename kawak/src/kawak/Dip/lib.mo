@@ -300,7 +300,7 @@ module {
 
 
     /// Transfers value amount of tokens to Principal to.
-    public func transfer(caller : Principal, to: Principal, value: Nat) :  Types.TxReceipt {
+    public func transfer(caller : Principal, to: Principal, value: Nat) : async Types.TxReceipt {
       if (_balanceOf(caller) < value + fee) { return #Err(#InsufficientBalance); };
       _chargeFee(caller, fee);
       _transfer(caller, to, value);
