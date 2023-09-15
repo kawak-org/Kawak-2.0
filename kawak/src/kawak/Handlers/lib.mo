@@ -201,6 +201,8 @@ module {
             };
         };
 
+        
+
         // public func getAnnotationID() : Nat{
         //     annotationPK;
         // };
@@ -334,7 +336,7 @@ module {
             };
         };
 
-        public func updateRating(bool : Bool, essayID : Nat, reviewID : Nat) : () {
+        private func updateRating(bool : Bool, essayID : Nat, reviewID : Nat) : () {
             var annotation = GetAnnotation(essayID);
             for (vals in Iter.fromArray(annotation)) {
                 if (vals.id == reviewID) {
@@ -366,6 +368,13 @@ module {
             return user;
         };
 
+        private func actualCost(rating : Nat, cost : Nat) : Nat {
+            var rating_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(rating)));
+            var cost_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(cost)));
+            return Nat64.toNat(Int64.toNat64(Float.toInt64(Float.nearest((rating_ / 5) * cost_))));
+
+};
+
         public func Rate(essayID : Nat, reviewID : Nat, rating : Nat, aid : Principal) : ?() {
             var essay = GetEssay(essayID);
             // var annotation = GetAnnotation(essayID);
@@ -377,15 +386,13 @@ module {
                         var cost = essay.essayCost;
                         var annotatorPrincipal = getAnnotatorPrincipal(essayID, reviewID)!;
                         var _annotation = state._Users.getUser(annotatorPrincipal)!;
-                        var rating_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(rating)));
-                        var cost_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(cost)));
-                        var actual_cost = Nat64.toNat(Int64.toNat64(Float.toInt64(Float.nearest((rating_ / 5) * cost_))));
-                        var remainder : Nat = cost - actual_cost;
+                        
+                        var remainder : Nat = cost - actualCost(rating, cost);
                         // var actual_cost = ((rating/5) * cost);
                         var _annotatorUpdate = {
                             userName = _annotation.userName;
                             role = _annotation.role;
-                            token_balance = _annotation.token_balance + actual_cost;
+                            token_balance = _annotation.token_balance + actualCost(rating, cost);
                             avatar = _annotation.avatar;
                             userRating = _annotation.userRating;
                             myEssays = _annotation.myEssays;
