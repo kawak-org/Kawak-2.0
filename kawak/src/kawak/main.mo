@@ -169,7 +169,7 @@ shared (msg) actor class Kawak(
   });
 
   public shared ({ caller }) func transferTokenTo(to : Principal, value : Nat) : async DipTypes.TxReceipt {
-    _Brew_DIP20.transfer(caller, to, value);
+    await _Brew_DIP20.transfer(caller, to, value);
   };
 
   public shared ({caller}) func GetBalance() : async Nat{
@@ -253,7 +253,7 @@ shared (msg) actor class Kawak(
   };
 
   public shared ({ caller }) func AddRatingNow(essayID : Nat, reviewID : Nat, rating : Nat) : async ?() {
-    _Essays.Rate(essayID, reviewID, rating, caller);
+    await _Essays.Rate(essayID, reviewID, rating, caller);
   };
 
   public shared ({ caller }) func DeleteEssay(id : Nat) : async (){

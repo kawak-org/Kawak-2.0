@@ -10,7 +10,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 // const agent = new HttpAgent({ host })
 
 const LOCAL_II_CANISTER =
-  "http://127.0.0.1:4943/?canisterId=br5f7-7uaaa-aaaaa-qaaca-cai";
+  "http://127.0.0.1:4943/?canisterId=be2us-64aaa-aaaaa-qaabq-cai";
 
 const network =
   process.env.DFX_NETWORK ||
