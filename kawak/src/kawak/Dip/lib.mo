@@ -17,21 +17,21 @@ module {
 
     public type state = Types.State;
 
-    public class Brew_DIP721 (state : Types.State) {
+    public class Brew_DIP721(state : Types.State) {
 
         var ledger : [var Types.TokenMetadata] = [var];
 
         public func toStable() : Types.DIP721_LocalStableState {
             {
                 ledger = Array.freeze(ledger);
-            }
-        };    
+            };
+        };
 
-        public func postStable(_ledger : [Types.TokenMetadata]){
+        public func postStable(_ledger : [Types.TokenMetadata]) {
             ledger := Array.thaw(_ledger);
         };
 
-         /// Query methods
+        /// Query methods
 
         // Function allows the canister to be queried
         // About the total number of NFts that exist in the contract
@@ -41,27 +41,29 @@ module {
 
         public func BalanceOfNFTs(caller : Principal) : Nat {
             Array.filter<Types.TokenMetadata>(
-                Array.freeze(ledger), func(t){
+                Array.freeze(ledger),
+                func(t) {
                     t.owner == caller;
                 },
-            ).size()
+            ).size();
         };
 
         public func OwnerOfNFT(tokenId : Nat) : Result.Result<?Principal, Types.NftError> {
             if (tokenId < ledger.size()) {
                 #ok(?ledger[tokenId].owner);
             } else {
-                #err(#TokenNotFound)
+                #err(#TokenNotFound);
             };
         };
 
-        public func NftOwnerTokenMetadata(caller : Principal) : Result.Result<[Types.TokenMetadata], Types.NftError>{
+        public func NftOwnerTokenMetadata(caller : Principal) : Result.Result<[Types.TokenMetadata], Types.NftError> {
             #ok(
                 Array.filter<Types.TokenMetadata>(
-                    Array.freeze(ledger), func(t){
+                    Array.freeze(ledger),
+                    func(t) {
                         t.owner == caller;
                     },
-                ),
+                )
             );
         };
 
@@ -84,12 +86,12 @@ module {
             };
         };
 
-
         // Brews/Utils
 
         public func MintNFT(title : Text, content : Text, caller : Principal) : Nat {
             ledger := Array.tabulateVar<Types.TokenMetadata>(
-                ledger.size() + 1, func(i) {
+                ledger.size() + 1,
+                func(i) {
                     if (i < ledger.size()) {
                         ledger[i];
                     } else {
@@ -106,7 +108,7 @@ module {
                             transferred_by = null;
                             listed = false;
                             locked = false;
-                        }
+                        };
                     };
                 },
             );
@@ -117,13 +119,13 @@ module {
             ledger[tokenId].listed;
         };
 
-        public func Metadata(tokenId : Nat) : Types.TokenMetadata{
+        public func Metadata(tokenId : Nat) : Types.TokenMetadata {
             ledger[tokenId];
         };
 
         public func TransferNFTto(to : Principal, caller : Principal, tokenId : Nat) : Result.Result<Nat, Types.NftError> {
             if (tokenId >= ledger.size()) {
-                return #err(#TokenNotFound)
+                return #err(#TokenNotFound);
             };
             let token = ledger[(tokenId - 1)];
             if (token.owner != caller) {
@@ -133,9 +135,8 @@ module {
             #ok(0);
         };
 
-
         public func listNFT(tokenId : Nat, meta : Types.TokenMetadata) {
-            ledger[tokenId-1] := {
+            ledger[tokenId -1] := {
                 owner = meta.owner;
                 token_identifier = meta.token_identifier;
                 title = meta.title;
@@ -156,14 +157,14 @@ module {
     // Credits: https://github.com/Psychedelic/DIP20/blob/main/motoko/src/token.mo
 
     public class Brew_DIP20(state : Types.State) {
-        
-        var owner_          : Principal = state.caller;
-        var logo_           : Text = "";
-        var decimals_       : Nat8 = 2;
-        var name_           : Text = "KawakCoin";
-        var totalSupply_    : Nat = 10;
-        var symbol_         : Text = "kwk";
-        var fee_            : Nat = 0;
+
+        var owner_ : Principal = state.caller;
+        var logo_ : Text = "";
+        var decimals_ : Nat8 = 2;
+        var name_ : Text = "KawakCoin";
+        var totalSupply_ : Nat = 10;
+        var symbol_ : Text = "kwk";
+        var fee_ : Nat = 0;
 
         var blackhole : Principal = Principal.fromText("aaaaa-aa");
         var feeTo : Principal = owner_;
@@ -191,8 +192,8 @@ module {
             {
                 balanceEntries;
                 allowanceEntries;
-            }
-        };    
+            };
+        };
 
         public func postStable(_balanceEntries : [(Principal, Nat)], _allowanceEntries : [(Principal, [(Principal, Nat)])]) {
             balances := HashMap.fromIter<Principal, Nat>(_balanceEntries.vals(), 10, Principal.equal, Principal.hash);
@@ -226,135 +227,134 @@ module {
             return index;
         };
 
-    private func _chargeFee(
-        from : Principal,
-        fee : Nat,
-    ) {
-        if (fee > 0) {
-            _transfer(from, feeTo, fee);
-        };
-    };
-
-    private func _transfer(
-        from : Principal,
-        to : Principal,
-        value : Nat,
-    ) {
-        let from_balance = _balanceOf(from);
-        let from_balance_new : Nat = from_balance - value;
-        if (from_balance_new != 0) { balances.put(from, from_balance_new) } else {
-            balances.delete(from);
-        };
-
-        let to_balance = _balanceOf(to);
-        let to_balance_new : Nat = to_balance + value;
-        if (to_balance_new != 0) { balances.put(to, to_balance_new) };
-    };
-
-    private func _balanceOf(who : Principal) : Nat {
-        switch (balances.get(who)) {
-            case (?balance) { return balance };
-            case (_) { return 0 };
-        };
-    };
-
-    public func getBalanceOf(who : Principal) : Nat {
-        _balanceOf(who);
-    };
-
-    private func _allowance(
-        owner : Principal,
-        spender : Principal,
-    ) : Nat {
-        switch (allowances.get(owner)) {
-            case (?allowance_owner) {
-                switch (allowance_owner.get(spender)) {
-                    case (?allowance) { return allowance };
-                    case (_) { return 0 };
-                };
+        private func _chargeFee(
+            from : Principal,
+            fee : Nat,
+        ) {
+            if (fee > 0) {
+                _transfer(from, feeTo, fee);
             };
-            case (_) { return 0 };
         };
-    };
 
-    public func burn(amount : Nat, caller : Principal) : async Types.TxReceipt {
-        let from_balance = _balanceOf(caller);
-        if (from_balance < amount) {
-            return #Err(#InsufficientBalance);
+        private func _transfer(
+            from : Principal,
+            to : Principal,
+            value : Nat,
+        ) {
+            let from_balance = _balanceOf(from);
+            let from_balance_new : Nat = from_balance - value;
+            if (from_balance_new != 0) { balances.put(from, from_balance_new) } else {
+                balances.delete(from);
+            };
+
+            let to_balance = _balanceOf(to);
+            let to_balance_new : Nat = to_balance + value;
+            if (to_balance_new != 0) { balances.put(to, to_balance_new) };
         };
-        totalSupply_ -= amount;
-        balances.put(caller, from_balance - amount);
-        let txid = addRecord(
-            ?caller,
-            #burn,
-            caller,
-            blackhole,
-            amount,
-            0,
-            Time.now(),
-            #succeeded,
-        );
-        return #Ok(txid);
-    };
 
+        private func _balanceOf(who : Principal) : Nat {
+            switch (balances.get(who)) {
+                case (?balance) { return balance };
+                case (_) { return 0 };
+            };
+        };
 
+        public func getBalanceOf(who : Principal) : Nat {
+            _balanceOf(who);
+        };
 
-    /// Transfers value amount of tokens to Principal to.
-    public func transfer(caller : Principal, to: Principal, value: Nat) : async Types.TxReceipt {
-      if (_balanceOf(caller) < value + fee) { return #Err(#InsufficientBalance); };
-      _chargeFee(caller, fee);
-      _transfer(caller, to, value);
-      let txid = addRecord(
-        null, 
-        #transfer, 
-        caller, 
-        to, 
-        value, 
-        fee, 
-        Time.now(), 
-        #succeeded
-      );
-      return #Ok(txid);
-    };
-    
-    
-    /// Allows spender to withdraw from your account multiple times, up to the value amount.
-    /// If this function is called again it overwrites the current allowance with value.
-    public func approve(
-      caller : Principal,
-      spender: Principal, 
-      value: Nat
-    ) : async Types.TxReceipt {
-      if(_balanceOf(caller) < fee) { return #Err(#InsufficientBalance); };
-      _chargeFee(caller, fee);
-      let v = value + fee;
-      if (value == 0 and Option.isSome(allowances.get(caller))) {
-        let allowance_caller = _unwrap(allowances.get(caller));
-        allowance_caller.delete(spender);
-        if (allowance_caller.size() == 0) { allowances.delete(caller); }
-        else { allowances.put(caller, allowance_caller); };
-      } else if (value != 0 and Option.isNull(allowances.get(caller))) {
-        var temp = HashMap.HashMap<Principal, Nat>(1, Principal.equal, Principal.hash);
-        temp.put(spender, v);
-        allowances.put(caller, temp);
-      } else if (value != 0 and Option.isSome(allowances.get(caller))) {
-        let allowance_caller = _unwrap(allowances.get(caller));
-        allowance_caller.put(spender, v);
-        allowances.put(caller, allowance_caller);
-      };
-      let txid = addRecord(
-        null, 
-        #approve, 
-        caller, 
-        spender, 
-        v, 
-        fee, 
-        Time.now(), 
-        #succeeded
-      );
-      return #Ok(txid);
-    };
-    
-        
+        private func _allowance(
+            owner : Principal,
+            spender : Principal,
+        ) : Nat {
+            switch (allowances.get(owner)) {
+                case (?allowance_owner) {
+                    switch (allowance_owner.get(spender)) {
+                        case (?allowance) { return allowance };
+                        case (_) { return 0 };
+                    };
+                };
+                case (_) { return 0 };
+            };
+        };
+
+        public func burn(amount : Nat, caller : Principal) : async Types.TxReceipt {
+            let from_balance = _balanceOf(caller);
+            if (from_balance < amount) {
+                return #Err(#InsufficientBalance);
+            };
+            totalSupply_ -= amount;
+            balances.put(caller, from_balance - amount);
+            let txid = addRecord(
+                ?caller,
+                #burn,
+                caller,
+                blackhole,
+                amount,
+                0,
+                Time.now(),
+                #succeeded,
+            );
+            return #Ok(txid);
+        };
+
+        /// Transfers value amount of tokens to Principal to.
+        public func transfer(caller : Principal, to : Principal, value : Nat) : async Types.TxReceipt {
+            if (_balanceOf(caller) < value + fee) {
+                return #Err(#InsufficientBalance);
+            };
+            _chargeFee(caller, fee);
+            _transfer(caller, to, value);
+            let txid = addRecord(
+                null,
+                #transfer,
+                caller,
+                to,
+                value,
+                fee,
+                Time.now(),
+                #succeeded,
+            );
+            return #Ok(txid);
+        };
+
+        /// Allows spender to withdraw from your account multiple times, up to the value amount.
+        /// If this function is called again it overwrites the current allowance with value.
+        public func approve(
+            caller : Principal,
+            spender : Principal,
+            value : Nat,
+        ) : async Types.TxReceipt {
+            if (_balanceOf(caller) < fee) { return #Err(#InsufficientBalance) };
+            _chargeFee(caller, fee);
+            let v = value + fee;
+            if (value == 0 and Option.isSome(allowances.get(caller))) {
+                let allowance_caller = _unwrap(allowances.get(caller));
+                allowance_caller.delete(spender);
+                if (allowance_caller.size() == 0) { allowances.delete(caller) } else {
+                    allowances.put(caller, allowance_caller);
+                };
+            } else if (value != 0 and Option.isNull(allowances.get(caller))) {
+                var temp = HashMap.HashMap<Principal, Nat>(1, Principal.equal, Principal.hash);
+                temp.put(spender, v);
+                allowances.put(caller, temp);
+            } else if (value != 0 and Option.isSome(allowances.get(caller))) {
+                let allowance_caller = _unwrap(allowances.get(caller));
+                allowance_caller.put(spender, v);
+                allowances.put(caller, allowance_caller);
+            };
+            let txid = addRecord(
+                null,
+                #approve,
+                caller,
+                spender,
+                v,
+                fee,
+                Time.now(),
+                #succeeded,
+            );
+            return #Ok(txid);
+        };
+
     };
 };
