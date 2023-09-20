@@ -33,10 +33,13 @@ module {
         var EssayEntries : [(Nat, EssayEntry)] = [];
         var UserEssayEntries : [(Principal, EssayEntry)] = [];
         var ReviewStatusEntries : [(Nat, Types.ReviewStatus)] = [];
+        var Rated : [(Nat, Types.Rated)] = [];
 
         var EssayHashMap : HashMap.HashMap<Nat, EssayEntry> = HashMap.fromIter<Nat, EssayEntry>(EssayEntries.vals(), 1, Nat.equal, Hash.hash);
         var UserEssayHashMap : HashMap.HashMap<Principal, EssayEntry> = HashMap.fromIter<Principal, EssayEntry>(UserEssayEntries.vals(), 10, Principal.equal, Principal.hash);
         var ReviewStatusHash : HashMap.HashMap<Nat, Types.ReviewStatus> = HashMap.fromIter<Nat, Types.ReviewStatus>(ReviewStatusEntries.vals(), 1, Nat.equal, Hash.hash);
+        var RatingMap : TrieMap.TrieMap<Nat, Types.Rated> = TrieMap.fromEntries<Nat, Types.Rated>(Rated.vals(), Nat.equal, Hash.hash);
+        
 
         var essays : Buffer.Buffer<EssayEntry> = Buffer.Buffer(0);
 
