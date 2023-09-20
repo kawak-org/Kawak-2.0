@@ -419,8 +419,7 @@ module {
         // @deprecated function
         // public func GetUserEssays(userName : Text) : ?[Types.EssayEntry] {
         //     do ? {
-        //         var temp = Buffer.Buffer<Types.EssayEntry>(0);
-        //         for (i in essays.vals()) {
+        //         var temp = Buffer.Buffer<Types.EssayEntry>(0);f
         //             if (i.owner == userName) {
         //                 temp.add(i);
         //             };
