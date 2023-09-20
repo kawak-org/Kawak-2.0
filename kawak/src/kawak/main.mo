@@ -172,6 +172,8 @@ shared (msg) actor class Kawak(
     await _Brew_DIP20.transfer(caller, to, value);
   };
 
+  
+
   public shared ({caller}) func GetBalance() : async Nat{
     _Brew_DIP20.getBalanceOf(caller);
   };
@@ -242,6 +244,10 @@ shared (msg) actor class Kawak(
 
   public shared ({ caller }) func getUserEssays(userName : Text) : async ?[HandlersTypes.EssayEntry] {
     _Essays.GetUserEssays(userName);
+  };
+
+  public shared func floor(a: Nat, b : Nat) : async Nat {
+    await _Essays.actualCost(a, b);
   };
 
   public func getessay(id : Nat) : async ?HandlersTypes.EssayEntry {

@@ -1,4 +1,5 @@
 import Int "mo:base/Int";
+import Nat "mo:base/Nat";
 import Admins "../Admins";
 import Users "../Users";
 import Dip "../Dip";
@@ -55,6 +56,12 @@ module {
         essayID : Nat;
         // essay : ?EssayEntry;
         status : Bool;
+    };
+
+    public type Rated = {
+        essayID : Nat;
+        reviewId : Nat;
+        rated : Bool;
     };
 
     public type EssayEntry = {

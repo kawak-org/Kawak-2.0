@@ -7,6 +7,7 @@ import Order "mo:base/Order";
 import Buffer "mo:base/Buffer";
 import Result "mo:base/Result";
 import Nat "mo:base/Nat";
+import TrieMap "mo:base/TrieMap";
 import Float "mo:base/Float";
 // import Nat "mo:base/Nat";
 import Nat64 "mo:base/Nat64";
@@ -368,7 +369,7 @@ module {
             return user;
         };
 
-        private func actualCost(rating : Nat, cost : Nat) : async  Nat {
+        public func actualCost(rating : Nat, cost : Nat) : async  Nat {
             var rating_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(rating)));
             var cost_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(cost)));
             return Nat64.toNat(Int64.toNat64(Float.toInt64(Float.nearest((rating_ / 5) * cost_))));

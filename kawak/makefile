@@ -6,7 +6,7 @@ all: build
 kawak:
 	$(eval kawakCanisterID=$(shell dfx canister id kawak))
 	echo kawakCanisterID = $(kawakCanisterID)
-	dfx deploy kawak --argument="(principal \"$(kawakCanister)\") " 
+	dfx deploy kawak --argument="(principal \"$(kawakCanisterID)\") " 
 	# dfx deploy kawak --argument="(
 	#     principal $(kawakCanisterID)
 	# )"
