@@ -351,7 +351,7 @@ export default function Page() {
       ?.logIn()
       .then((d) => {
         if (d === true) {
-          console.log("loggin function success response", d);
+          console.log("loggin function success response", d)
           changeAuthStatus();
           navigate("/forge");
           navigate(0);
@@ -361,14 +361,14 @@ export default function Page() {
           return;
         }
         changeAuthStatus();
-        console.log("loggin function success response", d);
+        console.log("loggin function success response", d)
         navigate("/onboarding1");
         navigate(0);
         // window.location.reload();
         // setIamNew(true);
       })
       .catch((err) => {
-        console.log("loggin function error response", err);
+        console.log("loggin function error response", err)
         ErrorHandler(err);
         // alert(err);
       });
@@ -397,58 +397,60 @@ export default function Page() {
     trackPageView(params);
   }, []);
 
-  const forgeVid: any = document.getElementById("forgeVid");
-  const anvilVid: any = document.getElementById("anvilVid");
 
-  function isElementInViewPort(el) {
-    // if(!ref.current) return
-    if (!el) return;
-    else {
-      const rect = el.getBoundingClientRect();
-      return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <=
-          (window.innerHeight || document.documentElement.clientHeight) &&
-        rect.right <=
-          (window.innerWidth || document.documentElement.clientWidth)
-      );
-    }
+
+const forgeVid:any = document.getElementById("forgeVid");
+const anvilVid:any = document.getElementById("anvilVid");
+
+
+function isElementInViewPort(el) {
+  // if(!ref.current) return
+  if(!el) return 
+  else {
+  const rect = el.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+}
+}
+
+function handleVidPlayback () {
+
+  if ((isElementInViewPort(forgeVid) && isElementInViewPort(anvilVid))) {
+    forgeVid.pause();
+    anvilVid.pause();
   }
 
-  function handleVidPlayback() {
-    if (isElementInViewPort(forgeVid) && isElementInViewPort(anvilVid)) {
-      forgeVid.pause();
-      anvilVid.pause();
-    } else if (
-      isElementInViewPort(forgeVid) &&
-      !isElementInViewPort(anvilVid)
-    ) {
-      anvilVid.pause();
-    } else if (
-      isElementInViewPort(anvilVid) &&
-      !isElementInViewPort(forgeVid)
-    ) {
-      forgeVid.pause();
-    } else if (forgeVid && !isElementInViewPort(forgeVid)) {
-      forgeVid.pause();
-    } else if (anvilVid && !isElementInViewPort(anvilVid)) {
-      anvilVid.pause();
-    }
+  else if (isElementInViewPort(forgeVid) && !isElementInViewPort(anvilVid)){
+    anvilVid.pause();
   }
-  function setVideoStartTime(seconds) {
-    if (forgeVid && seconds <= forgeVid.duration) {
-      forgeVid.currentTime = seconds;
-    }
-    if (anvilVid && seconds <= anvilVid.duration) {
-      anvilVid.currentTime = seconds;
-    }
+  else if (isElementInViewPort(anvilVid) && !isElementInViewPort(forgeVid))
+  {
+    forgeVid.pause();
   }
+  else if (forgeVid && !isElementInViewPort(forgeVid)) {
+    forgeVid.pause();
+  }
+  else if (anvilVid && !isElementInViewPort(anvilVid)) {
+    anvilVid.pause();
+  }
+}
+function setVideoStartTime(seconds) {
+  if (forgeVid && seconds <= forgeVid.duration) {
+    forgeVid.currentTime = seconds;
+  }
+  if ( anvilVid && seconds <= anvilVid.duration) {
+    anvilVid.currentTime = seconds;
+  }
+}
 
-  // Call the function with the desired starting time (e.g., 30 seconds)
-  setVideoStartTime(1);
+// Call the function with the desired starting time (e.g., 30 seconds)
+setVideoStartTime(1);
 
-  document.addEventListener("scroll", handleVidPlayback);
+document.addEventListener('scroll', handleVidPlayback);
 
   return (
     <div className="p-0 m-0">
@@ -461,7 +463,7 @@ export default function Page() {
         />
         <img
           // ref={line_2}
-          className="z-[-20] absolute hidden lg:block right-0 top-[3rem]  mobileLine2"
+          className="z-[-20] absolute hidden lg:block  right-0 top-[3rem]  mobileLine2"
           src={`line2.png`}
           alt=""
         />
@@ -906,37 +908,22 @@ export default function Page() {
               alt=""
             />
           </div> */}
-          <div className="relative mt-[3.9rem">
-            <video
-              id="forgeVid"
-              className="relative h-auto w-40% m-auto"
-              /* autoPlay  muted */ playsInline
-              loop
-              controls
-            >
-              <source src={`onboarding-videos/Forge.mp4`} type="video/mp4" />
-              <source src={`onboarding-videos/Forge.ogg`} type="video/ogg" />
-              Your browser does not support the video tag.
-            </video>
+           <div className="relative mt-[3.9rem">
+           <video id="forgeVid"  className="relative h-auto w-40% m-auto"  /* autoPlay  muted */ playsInline loop controls>
+            <source src={`onboarding-videos/Forge.mp4`} type="video/mp4"/>
+            <source src={`onboarding-videos/Forge.ogg`} type="video/ogg"/>
+            Your browser does not support the video tag.
+          </video>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-[4rem] mt-[10rem] ">
-          <div className="relative mt-[3.9rem] ">
-            <video
-              id="anvilVid"
-              className="relative h-auto w-40% m-auto"
-              /* autoPlay  muted */ playsInline
-              loop
-              controls
-            >
-              <source
-                /* className="w-[30%]" */ src={`onboarding-videos/Anvil.mp4`}
-                type="video/mp4"
-              />
-              <source src={`onboarding-videos/Anvil.ogg`} type="video/ogg" />
-              Your browser does not support the video tag.
-            </video>
+           <div className="relative mt-[3.9rem] ">
+           <video  id="anvilVid" className="relative h-auto w-40% m-auto" /* autoPlay  muted */ playsInline loop controls>
+            <source /* className="w-[30%]" */ src={`onboarding-videos/Anvil.mp4`} type="video/mp4"/>
+            <source src={`onboarding-videos/Anvil.ogg`} type="video/ogg"/>
+            Your browser does not support the video tag.
+          </video>
           </div>
 
           <div className="flex flex-col anvil2 order-first md:order-last">
@@ -1010,7 +997,9 @@ export default function Page() {
               src={`pink.png`}
               alt=""
             />
+
           </div>
+         
         </div>
       </section>
 
