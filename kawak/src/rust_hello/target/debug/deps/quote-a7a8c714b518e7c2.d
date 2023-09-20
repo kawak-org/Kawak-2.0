@@ -1,0 +1,13 @@
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/quote-a7a8c714b518e7c2.rmeta: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/ext.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/format.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/ident_fragment.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/to_tokens.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/runtime.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/spanned.rs
+
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/libquote-a7a8c714b518e7c2.rlib: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/ext.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/format.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/ident_fragment.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/to_tokens.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/runtime.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/spanned.rs
+
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/quote-a7a8c714b518e7c2.d: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/ext.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/format.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/ident_fragment.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/to_tokens.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/runtime.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/spanned.rs
+
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/lib.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/ext.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/format.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/ident_fragment.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/to_tokens.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/runtime.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.32/src/spanned.rs:

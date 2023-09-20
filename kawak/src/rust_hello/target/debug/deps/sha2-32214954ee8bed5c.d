@@ -1,0 +1,13 @@
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/sha2-32214954ee8bed5c.rmeta: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/core_api.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha256.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha512.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/consts.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha256/soft.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha512/soft.rs
+
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/libsha2-32214954ee8bed5c.rlib: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/core_api.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha256.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha512.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/consts.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha256/soft.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha512/soft.rs
+
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/sha2-32214954ee8bed5c.d: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/core_api.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha256.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha512.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/consts.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha256/soft.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha512/soft.rs
+
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/lib.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/core_api.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha256.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha512.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/consts.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha256/soft.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/sha2-0.10.7/src/sha512/soft.rs:

@@ -1,0 +1,12 @@
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/cipher-f90e44f02609638c.rmeta: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/block.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/errors.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/stream.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/stream_core.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/stream_wrapper.rs
+
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/libcipher-f90e44f02609638c.rlib: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/block.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/errors.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/stream.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/stream_core.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/stream_wrapper.rs
+
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/cipher-f90e44f02609638c.d: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/block.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/errors.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/stream.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/stream_core.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/stream_wrapper.rs
+
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/lib.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/block.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/errors.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/stream.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/stream_core.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/cipher-0.4.4/src/stream_wrapper.rs:

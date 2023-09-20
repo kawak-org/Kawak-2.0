@@ -409,7 +409,7 @@ module {
                           var finalize = await state._Brew_DIP20.burn(remainder, aid);
                         };
                         
-                        updateRating(true, essayID, reviewID);
+                        // updateRating(true, essayID, reviewID);
                     };
                 };
                 // var annotation = GetAnnotation(essayID);
