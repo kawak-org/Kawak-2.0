@@ -107,6 +107,7 @@ module {
             wordCount : Nat,
             reviewTimes : Nat32,
             reviewed : Bool,
+            rated : Bool,
             essayCost : Nat,
             submittedAt : Int,
             text : Text,
@@ -125,6 +126,7 @@ module {
                 wordCount : Nat;
                 reviewTimes : Nat32;
                 reviewed : Bool;
+                rated : Bool;
                 essayCost : Nat;
                 submittedAt : Int;
                 text : Text;
@@ -136,12 +138,12 @@ module {
         };
 
         private func CreateOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry, reviews : [Types.AnnotationEntry], _public : Bool, description : Text) {
-            essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, [], _public, description));
+            essays.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, false, essayCost, Time.now(), text, userDetails, [], _public, description));
         };
 
         private func createOneEssay(caller : Principal, id : Nat, owner : Text, title : Text, topic : [Text], wordCount : Nat, essayCost : Nat, text : Text, userDetails : UsersTypes.UserEntry, _public : Bool, description : Text) {
-            EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, [], _public, description));
-            UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, essayCost, Time.now(), text, userDetails, [], _public, description));
+            EssayHashMap.put(id, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, false, essayCost, Time.now(), text, userDetails, [], _public, description));
+            UserEssayHashMap.put(caller, makeEssay(id, caller, owner, title, topic, wordCount, 0, false, false, essayCost, Time.now(), text, userDetails, [], _public, description));
         };
 
         public func setReviewStatus(essayID : Nat, status : Bool) {
@@ -327,6 +329,7 @@ module {
                         //createdAt : Time;
                         reviewTimes = essay.reviewTimes;
                         reviewed = essay.reviewed;
+                        rated = essay.rated;
                         essayCost = essay.essayCost;
                         submittedAt = essay.submittedAt;
                         text = essay.text;
@@ -372,7 +375,36 @@ module {
             return user;
         };
 
-        public func actualCost(rating : Nat, cost : Nat) : async  Nat {
+        public func UpdateRate(essayID : Nat) {
+            var essay = EssayHashMap.get(essayID);
+            switch (essay) {
+                case (null) {};
+                case (?essay) {
+                    var update = {
+                        id = essay.id;
+                        aid = essay.aid;
+                        owner = essay.owner;
+                        title = essay.title;
+                        topic = essay.topic;
+                        wordCount = essay.wordCount;
+                        //createdAt : Time;
+                        reviewTimes = essay.reviewTimes;
+                        reviewed = essay.reviewed;
+                        rated = true;
+                        essayCost = essay.essayCost;
+                        submittedAt = essay.submittedAt;
+                        text = essay.text;
+                        userDetails = essay.userDetails;
+                        reviews = essay.reviews;
+                        _public = essay._public;
+                        description = essay.description;
+                    };
+                    var updated = UpdateEssay(essayID, update);
+                };
+            };
+        };
+
+        private func actualCost(rating : Nat, cost : Nat) : async  Nat {
             var rating_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(rating)));
             var cost_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(cost)));
             return Nat64.toNat(Int64.toNat64(Float.toInt64(Float.nearest((rating_ / 5) * cost_))));
@@ -403,7 +435,8 @@ module {
                             myDrafts = _annotation.myDrafts;
                             createdAt = _annotation.createdAt;
                             reviewingEssay = _annotation.reviewingEssay;
-                            pastRatedFeedbacks = Array.append(_annotation.pastRatedFeedbacks, [rating]);
+                            pastRatedFeedbacks = _annotation.pastRatedFeedbacks;
+                            //Array.append(_annotation.pastRatedFeedbacks, [rating]);
                             onBoarding = _annotation.onBoarding;
                             isAdmin = _annotation.isAdmin;
                         };
@@ -412,8 +445,9 @@ module {
                         if (remainder != 0){
                           var finalize = await state._Brew_DIP20.burn(remainder, aid);
                         };
+                        UpdateRate(essayID);
                         
-                        updateRating(true, essayID, reviewID);
+                        // updateRating(true, essayID, reviewID);
                     };
                 };
                 // var annotation = GetAnnotation(essayID);
@@ -469,6 +503,7 @@ module {
                                 //createdAt : Time;
                                 reviewTimes = essay.reviewTimes + 1;
                                 reviewed = true;
+                                rated = essay.rated;
                                 essayCost = essay.essayCost;
                                 submittedAt = essay.submittedAt;
                                 text = essay.text;
@@ -532,6 +567,7 @@ module {
                         //createdAt : Time;
                         reviewTimes : Nat32 = 0;
                         reviewed = false;
+                        rated = essay.rated;
                         essayCost = essay.essayCost;
                         submittedAt = essay.submittedAt;
                         text = essay.text;
@@ -577,6 +613,7 @@ module {
                         //createdAt : Time;
                         reviewTimes = essay.reviewTimes;
                         reviewed = essay.reviewed;
+                        rated = essay.rated;
                         essayCost = essay.essayCost;
                         submittedAt = essay.submittedAt;
                         text = essay.text;
@@ -605,6 +642,7 @@ module {
                         //createdAt : Time;
                         reviewTimes = essay.reviewTimes;
                         reviewed = essay.reviewed;
+                        rated = essay.rated;
                         essayCost = essay.essayCost;
                         submittedAt = essay.submittedAt;
                         text = essay.text;

@@ -74,6 +74,7 @@ module {
         wordCount : Nat;
         reviewTimes : Nat32;
         reviewed     : Bool;
+        rated    : Bool;
         essayCost : Nat;
         submittedAt : Int;
         text : Text;

@@ -1,0 +1,12 @@
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/term-b09832a798676edf.rmeta: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/mod.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/searcher.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/parser/compiled.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/parser/names.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/parm.rs
+
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/libterm-b09832a798676edf.rlib: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/mod.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/searcher.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/parser/compiled.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/parser/names.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/parm.rs
+
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/term-b09832a798676edf.d: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/mod.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/searcher.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/parser/compiled.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/parser/names.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/parm.rs
+
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/lib.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/mod.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/searcher.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/parser/compiled.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/parser/names.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/term-0.7.0/src/terminfo/parm.rs:

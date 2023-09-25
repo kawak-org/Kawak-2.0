@@ -1,0 +1,12 @@
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/libthiserror_impl-36c8f0bb0591e130.dylib: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/ast.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/attr.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/expand.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/fmt.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/generics.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/prop.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/valid.rs
+
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/thiserror_impl-36c8f0bb0591e130.d: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/ast.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/attr.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/expand.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/fmt.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/generics.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/prop.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/valid.rs
+
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/lib.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/ast.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/attr.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/expand.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/fmt.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/generics.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/prop.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.44/src/valid.rs:

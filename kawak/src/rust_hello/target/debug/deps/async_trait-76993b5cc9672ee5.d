@@ -1,0 +1,12 @@
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/libasync_trait-76993b5cc9672ee5.dylib: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/args.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/bound.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/expand.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/lifetime.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/parse.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/receiver.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/verbatim.rs
+
+/Users/ola/Documents/Github/Kawak-2.0/kawak/src/rust_hello/target/debug/deps/async_trait-76993b5cc9672ee5.d: /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/lib.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/args.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/bound.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/expand.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/lifetime.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/parse.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/receiver.rs /Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/verbatim.rs
+
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/lib.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/args.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/bound.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/expand.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/lifetime.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/parse.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/receiver.rs:
+/Users/ola/.cargo/registry/src/github.com-1ecc6299db9ec823/async-trait-0.1.72/src/verbatim.rs:
