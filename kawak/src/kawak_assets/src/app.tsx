@@ -44,13 +44,14 @@ export default function App() {
     enableLinkTracking();
 
     const { handleAuthenticated, setIIAuth } = useContext(UserContext);
+    const [isAuthenticated, setIsAuthenticated] = useState(false)
     const navigate = useNavigate();
     const [actorRestated, setActorRestated] = useState<boolean>(false);
 
     useEffect(() => {
         const runOnMounth = async () => {
             const authClient = await AuthClient.create();
-            if (await authClient.isAuthenticated()) {
+            if (isAuthenticated) {
                 // setTour(tour_);
                 handleAuthenticated(authClient);
                 if (location.pathname === "/") {

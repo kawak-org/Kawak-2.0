@@ -404,7 +404,7 @@ module {
             };
         };
 
-        private func actualCost(rating : Nat, cost : Nat) : async  Nat {
+        public func actualCost(rating : Nat, cost : Nat) : async  Nat {
             var rating_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(rating)));
             var cost_ = Float.fromInt64(Int64.fromNat64(Nat64.fromNat(cost)));
             return Nat64.toNat(Int64.toNat64(Float.toInt64(Float.nearest((rating_ / 5) * cost_))));

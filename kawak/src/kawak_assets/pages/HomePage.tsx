@@ -24,7 +24,7 @@ function classNames(...classes) {
 
 export default function Page() {
   const { trackPageView } = useMatomo();
-  const { Auth, iiAuth, actor, changeAuthStatus } = useContext(UserContext);
+  const { Auth, iiAuth, actor, changeAuthStatus,loginWithMetaMask } = useContext(UserContext);
   const [navBar, setNavBar] = useState<boolean>(false);
   const [showNavbar, setShowNavbar] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -369,13 +369,14 @@ export default function Page() {
       })
       .catch((err) => {
         console.log("loggin function error response", err);
-        ErrorHandler(err);
+        navigate("/onboarding1");
+        // ErrorHandler(err);
         // alert(err);
       });
   };
-  if (iiAuth) {
+  // if (iiAuth) {
     login_();
-  }
+  // }
 
   const handleNavbar = () => {
     if (window.scrollY >= 100) {
@@ -526,14 +527,14 @@ export default function Page() {
                   <div className="flex h-full my-3">
                     <div className="self-end w-full flex flex-col justify-center items-center">
                       <p
-                        onClick={Auth}
+                        onClick={loginWithMetaMask}
                         className="text-white my-3 font-medium p-1 text-base cursor-pointer"
                       >
                         Sign In
                       </p>
 
                       <button
-                        onClick={Auth}
+                        onClick={loginWithMetaMask}
                         className="text-[#08172E] bg-white text-base py-3 px-10"
                       >
                         Try Kawak
@@ -588,7 +589,7 @@ export default function Page() {
             {iiAuth === false ? (
               <>
                 <button
-                  onClick={Auth}
+                  onClick={loginWithMetaMask}
                   className={
                     navBar
                       ? " text-white hover:border-white hover:border-2  text-sm px-4 py-2 mr-6"
@@ -599,7 +600,7 @@ export default function Page() {
                   Sign in
                 </button>
                 <button
-                  onClick={Auth}
+                  onClick={loginWithMetaMask}
                   className={
                     navBar
                       ? " text-[#08172E] bg-[#ffffff] text-sm px-4 py-2 mr-6"
@@ -1024,7 +1025,7 @@ export default function Page() {
             writing tool
           </p>
           <button
-            onClick={Auth}
+            onClick={loginWithMetaMask}
             className=" text-white bg-[#08172E] text-xs px-4 py-2 "
           >
             Try Kawak

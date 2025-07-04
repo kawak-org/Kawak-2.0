@@ -7,6 +7,14 @@ import { _SERVICE } from "../../declarations/kawak/kawak.did";
 import { ShepherdTourContext } from "react-shepherd";
 import { useMatomo } from "@datapunt/matomo-tracker-react";
 // import Onboarding from "../pages/Onboard/Onboarding";
+import {
+  clearAuthClientStorage,
+  deriveKeysFromSeedPhrase,
+  createIdentityFromKeyPair,
+  validateAndFixSeedPhrase,
+  generateSeedPhrase,
+} from "../utils/CryptoUtils"
+import MetaMaskService from "../services/MetaMaskService"
 
 export const UserContext = React.createContext<{
 	Auth: any;
@@ -15,6 +23,7 @@ export const UserContext = React.createContext<{
 	iiAuth: boolean;
 	setIIAuth: any;
 	changeAuthStatus: any;
+	loginWithMetaMask: any
 	handleAuthenticated: (arg0: any) => any;
 	tour: any;
 	setTour: any;
@@ -30,6 +39,7 @@ export const UserContext = React.createContext<{
 	setActor: undefined,
 	iiAuth: false,
 	setIIAuth: false,
+	loginWithMetaMask: null,
 	changeAuthStatus: undefined,
 	handleAuthenticated: undefined,
 	tour: undefined,
@@ -52,6 +62,11 @@ export const UserProvider = ({ children }) => {
 	const [checkedEssayPage, setCheckedEssayPage] = useState(false);
 	const [checkedDraftPage, setCheckedDraftPage] = useState(false);
 	const [checkedNftPage, setCheckedNftPage] = useState(false);
+	const [isAuthenticated, setIsAuthenticated] = useState(false)
+	const [notAuthenticated, setNotAuthenticated] = useState(true)
+	const [authClient, setAuthClient] = useState(null)
+	const [identity, setIdentity] = useState(null)
+	const [principal, setPrincipal] = useState(null)
 
 	const { trackEvent } = useMatomo();
 
@@ -67,6 +82,7 @@ export const UserProvider = ({ children }) => {
 				navigate("/forge");
 			}
 			setIIAuth(true);
+			setNotAuthenticated(false);
 		}
 
 		const loginButton = document.getElementById(
@@ -93,6 +109,7 @@ export const UserProvider = ({ children }) => {
 				handleAuthenticated(authClient);
 				navigate("/");
 				setIIAuth(true);
+				setNotAuthenticated(false);
 			},
 			windowOpenerFeatures:
 				`left=${window.screen.width / 2 - 525 / 2}, ` +
@@ -106,6 +123,74 @@ export const UserProvider = ({ children }) => {
 			maxTimeToLive: days * hours * nanoseconds,
 		});
 	}
+
+	  const loginWithMetaMask = async (e) => {
+		e.preventDefault();
+		trackEvent({ category: "Authentication", action: "sign-in/sign-up" });
+		const authClient = await AuthClient.create();
+		if (await authClient.isAuthenticated()) {
+			handleAuthenticated(authClient);
+			setTour(tour_);
+			if (location.pathname === "/") {
+				navigate("/forge");
+			}
+			setIIAuth(true);
+			setNotAuthenticated(false);
+		}
+
+		const loginButton = document.getElementById(
+			"loginButton"
+		) as HTMLButtonElement;
+    try {
+      // Unique message for signature to create deterministic seed
+      const uniqueMessage =
+        "Sign this message to log in with your Ethereum wallet"
+
+      console.log("Requesting MetaMask signature...")
+      const signature = await MetaMaskService.signMessage(uniqueMessage)
+      console.log("MetaMask Signature received")
+
+      if (!signature) {
+        throw new Error("Failed to sign with MetaMask.")
+      }
+
+      // Generate seed phrase from signature
+      console.log("Generating seed phrase from signature...")
+      const seedPhrase = await generateSeedPhrase(signature)
+
+      // Wait for this to fully complete before continuing
+      console.log("Initializing login flow with seed phrase...")
+      // await this.handleLoginFlow(seedPhrase, { source: 'metamask', retry: true });
+      // Validate and potentially fix the seed phrase
+      const validSeedPhrase = validateAndFixSeedPhrase(seedPhrase)
+      console.log(`Processing login with seed phrase `)
+      // Derive keys and create identity
+      const keyPair = deriveKeysFromSeedPhrase(validSeedPhrase)
+      const identity = createIdentityFromKeyPair(keyPair)
+      console.log("Creating identity from key pair...")
+      setIdentity(identity)
+      setIsAuthenticated(true)
+      const principal = identity.getPrincipal()
+      setPrincipal(principal)
+      console.log("Principal:", principal.toString())
+      const actor = createActor(canisterId, {
+        agentOptions: {
+          identity,
+        },
+      })
+      setActor(actor);
+      console.log("Actors created successfully")
+	  setTour(tour_);
+	  handleAuthenticated(authClient);
+      setIIAuth(true);
+	  setNotAuthenticated(false);
+      return navigate("/")
+    } catch (error) {
+      console.error("MetaMask login error:", error)
+      throw new Error(`MetaMask login failed: ${error.message}`)
+    }
+  }
+
 
 	async function handleAuthenticated(authClient: AuthClient) {
 		const identity = (await authClient.getIdentity()) as unknown as Identity;
@@ -136,6 +221,7 @@ export const UserProvider = ({ children }) => {
 				setActor,
 				iiAuth,
 				setIIAuth,
+				loginWithMetaMask,
 				handleAuthenticated,
 				changeAuthStatus,
 				tour,
