@@ -297,6 +297,52 @@ shared (msg) actor class Kawak(
   //   if (essayCost)
   // }
 
+  public type EssayCoin = {
+    essayID : Nat;
+    contract_address : Text;
+    name : Text;
+    symbol : Text;
+    total_supply : Nat;
+    owner : Principal;
+    metadata : Text;
+    created_at : Int;
+  };
+
+  var EssayCoins : [(Nat, EssayCoin)] = [];
+  var EssayCoinHashMap : HashMap.HashMap<Nat, EssayCoin> = HashMap.fromIter<Nat, EssayCoin>(EssayCoins.vals(), 1, Nat.equal, Hash.hash);
+
+  public shared ({ caller }) func createEssayCoin(essayID : Nat, contract_address : Text, name : Text, symbol : Text, total_supply : Nat, owner : Principal, metadata : Text, created_at : Int) : async () {
+    let essayCoin : EssayCoin = {
+      essayID;
+      contract_address;
+      name;
+      symbol;
+      total_supply;
+      owner;
+      metadata;
+      created_at;
+    };
+    EssayCoinHashMap.put(essayID, essayCoin);
+  };
+
+  public query func getEssayCoin(essayID : Nat) : async ?EssayCoin {
+    EssayCoinHashMap.get(essayID);
+  };
+
+  public query func getEssayCoins() : async [(Nat, EssayCoin)] {
+    Iter.toArray(EssayCoinHashMap.entries());
+  };
+
+  public query func getOwnerEssayCoins(owner : Principal) : async [(Nat, EssayCoin)] {
+    var essayCoins : [(Nat, EssayCoin)] = [];
+    for ((essayID, essayCoin) in EssayCoinHashMap.entries()) {
+      if (essayCoin.owner == owner) {
+        essayCoins.add((essayID, essayCoin));
+      };
+    };
+    essayCoins;
+  };
+
   let _Drafts = Handlers.Drafts({
     caller;
     _Admins;
