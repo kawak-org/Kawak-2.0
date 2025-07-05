@@ -42,8 +42,22 @@ export const useFetchProfile = () => {
   try {
     const handleFetch = () => {
       actor?.getUser().then((profile) => {
-        if (!profile) {
-          return toast.error("cannot find user");
+        if (!profile || !profile[0]) {
+          // User doesn't have a profile yet - this is normal for new MetaMask users
+          console.log("User profile not found - user may need to complete onboarding");
+          // Set a default profile state to prevent errors
+          const defaultData = {
+            avatar: "",
+            username: "",
+            onboarding: false,
+            reviewingEssay: 0,
+            tokenBalance: 0,
+            noOfDrafts: 0,
+            noOfEssays: 0,
+            isLoading: false,
+          };
+          dispatch(updateProfile(defaultData));
+          return;
         } else {
           const {
             userName,
@@ -69,6 +83,20 @@ export const useFetchProfile = () => {
           };
           dispatch(updateProfile(data));
         }
+      }).catch((error) => {
+        console.error("Error fetching user profile:", error);
+        // Set default profile on error
+        const defaultData = {
+          avatar: "",
+          username: "",
+          onboarding: false,
+          reviewingEssay: 0,
+          tokenBalance: 0,
+          noOfDrafts: 0,
+          noOfEssays: 0,
+          isLoading: false,
+        };
+        dispatch(updateProfile(defaultData));
       });
     };
 
@@ -516,4 +544,33 @@ export const useFilterEssay = () => {
     toast.error("something went wrong");
     setLoading(false);
   }
+};
+
+export const useCreateProfile = () => {
+  const { actor } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
+
+  const createProfile = async (username: string, avatar: string) => {
+    try {
+      setLoading(true);
+      const result = await actor?.createProfile(username, avatar);
+      
+      if (result && 'ok' in result) {
+        toast.success("Profile created successfully!");
+        return true;
+      } else if (result && 'err' in result) {
+        toast.error(result.err);
+        return false;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error creating profile:", error);
+      toast.error("Failed to create profile");
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { createProfile, loading };
 };

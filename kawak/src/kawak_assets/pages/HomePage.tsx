@@ -24,7 +24,7 @@ function classNames(...classes) {
 
 export default function Page() {
   const { trackPageView } = useMatomo();
-  const { Auth, iiAuth, actor, changeAuthStatus,loginWithMetaMask } = useContext(UserContext);
+  const { Auth, iiAuth, actor, changeAuthStatus, loginWithMetaMask, isAuthenticated } = useContext(UserContext);
   const [navBar, setNavBar] = useState<boolean>(false);
   const [showNavbar, setShowNavbar] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -347,6 +347,11 @@ export default function Page() {
   }, [gsap]);
 
   const login_ = () => {
+    // Only run this if we have an actor and the user is authenticated
+    if (!actor || !isAuthenticated) {
+      return;
+    }
+
     actor
       ?.logIn()
       .then((d) => {
@@ -362,21 +367,28 @@ export default function Page() {
         }
         changeAuthStatus();
         console.log("loggin function success response", d);
-        navigate("/onboarding1");
+        // Remove onboarding redirect - go directly to forge
+        navigate("/forge");
         navigate(0);
         // window.location.reload();
         // setIamNew(true);
       })
       .catch((err) => {
         console.log("loggin function error response", err);
-        navigate("/onboarding1");
+        // Remove onboarding redirect - go directly to forge
+        navigate("/forge");
         // ErrorHandler(err);
         // alert(err);
       });
   };
-  // if (iiAuth) {
-    login_();
-  // }
+  
+  // Only run login_ if user is authenticated and has an actor
+  // Comment out the automatic login_ call to prevent onboarding redirects
+  // useEffect(() => {
+  //   if (isAuthenticated && actor) {
+  //     login_();
+  //   }
+  // }, [isAuthenticated, actor]);
 
   const handleNavbar = () => {
     if (window.scrollY >= 100) {
@@ -756,7 +768,7 @@ export default function Page() {
                   Community Driven
                 </h3>
                 <p className="text-[#152537] group-hover:text-white  text-xs md:text-sm mt-5">
-                  You hear it a lot but here it’s actually true. Every mind that
+                  You hear it a lot but here it's actually true. Every mind that
                   engages with the work of others has the opportunity to both
                   find and be a mentor.
                   <span className="text-[#F98E2D] group-hover:text-white ">
@@ -1038,7 +1050,7 @@ export default function Page() {
           Frequently asked questions
         </h2>
         <p className="my-4  max-w-[500px]">
-          If you can’t find what you’re looking for, feel free to email our
+          If you can't find what you're looking for, feel free to email our
           support team at
           <span
             onClick={() =>
@@ -1088,7 +1100,7 @@ export default function Page() {
           <div className=" flex flex-col mt-[5rem]">
             <img className=" h-[30px] w-[9rem]" src={`logo.png`} />
             <p className="max-w-[400px] mt-[1rem] text-xs text-white/90">
-              It is a free meritocratic tool where good feedback on peers’
+              It is a free meritocratic tool where good feedback on peers'
               essays is rewarded by matching writers with others who provide the
               same quality of feedback.
             </p>
@@ -1198,10 +1210,10 @@ const faqs = [
   {
     question: "Why meritocratic?",
     answer:
-      "While no system is perfect, meritocracy has demonstrated overtime a consistent ability in producing a net positive for humanity at large. Still sceptical? We suggest reading “The Aristocracy of Talent” by Alan Wooldridge",
+      "While no system is perfect, meritocracy has demonstrated overtime a consistent ability in producing a net positive for humanity at large. Still sceptical? We suggest reading \"The Aristocracy of Talent\" by Alan Wooldridge",
   },
   {
-    question: "What’s with the weird url?",
+    question: "What's with the weird url?",
     answer:
       "Since the website aims to be owned by the community we are decentralized and running all computation on a blockchain. ",
   },

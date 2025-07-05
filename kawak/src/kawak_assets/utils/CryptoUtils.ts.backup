@@ -58,49 +58,89 @@ export function generateSeedPhrase(input: any) {
   }
 
   try {
-    // Create a simple deterministic seed from the input
-    // This avoids any complex hex string processing issues
-    let seedString = ""
-    
+    // Check if input is a hex string (Ethereum address or signature)
     if (typeof input === 'string' && input.startsWith('0x')) {
-      // For hex strings (Ethereum addresses), use a simple hash
-      const hexString = input.slice(2).toLowerCase()
-      const hash = hexString.split('').reduce((acc, char) => {
-        return acc + char.charCodeAt(0)
-      }, 0)
-      seedString = `kawak-${Math.abs(hash).toString(16).slice(0, 16)}`
-    } else {
-      // For regular strings, use them directly
-      seedString = `kawak-${input}`
-    }
-    
-    // Use the seed string to generate a deterministic mnemonic
-    const encoder = new TextEncoder()
-    const encodedInput = encoder.encode(seedString)
+      // For Ethereum addresses, use them directly as they're already valid hex
+      // For signatures, we'll use a hash to avoid processing issues
+      const hexString = input.slice(2) // Remove 0x prefix
+      
+      // If it's an Ethereum address (40 characters), use it directly
+      if (hexString.length === 40) {
+        // Ethereum address - use directly
+        const encoder = new TextEncoder()
+        const encodedInput = encoder.encode(hexString)
 
-    return crypto.subtle.digest("SHA-256", encodedInput).then((hashBuffer) => {
-      try {
-        // Convert hash to a simple string and use it to generate mnemonic
-        const hashArray = new Uint8Array(hashBuffer)
-        const hashString = Array.from(hashArray.slice(0, 16))
-          .map(b => b.toString(16).padStart(2, '0'))
-          .join('')
+              return crypto.subtle.digest("SHA-256", encodedInput).then((hashBuffer) => {
+          try {
+            const entropy = new Uint8Array(hashBuffer.slice(0, 16))
+            const mnemonic = bip39.entropyToMnemonic(entropy)
+
+            if (!validateMnemonic(mnemonic)) {
+              console.warn("Generated invalid mnemonic, falling back to random")
+              return generateMnemonic()
+            }
+
+            return mnemonic
+          } catch (err) {
+            console.error("Error generating mnemonic from hash:", err)
+            return generateMnemonic()
+          }
+        })
+      } else {
+        // For signatures or other hex strings, use a hash to avoid processing issues
+        let hash = 0
+        for (let i = 0; i < hexString.length; i++) {
+          const char = hexString.charCodeAt(i)
+          hash = ((hash << 5) - hash) + char
+          hash = hash & hash // Convert to 32-bit integer
+        }
         
-        // Use the hash string as input for mnemonic generation
-        // Use a simple approach that doesn't require complex entropy conversion
-        const mnemonic = generateMnemonic()
+        // Convert hash to a deterministic string
+        const hashString = Math.abs(hash).toString(16).padStart(8, '0')
         
-        if (!validateMnemonic(mnemonic)) {
-          console.warn("Generated invalid mnemonic, falling back to random")
+        // Use this as input for mnemonic generation
+        const encoder = new TextEncoder()
+        const encodedInput = encoder.encode(hashString)
+
+        return crypto.subtle.digest("SHA-256", encodedInput).then((hashBuffer) => {
+          try {
+            const entropy = new Uint8Array(hashBuffer.slice(0, 16))
+            const mnemonic = bip39.entropyToMnemonic(entropy)
+
+            if (!validateMnemonic(mnemonic)) {
+              console.warn("Generated invalid mnemonic, falling back to random")
+              return generateMnemonic()
+            }
+
+            return mnemonic
+          } catch (err) {
+            console.error("Error generating mnemonic from hash:", err)
+            return generateMnemonic()
+          }
+        })
+      }
+    } else {
+      // Handle regular string input
+      const encoder = new TextEncoder()
+      const encodedInput = encoder.encode(input)
+
+      return crypto.subtle.digest("SHA-256", encodedInput).then((hashBuffer) => {
+        try {
+          const entropy = new Uint8Array(hashBuffer.slice(0, 16))
+          const mnemonic = bip39.entropyToMnemonic(entropy)
+
+          if (!validateMnemonic(mnemonic)) {
+            console.warn("Generated invalid mnemonic, falling back to random")
+            return generateMnemonic()
+          }
+
+          return mnemonic
+        } catch (err) {
+          console.error("Error generating mnemonic from hash:", err)
           return generateMnemonic()
         }
-
-        return mnemonic
-      } catch (err) {
-        console.error("Error generating mnemonic from hash:", err)
-        return generateMnemonic()
-      }
-    })
+      })
+    }
   } catch (error) {
     console.error("Error in seed phrase generation:", error)
     return Promise.resolve(generateMnemonic())

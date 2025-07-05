@@ -5,7 +5,7 @@ import "rsuite/dist/rsuite.min.css";
 
 function EssayBar() {
   const navigate = useNavigate();
-  const [tag, setTag] = useState("");
+  const [tag, setTag] = useState<string[]>([]);
   const data = ["Science", "Politics", "Cryptocurrency", "Fashion"].map(
     (item) => ({
       label: item,
@@ -13,7 +13,7 @@ function EssayBar() {
     })
   );
 
-  console.log(tag);
+  console.log(tag.join(', '));
   return (
     <div className="flex justify-between mt-6  md:mt-6 items-center">
       <div className="flex flex-row justify-center items-center mr-4">

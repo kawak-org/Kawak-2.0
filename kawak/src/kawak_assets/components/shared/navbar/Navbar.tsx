@@ -9,6 +9,8 @@ import { AiOutlineClose } from "react-icons/ai";
 import { IoIosMenu } from "react-icons/io";
 import SignOutModal from "../../Modal/SignOutModal";
 import { DarkModeToggle } from "react-dark-mode-toggle-2";
+import { UserContext } from "../../../context/userContext";
+import MetaMaskStatus from "../../MetaMaskStatus";
 
 const Navbar = () => {
   const [activePage, setActivePage] = useState(0);
@@ -56,10 +58,18 @@ const Navbar = () => {
   //   setActivePage(number);
   // };
 
-  const handleSignOut = () => {
-    window.localStorage.clear();
-    window.location.reload();
-    navigate("/");
+  const { logout } = useContext(UserContext);
+
+  const handleSignOut = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Sign out failed:", error);
+      // Fallback to old method if logout fails
+      window.localStorage.clear();
+      window.location.reload();
+      navigate("/");
+    }
   };
 
   return (
@@ -206,6 +216,13 @@ const Navbar = () => {
               </NavLink>
             </div>
 
+            {/* MetaMask Status for Mobile */}
+            <div className="flex justify-center mt-6">
+              <div className="scale-75">
+                <MetaMaskStatus />
+              </div>
+            </div>
+
             <div className="flex h-full my-3">
               <div className="self-end w-full flex flex-col justify-center items-center">
                 <div className="border-b-[1px] bg-gray-400 my-3 w-full" />
@@ -266,6 +283,11 @@ const Navbar = () => {
         >
           Marketplace
         </NavLink>
+      </div>
+
+      {/* MetaMask Status */}
+      <div className="hidden sm:flex mr-4">
+        <MetaMaskStatus />
       </div>
 
       <div
