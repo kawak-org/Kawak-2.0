@@ -20,6 +20,9 @@ import MarketplaceTypes "Marketplace/types";
 import Types "Types";
 import Users "Users";
 import UsersTypes "Users/types";
+import HashMap "mo:base/HashMap";
+import Hash "mo:base/Hash";
+import Iter "mo:base/Iter"; 
 
 shared (msg) actor class Kawak(
   caller : Principal
@@ -311,14 +314,25 @@ shared (msg) actor class Kawak(
   var EssayCoins : [(Nat, EssayCoin)] = [];
   var EssayCoinHashMap : HashMap.HashMap<Nat, EssayCoin> = HashMap.fromIter<Nat, EssayCoin>(EssayCoins.vals(), 1, Nat.equal, Hash.hash);
 
-  public shared ({ caller }) func createEssayCoin(essayID : Nat, contract_address : Text, name : Text, symbol : Text, total_supply : Nat, owner : Principal, metadata : Text, created_at : Int) : async () {
+  public query func getOwnerEssayCoins(owner : Principal) : async [(Nat, EssayCoin)] {
+    var essayCoins : [(Nat, EssayCoin)] = [];
+    for ((essayID, essayCoin) in EssayCoinHashMap.entries()) {
+      if (essayCoin.owner == owner) {
+        essayCoins := Array.append(essayCoins, [(essayID, essayCoin)]);
+      };
+    };
+    essayCoins;
+  };
+
+  // Public EssayCoin functions for frontend integration
+  public shared ({ caller }) func createEssayCoin(essayID : Nat, contract_address : Text, name : Text, symbol : Text, total_supply : Nat, metadata : Text, created_at : Int) : async () {
     let essayCoin : EssayCoin = {
       essayID;
       contract_address;
       name;
       symbol;
       total_supply;
-      owner;
+      owner = caller;
       metadata;
       created_at;
     };
@@ -331,16 +345,6 @@ shared (msg) actor class Kawak(
 
   public query func getEssayCoins() : async [(Nat, EssayCoin)] {
     Iter.toArray(EssayCoinHashMap.entries());
-  };
-
-  public query func getOwnerEssayCoins(owner : Principal) : async [(Nat, EssayCoin)] {
-    var essayCoins : [(Nat, EssayCoin)] = [];
-    for ((essayID, essayCoin) in EssayCoinHashMap.entries()) {
-      if (essayCoin.owner == owner) {
-        essayCoins.add((essayID, essayCoin));
-      };
-    };
-    essayCoins;
   };
 
   let _Drafts = Handlers.Drafts({

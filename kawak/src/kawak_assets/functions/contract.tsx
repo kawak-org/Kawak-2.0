@@ -548,29 +548,164 @@ export const useFilterEssay = () => {
 
 export const useCreateProfile = () => {
   const { actor } = useContext(UserContext);
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
 
   const createProfile = async (username: string, avatar: string) => {
     try {
       setLoading(true);
       const result = await actor?.createProfile(username, avatar);
-      
       if (result && 'ok' in result) {
         toast.success("Profile created successfully!");
+        // Refresh profile data
+        const profile = await actor?.getUser();
+        if (profile && profile[0]) {
+          const {
+            userName,
+            myEssays,
+            myDrafts,
+            token_balance,
+            reviewingEssay,
+            onBoarding,
+            avatar: userAvatar,
+          } = profile[0];
+          const data = {
+            avatar: userAvatar,
+            username: userName,
+            onboarding: onBoarding,
+            reviewingEssay: Number(reviewingEssay),
+            tokenBalance: Number(token_balance),
+            noOfDrafts: myDrafts.length,
+            noOfEssays: myEssays.length,
+            isLoading: false,
+          };
+          dispatch(updateProfile(data));
+        }
+        setLoading(false);
         return true;
-      } else if (result && 'err' in result) {
-        toast.error(result.err);
+      } else {
+        toast.error("Failed to create profile");
+        setLoading(false);
         return false;
       }
-      return false;
     } catch (error) {
       console.error("Error creating profile:", error);
-      toast.error("Failed to create profile");
-      return false;
-    } finally {
+      toast.error("Error creating profile");
       setLoading(false);
+      return false;
     }
   };
 
   return { createProfile, loading };
+};
+
+// EssayCoin functions
+export const useCreateEssayCoin = () => {
+  const { actor } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
+
+  const createEssayCoin = async (
+    essayID: number,
+    contract_address: string,
+    name: string,
+    symbol: string,
+    total_supply: number,
+    metadata: string
+  ) => {
+    setLoading(true);
+    try {
+      const currentTime = Math.floor(Date.now() / 1000); // Current timestamp in seconds
+      console.log('Creating EssayCoin in backend:', {
+        essayID,
+        contract_address,
+        name,
+        symbol,
+        total_supply,
+        metadata,
+        currentTime
+      });
+      
+      await actor?.createEssayCoin(
+        BigInt(essayID),
+        contract_address,
+        name,
+        symbol,
+        BigInt(total_supply),
+        metadata,
+        BigInt(currentTime)
+      );
+      
+      console.log("✅ EssayCoin saved to backend successfully");
+      toast.success("EssayCoin created and saved successfully!");
+      setLoading(false);
+      return true;
+    } catch (error) {
+      console.error("Error creating EssayCoin:", error);
+      toast.error("Failed to create EssayCoin");
+      setLoading(false);
+      return false;
+    }
+  };
+
+  return { createEssayCoin, loading };
+};
+
+export const useGetEssayCoin = () => {
+  const { actor } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
+
+  const getEssayCoin = async (essayID: number) => {
+    setLoading(true);
+    try {
+      const essayCoin = await actor?.getEssayCoin(BigInt(essayID));
+      setLoading(false);
+      return essayCoin;
+    } catch (error) {
+      console.error("Error fetching EssayCoin:", error);
+      setLoading(false);
+      return null;
+    }
+  };
+
+  return { getEssayCoin, loading };
+};
+
+export const useGetAllEssayCoins = () => {
+  const { actor } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
+
+  const getAllEssayCoins = async () => {
+    setLoading(true);
+    try {
+      const essayCoins = await actor?.getEssayCoins();
+      setLoading(false);
+      return essayCoins || [];
+    } catch (error) {
+      console.error("Error fetching all EssayCoins:", error);
+      setLoading(false);
+      return [];
+    }
+  };
+
+  return { getAllEssayCoins, loading };
+};
+
+export const useGetOwnerEssayCoins = () => {
+  const { actor } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
+
+  const getOwnerEssayCoins = async (owner: Principal) => {
+    setLoading(true);
+    try {
+      const essayCoins = await actor?.getOwnerEssayCoins(owner);
+      setLoading(false);
+      return essayCoins || [];
+    } catch (error) {
+      console.error("Error fetching owner EssayCoins:", error);
+      setLoading(false);
+      return [];
+    }
+  };
+
+  return { getOwnerEssayCoins, loading };
 };

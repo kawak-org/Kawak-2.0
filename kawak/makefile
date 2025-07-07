@@ -26,4 +26,6 @@ clean:
 	rm -rf ./node_modules/
 	rm -rf ./src/declarations/
 
-  
+   dfx deploy kawak --argument="(
+     principal \"bkyz2-fmaaa-aaaaa-qaaaq-cai\"
+ )"

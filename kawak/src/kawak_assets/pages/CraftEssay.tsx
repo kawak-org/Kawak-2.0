@@ -21,6 +21,8 @@ import { addToMyEssay } from "../redux/slice/myEssaySlice";
 import ErrorHandler from "../utils/ErrorHandler";
 // import { BackspaceIcon } from "@heroicons/react/solid";
 import PreviewEssay from "../components/essay/PreviewEssay";
+import EssayCoinForm from "../components/essay/EssayCoinForm";
+import { getPinataConfig } from "../config/pinata";
 import { EssayEditorContext } from "../context/EssayEditorContext";
 // import CustomPrompt from "../utils/navigation-block/CustomPrompt";
 import { addToMyDraft, updateDraftItem } from "../redux/slice/draftSlice";
@@ -41,6 +43,9 @@ const CraftEssay = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [draftLoading, setDraftLoading] = useState<boolean>(false);
   const [minCost, setMinCost] = useState(0);
+  const [createdEssayId, setCreatedEssayId] = useState<number>(0);
+  const [essayCoinConfig, setEssayCoinConfig] = useState<any>(null);
+  const [coinCreationStatus, setCoinCreationStatus] = useState<string>('');
 
   // const [modalIsOpen, setModalIsOpen] = useState(false);
   const user = useAppSelector((state) => state.profile);
@@ -93,64 +98,128 @@ const CraftEssay = () => {
     description
   };
 
-  const handleSubmit = async () => {
-    console.log(essayEntry);
+  const handleSubmitAndCreateCoin = async () => {
+    console.log("🚀 Starting combined essay submission and coin creation process...");
+    
     if (essayWords < 100) {
       toast.error("essay can't be lesser than a 100 words");
       return;
     } else if (title.length < 2) {
       toast.error("Please add a title to your essay");
       return;
-    } else {
-      setIsLoading(true);
-      if (user.onboarding === false && user.noOfEssays === 0) {
-        actor.updateOnboarding(true).then(() => {
-          dispatch(setOnboarding(true));
-        });
-      }
-      actor
-        .createEssay(
-          essayEntry.title,
-          essayEntry.topic,
-          BigInt(essayWords),
-          essayEntry.essayCost,
-          essayEntry.text,
-          visibility,
-          description
-        )
-        
-        .then((d:any) => {
-          if (d) {
-            // Track Create Essay Event
-            trackEvent({
-              category: "Post",
-              action: `Created an Essay with id ${Number(d)} `,
-              documentTitle: "Create Essay Page",
-              href: window.location.href,
-            });
-            handleRemoveFromDraft();
-            setIsLoading(false);
-            dispatch(setTokenBalance(essayCost));
-            dispatch(setnoOfEssays());
-            if(visibility) {
-            dispatch(addToForge({ ...dispatchField, id: Number(d.ok[0]) - 1 }));
-          }
-            dispatch(addToMyEssay({ ...dispatchField, id: (Number(d.ok[0]) - 1) }));
-            // set essay editor content to initial
-            setStateEmpty();
-            toast.success("Essay Created");
-            dispatch(resetCount());
-            localStorage.removeItem("last_essay");
-            // console.log("value of d", d)
-            navigate(`/forge`);
-          }
-        })
-        .catch((err) => {
-          setIsLoading(false);
-          ErrorHandler(err);
-          console.log(err);
-        });
     }
+
+    setIsLoading(true);
+    setCoinCreationStatus('Submitting essay...');
+    
+    try {
+      console.log("📝 Step 1: Updating onboarding status if needed");
+      if (user.onboarding === false && user.noOfEssays === 0) {
+        console.log("🔄 Updating user onboarding status");
+        await actor.updateOnboarding(true);
+        dispatch(setOnboarding(true));
+      }
+
+      console.log("📝 Step 2: Creating essay on blockchain");
+      console.log("Essay details:", {
+        title: essayEntry.title,
+        topic: essayEntry.topic,
+        wordCount: essayWords,
+        cost: essayCost,
+        visibility,
+        description
+      });
+
+      const essayResult = await actor.createEssay(
+        essayEntry.title,
+        essayEntry.topic,
+        BigInt(essayWords),
+        essayEntry.essayCost,
+        essayEntry.text,
+        visibility,
+        description
+      );
+
+      if (essayResult && 'ok' in essayResult) {
+        const essayId = Number(essayResult.ok[0]);
+        console.log("✅ Essay created successfully with ID:", essayId);
+        setCreatedEssayId(essayId);
+        setCoinCreationStatus('Essay submitted! Creating coin...');
+
+        // Track Create Essay Event
+        trackEvent({
+          category: "Post",
+          action: `Created an Essay with id ${essayId}`,
+          documentTitle: "Create Essay Page",
+          href: window.location.href,
+        });
+
+        // Update Redux state
+        handleRemoveFromDraft();
+        dispatch(setTokenBalance(essayCost));
+        dispatch(setnoOfEssays());
+        if(visibility) {
+          dispatch(addToForge({ ...dispatchField, id: essayId - 1 }));
+        }
+        dispatch(addToMyEssay({ ...dispatchField, id: essayId - 1 }));
+
+        // Check if we have saved coin configuration
+        const savedConfig = localStorage.getItem(`essayCoinConfig_${essayId}`);
+        if (savedConfig) {
+          console.log("🪙 Found saved coin configuration, proceeding with coin creation");
+          try {
+            const coinConfig = JSON.parse(savedConfig);
+            console.log("Coin configuration:", coinConfig);
+            
+            // Trigger coin creation through the form
+            setEssayCoinConfig(coinConfig);
+            setCoinCreationStatus('Coin configuration loaded, creating coin...');
+            
+            // Small delay to ensure state updates
+            setTimeout(() => {
+              console.log("🪙 Triggering coin creation...");
+              // The coin creation will be handled by the EssayCoinForm component
+              // We'll wait for the onCoinCreated callback
+            }, 1000);
+            
+          } catch (error) {
+            console.error("❌ Error parsing saved coin configuration:", error);
+            setCoinCreationStatus('Error loading coin configuration');
+          }
+        } else {
+          console.log("ℹ️ No saved coin configuration found, essay submitted without coin");
+          setCoinCreationStatus('Essay submitted successfully!');
+        }
+
+        // Clean up
+        setStateEmpty();
+        toast.success("Essay Created Successfully!");
+        dispatch(resetCount());
+        localStorage.removeItem("last_essay");
+        
+        // Navigate after a short delay to allow coin creation to complete
+        setTimeout(() => {
+          navigate(`/forge`);
+        }, 2000);
+        
+      } else if (essayResult && 'err' in essayResult) {
+        throw new Error(`Essay creation failed: ${essayResult.err}`);
+      } else {
+        throw new Error("Essay creation returned unexpected result");
+      }
+    } catch (err) {
+      console.error("❌ Error in combined submission process:", err);
+      setIsLoading(false);
+      setCoinCreationStatus('Error occurred during submission');
+      ErrorHandler(err);
+    }
+  };
+
+  const handleCoinCreated = (coinAddress: string) => {
+    console.log("🎉 Coin created successfully! Address:", coinAddress);
+    setCoinCreationStatus(`Coin created! Address: ${coinAddress}`);
+    toast.success(`EssayCoin created successfully! Address: ${coinAddress}`);
+    setEssayCoinConfig(null); // Clear saved config
   };
 
   const countWordsAndSetToken = () => {
@@ -189,149 +258,125 @@ const CraftEssay = () => {
         });
         setDraftLoading(false);
         toast.success("Drafted Essay Updated");
-        navigate("/my-essay/draft");
       })
       .catch((err) => {
-        console.log(err);
         setDraftLoading(false);
         ErrorHandler(err);
       });
   };
 
   const handleRemoveFromDraft = async () => {
-    if (editingDraftId) {
-      await actor.deleteDraft(BigInt(editingDraftId));
-      setEditingDraftId(null);
-      return;
+    if (editingDraftId !== 0) {
+      dispatch(updateDraftItem({ id: editingDraftId, text: "", title: "" }));
+      setEditingDraftId(0);
     }
-    return;
   };
 
   const handleSaveToDraft = () => {
-    if (essayWords < 2) {
-      toast.error("Essay to save can't be empty");
-      return;
-    } else if (title.length < 2) {
-      toast.error("Please add a title to your essay");
-      return;
-    } else if (editingDraftId) {
-      handleSaveEditDraft();
-      return;
-    } else {
-      setDraftLoading(true);
-
-      // const text = convertToRaw(editorState?.getCurrentContent());
-      // console.log(text)
-      actor
-        .draftEssay(title, text)
-        .then((d) => {
-          console.log(d);
-          setDraftLoading(false);
-          const payload = {
-            id: Number(d) - 1,
-            text,
+    console.log("💾 Saving essay to draft...");
+    setDraftLoading(true);
+    actor
+      .draftEssay(title, text)
+      .then((d: any) => {
+        console.log("✅ Draft saved successfully, ID:", d);
+        dispatch(
+          addToMyDraft({
+            id: Number(d),
             title,
-          };
-          dispatch(addToMyDraft(payload));
-          toast.success("Added to Draft");
-          navigate("/my-essay/draft");
-        })
-        .catch((err) => {
-          setDraftLoading(false);
-          ErrorHandler(err);
+            text,
+          })
+        );
+        // Track Save Draft Event
+        trackEvent({
+          category: "Essay",
+          action: "Saved A Drafted Content",
+          documentTitle: "Create Essay Page",
+          href: window.location.href,
         });
-    }
+        setDraftLoading(false);
+        toast.success("Draft Saved");
+      })
+      .catch((err) => {
+        console.error("❌ Error saving draft:", err);
+        setDraftLoading(false);
+        ErrorHandler(err);
+      });
   };
-  //track page view
-  useEffect(() => {
-    const params = {
-      documentTitle: "Create Essay Page",
-      href: window.location.href,
-      customDimensions: false,
-    };
-    trackPageView(params);
-  }, []);
-
 
   const convertPdfToHtml = async (event:any) => {
- const formData = new FormData();
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('pdf', file);
+      const response = await fetch('/api/convert-pdf', {
+        method: 'POST',
+        body: formData,
+      });
+      const html = await response.text();
+      setPdf(html);
+    }
+  };
 
- formData.append("pdfFile",event.target.files[0])
-
-    fetch("http://localhost:3000/extract-text",{
-      method:"POST",
-      body:formData,
-    }).then(res => {
-   return res.text()
-    }).then((data) => {
-      setEssay(data)
-      convertHTMLtoEditorContent(data)
-    })
-  }
 const handleSetVisibility = (e:any) => {
-  setVisibility(e.target.checked)
-
-}
+  setVisibility(e.target.checked);
+};
 
   return (
-    <div className="">
-      {/* <CustomPrompt
-				when={draftLoading || isLoading}
-				message='You gonna lose your data, are you sure?'
-			/> */}
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <CraftEssayNavbar />
-      {/* <div></div> */}
-      <div className="flex flex-col items-center justify-center px-2 py-3 mt-20 ">
+      <div className="container mx-auto px-4 py-8 mt-20">
         {step === 1 ? (
           <>
-            {/* Title */}
-            <div
-              className="flex p-2 flex-col border-inherit border-2 dark:border-[#3e5060] bg-white dark:bg-[#323f4b]  w-[80%]
-			 "
-            >
-              <input
-                value={title}
-                onChange={(e: any) => setTitle(e.target.value)}
-                className="text-md py-4 px-5 outline-none border dark:bg-[#323f4b] dark:border-[#3e5060] border-gray-200  dark:text-white text-red.500 rounded-md placeholder:text-xl placeholder:font-bold dark:placeholder:text-white/70 placeholder:text-[#141414A6] w-[100%]"
-                placeholder="Enter title here......"
-              />
-              <TagInput />
-              <input
-                value={description}
-                onChange={(e: any) => setDescription(e.target.value)}
-                className="text-md mt-5 py-4 px-5 outline-none border dark:bg-[#323f4b] dark:border-[#3e5060] border-gray-200  dark:text-white text-red.500 rounded-md placeholder:text-xl placeholder:font-bold dark:placeholder:text-white/70 placeholder:text-[#141414A6] w-[100%]"
-                placeholder="Enter a short description of your essay......"
-              />
-            </div>
-            {/* word count */}
-            <div className="flex place-content-end gap-3 mt-10 w-[80%]">
-              <label className="text-white bg-[#08172E] italic rounded-lg border-inherit border-3 px-2 text-xs  py-1 cursor-pointer" htmlFor="pdf" >upload from pdf
-              <input type="file" name="upload" value={pdf} onChange={(e) => {convertPdfToHtml(e)}} style={{"display":"none"}} id="pdf" accept="application/pdf" />
-              </label>
-              <p className="text-white bg-[#08172E] italic rounded-lg border-inherit border-3 px-2 text-xs  py-1">
-                {essayWords} words
-              </p>
-              {/* <PdfViewer/> */}
-            </div>
-            {/* Text Editor */}
-            <div className="essay-editor-tour w-[80%]">
-              <EssayEditor
-                handleEditorChange={(html) => {
-                  localStorage.setItem("last_essay", html);
-                  setEssay(html);
-                  dispatch(setEssayCount());
-                }}
-              />
-            </div>
-            {/* Footer Buttons */}
-            <div className="flex w-[80%] justify-end mt-10">
-              <div className="flex items-center gap-3">
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Create Your Essay
+                </h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Title *
+                    </label>
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      placeholder="Enter your essay title..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Description
+                    </label>
+                    <textarea
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      placeholder="Brief description of your essay..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Tags
+                    </label>
+                    <TagInput />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
+                <EssayEditor
+                  handleEditorChange={(html) => {
+                    localStorage.setItem("last_essay", html);
+                    setEssay(html);
+                    dispatch(setEssayCount());
+                  }}
+                />
+              </div>
+              <div className="flex justify-between items-center">
                 <button
-                  disabled={
-                    essayWords < 2 && title.length < 2
-                      ? true
-                      : false || draftLoading
-                  }
+                  disabled={draftLoading}
                   onClick={handleSaveToDraft}
                   className=" continue-essay-btn-tour border-black border-1px rounded-sm bg-white text-[#08172E] disabled:bg-slate-300 "
                 >
@@ -386,18 +431,52 @@ const handleSetVisibility = (e:any) => {
               <PreviewEssay />
             </div>
 
+            {/* EssayCoin Form */}
+            <div className="w-[80%] mt-8">
+              {essayCoinConfig && createdEssayId === 0 && (
+                <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-sm text-green-700 dark:text-green-300">
+                      EssayCoin configuration saved! Will be created after essay submission.
+                    </span>
+                  </div>
+                </div>
+              )}
+              <EssayCoinForm 
+                essayId={createdEssayId}
+                essayTitle={title}
+                onCoinCreated={handleCoinCreated}
+                isDisabled={false} // Allow configuration before essay submission
+                pinataConfig={getPinataConfig()}
+              />
+            </div>
+
+            {/* Status Display */}
+            {coinCreationStatus && (
+              <div className="w-[80%] mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-blue-700 dark:text-blue-300">
+                    {coinCreationStatus}
+                  </span>
+                </div>
+              </div>
+            )}
+
             <div className="flex w-[80%]  justify-end mt-10">
               {isLoading ? (
-                <button className="text-primary-dark dark:text-white/90 ">
-                  submitting...
+                <button className="text-primary-dark dark:text-white/90 flex items-center space-x-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                  <span>Submitting and Creating Coin...</span>
                 </button>
               ) : (
                 <button
                   disabled={essayWords < 100 && title.length < 2 ? true : false}
-                  onClick={handleSubmit}
-                  className="continue-essay-btn-tour dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white  rounded-sm text-white bg-[#08172E] disabled:bg-slate-300"
+                  onClick={handleSubmitAndCreateCoin}
+                  className="continue-essay-btn-tour dark:bg-[#627D98] dark:hover:bg-[#9AA5B1] dark:hover:text-white  rounded-sm text-white bg-[#08172E] disabled:bg-slate-300 px-6 py-2"
                 >
-                  Submit
+                  Submit and Create Coin
                 </button>
               )}
             </div>
