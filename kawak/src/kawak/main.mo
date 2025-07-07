@@ -68,6 +68,7 @@ shared (msg) actor class Kawak(
     let { balanceEntries; allowanceEntries } = _Brew_DIP20.toStable();
     stableBalanceEntries := balanceEntries;
     stableAllowanceEntries := allowanceEntries;
+    
 
     // Preserve Users
     let { ProfileEntries } = _Users.toStable();
@@ -311,7 +312,7 @@ shared (msg) actor class Kawak(
     created_at : Int;
   };
 
-  var EssayCoins : [(Nat, EssayCoin)] = [];
+  private stable var EssayCoins : [(Nat, EssayCoin)] = [];
   var EssayCoinHashMap : HashMap.HashMap<Nat, EssayCoin> = HashMap.fromIter<Nat, EssayCoin>(EssayCoins.vals(), 1, Nat.equal, Hash.hash);
 
   public query func getOwnerEssayCoins(owner : Principal) : async [(Nat, EssayCoin)] {
@@ -337,6 +338,14 @@ shared (msg) actor class Kawak(
       created_at;
     };
     EssayCoinHashMap.put(essayID, essayCoin);
+  };
+
+  public query func essayIsCoin(essayID : Nat) : async Bool {
+    let essayCoin = EssayCoinHashMap.get(essayID);
+    switch (essayCoin) {
+      case (null) { false };
+      case (?essayCoin) { true };
+    };
   };
 
   public query func getEssayCoin(essayID : Nat) : async ?EssayCoin {

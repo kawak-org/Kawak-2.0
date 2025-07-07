@@ -14,6 +14,7 @@ type Props = {
   reviewed: boolean;
   avatar: string;
   tags: any;
+  isCoin?: boolean;
 };
 
 const EssayCard = ({
@@ -26,6 +27,7 @@ const EssayCard = ({
   reviewed,
   avatar,
   tags,
+  isCoin = false,
 }: Props) => {
   const text = convert(body, {
     wordwrap: 90,
@@ -52,7 +54,14 @@ const EssayCard = ({
   // console.log(tags)
 
   return (
-    <div className="dark:bg-[#323f4b] bg-white shadow-xl rounded-[10px] py-3 px-4 max-w-sm hover:scale-105 transition-transform duration-200 ease-in-out">
+    <div className="dark:bg-[#323f4b] bg-white shadow-xl rounded-[10px] py-3 px-4 max-w-sm hover:scale-105 transition-transform duration-200 ease-in-out relative">
+      <div className="absolute top-2 right-2">
+        {isCoin ? (
+          <span className="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Coin</span>
+        ) : (
+          <span className="bg-gray-200 text-gray-700 text-xs font-semibold px-3 py-1 rounded-full">No Coin</span>
+        )}
+      </div>
       <div className="flex flex-row justify-between items-center mt-5">
         <h2 className=" text-[#08172E] font-bold text-base dark:text-white/90 no-underline">
           {title}

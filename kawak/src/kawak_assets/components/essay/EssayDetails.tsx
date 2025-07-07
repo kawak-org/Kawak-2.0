@@ -24,6 +24,7 @@ import {
 } from "../../redux/slice/annotationSlice";
 import ReviewCommentEditor from "../../src/RichText/ReviewCommentEditor/ReviewCommentEditor";
 import ShowComment from "./ShowComment_";
+import { useEssayIsCoin, useGetEssayCoin } from "../../functions/contract";
 
 const EssayDetails = () => {
   const { actor } = useContext(UserContext);
@@ -54,6 +55,11 @@ const EssayDetails = () => {
 
   let HighlightEssay: string = "";
   let annotation: string = "";
+
+  const { essayIsCoin } = useEssayIsCoin();
+  const { getEssayCoin } = useGetEssayCoin();
+  const [hasCoin, setHasCoin] = useState<boolean>(false);
+  const [coinAddress, setCoinAddress] = useState<string | null>(null);
 
   const changeSection = () => {
     setReviewSection(true);
@@ -127,6 +133,21 @@ const EssayDetails = () => {
     callOnMount();
   }, []);
 
+  useEffect(() => {
+    const checkCoin = async () => {
+      if (!id) return;
+      const isCoin = await essayIsCoin(Number(id));
+      setHasCoin(isCoin);
+      if (isCoin) {
+        const coin = await getEssayCoin(Number(id));
+        if (coin && coin[0] && coin[0].contract_address) {
+          setCoinAddress(coin[0].contract_address);
+        }
+      }
+    };
+    checkCoin();
+  }, [id]);
+
   const handleCarouselChange = (index: number) => {
     setAnnotationPosition(index);
   };
@@ -173,6 +194,29 @@ const EssayDetails = () => {
                       {essay[0].title}
                     </h2>
                     <div className="border-b-[1px] bg-gray-400 mt-3 mb-7" />
+                    {/* Coin Interaction Section */}
+                    {hasCoin && coinAddress && (
+                      <div className="my-6 p-4 bg-green-50 border border-green-200 rounded-lg flex flex-col items-center">
+                        <span className="text-green-700 font-semibold mb-2">This essay has a coin!</span>
+                        <button
+                          className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                          onClick={() => {
+                            navigate('/marketplace', { state: { coinAddress } });
+                            // Optionally, scroll to the coin in the marketplace page
+                          }}
+                        >
+                          View Coin & Trade
+                        </button>
+                        <a
+                          href={`https://testnet.zora.co/coin/bsep:${coinAddress}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-2 text-blue-600 underline text-xs"
+                        >
+                          View on Zora
+                        </a>
+                      </div>
+                    )}
                     {annotations?.length < 1 ? (
                       <div>
                         <LexicalRichTextEditor essay={essay[0].text} />

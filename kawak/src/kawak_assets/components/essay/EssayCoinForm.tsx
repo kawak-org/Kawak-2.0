@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { toast } from 'react-hot-toast';
 import { zoraCoinService, ZoraCoinConfig } from '../../services/ZoraCoinService';
 import { useAppSelector } from '../../redux/hooks';
@@ -14,13 +14,13 @@ interface EssayCoinFormProps {
   pinataConfig?: PinataConfig;
 }
 
-const EssayCoinForm: React.FC<EssayCoinFormProps> = ({
+const EssayCoinForm = forwardRef<any, EssayCoinFormProps>(({
   essayId,
   essayTitle,
   onCoinCreated,
   isDisabled = false,
   pinataConfig
-}) => {
+}, ref) => {
   const user = useAppSelector((state) => state.profile);
   const { address, isConnected } = useMetaMaskStatus();
   const { createEssayCoin } = useCreateEssayCoin();
@@ -145,30 +145,14 @@ const EssayCoinForm: React.FC<EssayCoinFormProps> = ({
     if (formData.initialPurchase?.enabled && !formData.initialPurchase.amount) {
       return 'Initial purchase amount is required when enabled';
     }
-    
+
+    // Require image file
+    if (!imageFile) {
+      return 'Coin image is required';
+    }
+
     console.log("✅ Form validation passed");
     return null;
-  };
-
-  const saveConfiguration = () => {
-    console.log("💾 Saving coin configuration...");
-    const error = validateForm();
-    if (error) {
-      console.error("❌ Form validation failed:", error);
-      toast.error(error);
-      return;
-    }
-    
-    // Save to localStorage for later use
-    const config = {
-      ...formData,
-      image: imageFile,
-      essayId
-    };
-    localStorage.setItem(`essayCoinConfig_${essayId}`, JSON.stringify(config));
-    console.log("✅ Configuration saved to localStorage");
-    setIsSaved(true);
-    toast.success('EssayCoin configuration saved!');
   };
 
   const createCoinAutomatically = async (config: any) => {
@@ -181,124 +165,85 @@ const EssayCoinForm: React.FC<EssayCoinFormProps> = ({
     await createCoinInternal(formData, false);
   };
 
-  const createCoinInternal = async (coinConfig: any, isAutoCreate: boolean = false) => {
+  const createCoinInternal = async (coinConfig: any, isAutoCreate: boolean = false, overrideEssayId?: number) => {
     if (!isConnected || !address) {
       console.error("❌ MetaMask not connected");
       toast.error('Please connect your MetaMask wallet first');
       return;
     }
 
-    if (essayId === 0 && !isAutoCreate) {
+    const finalEssayId = overrideEssayId !== undefined ? overrideEssayId : essayId;
+    if (finalEssayId === 0 && !isAutoCreate) {
       console.error("❌ Essay not submitted yet");
       toast.error('Please submit your essay first before creating the EssayCoin');
       return;
     }
 
-    const error = validateForm();
-    if (error) {
-      console.error("❌ Form validation failed:", error);
-      toast.error(error);
-      return;
-    }
-
     setIsLoading(true);
-    console.log("🚀 Starting coin creation process...");
-    
     try {
-      console.log("🔧 Step 1: Initializing Zora service");
+      console.log("[EssayCoin] Initializing Zora service...");
       const initialized = await zoraCoinService.initialize(address, undefined, pinataConfig);
       if (!initialized) {
-        throw new Error('Failed to initialize Zora service');
+        toast.error('Failed to initialize Zora service');
+        console.error('[EssayCoin] Failed to initialize Zora service');
+        setIsLoading(false);
+        return;
       }
-      console.log("✅ Zora service initialized");
-
-      // Prepare coin config
-      const finalCoinConfig: ZoraCoinConfig = {
-        ...coinConfig,
-        image: imageFile || undefined,
-        chainId: process.env.NODE_ENV === 'production' ? 8453 : 84532 // Base Mainnet or Sepolia
-      };
-
-      console.log("🔧 Step 2: Creating coin with config:", finalCoinConfig);
-      const result = await zoraCoinService.createCoin(finalCoinConfig);
-      
-      if (result.success) {
-        console.log("🎉 Coin created successfully!");
-        console.log("📊 Coin details:", {
-          address: result.address,
-          hash: result.hash,
-          essayId: essayId
+      console.log("[EssayCoin] Zora service initialized.");
+      // 1. Deploy coin to Zora
+      const configWithImage = { ...coinConfig, image: imageFile };
+      const result = await zoraCoinService.createCoin(configWithImage);
+      console.log("[EssayCoin] Zora deployment result:", result);
+      if (result && result.address) {
+        console.log("[EssayCoin] Coin deployed to Zora successfully. Address:", result.address);
+        const totalSupply = coinConfig.initialPurchase?.enabled && coinConfig.initialPurchase.amount
+          ? Number(coinConfig.initialPurchase.amount)
+          : 0;
+        const metadata = coinConfig.description || '';
+        console.log("[EssayCoin] Saving coin configuration to canister/backend with params:", {
+          essayId: finalEssayId,
+          contract_address: result.address,
+          name: coinConfig.name,
+          symbol: coinConfig.symbol,
+          totalSupply,
+          metadata
         });
-        
-        toast.success(`EssayCoin created successfully! Address: ${result.address}`);
-        
-        // Save coin info to backend
-        console.log("🔧 Step 3: Saving coin info to backend");
-        try {
-          const metadata = JSON.stringify({
-            name: coinConfig.name,
-            symbol: coinConfig.symbol,
-            description: coinConfig.description,
-            image: imageFile ? URL.createObjectURL(imageFile) : null,
-            zoraAddress: result.address,
-            transactionHash: result.hash,
-            created_at: new Date().toISOString()
-          });
-          
-          await createEssayCoin(
-            essayId,
-            result.address!,
-            coinConfig.name,
-            coinConfig.symbol,
-            1000000, // Default total supply
-            metadata
-          );
-          console.log("✅ Coin info saved to backend");
-        } catch (backendError) {
-          console.warn("⚠️ Failed to save coin info to backend:", backendError);
+        const saveResult = await createEssayCoin(
+          finalEssayId,
+          result.address, // contract_address
+          coinConfig.name,
+          coinConfig.symbol,
+          totalSupply,
+          metadata
+        );
+        console.log("[EssayCoin] Canister/backend save result:", saveResult);
+        if (saveResult) {
+          toast.success("Coin deployed and configuration saved!");
+          if (onCoinCreated) onCoinCreated(result.address);
+        } else {
+          console.error("[EssayCoin] Coin deployed but failed to save configuration.");
+          toast.error("Coin deployed but failed to save configuration.");
         }
-        
-        onCoinCreated?.(result.address!);
-        
-        // Clear saved configuration
-        localStorage.removeItem(`essayCoinConfig_${essayId}`);
-        setIsSaved(false);
-        console.log("🧹 Cleaned up saved configuration");
-        
       } else {
-        throw new Error(result.error || 'Failed to create coin');
+        console.error("[EssayCoin] Coin deployment failed, not saving config.", result?.error);
+        toast.error("Coin deployment failed, not saving config.");
       }
     } catch (error) {
-      console.error("❌ Error creating coin:", error);
-      toast.error(error instanceof Error ? error.message : 'Failed to create EssayCoin');
+      console.error("[EssayCoin] Error deploying coin or saving config:", error);
+      toast.error("Error deploying coin or saving config.");
     } finally {
       setIsLoading(false);
-      console.log("🏁 Coin creation process completed");
     }
   };
 
-  const loadSavedConfiguration = () => {
-    console.log("📂 Loading saved configuration for essay ID:", essayId);
-    const saved = localStorage.getItem(`essayCoinConfig_${essayId}`);
-    if (saved) {
-      try {
-        const config = JSON.parse(saved);
-        console.log("✅ Loaded saved configuration:", config);
-        setFormData(config);
-        setIsSaved(true);
-        toast.success('Loaded saved configuration');
-      } catch (error) {
-        console.error("❌ Failed to load saved configuration:", error);
-      }
-    } else {
-      console.log("ℹ️ No saved configuration found");
+  // Expose methods to parent via ref
+  useImperativeHandle(ref, () => ({
+    getConfig: () => formData,
+    createCoinWithEssayId: async (newEssayId: number) => {
+      // Use the current formData and newEssayId to create the coin
+      await createCoinInternal({ ...formData }, false, newEssayId);
     }
-  };
-
-  // Load saved configuration on mount
-  useEffect(() => {
-    loadSavedConfiguration();
-  }, [essayId]);
+  }));
 
   if (!isConnected) {
     return (
@@ -389,7 +334,7 @@ const EssayCoinForm: React.FC<EssayCoinFormProps> = ({
         {/* Image Upload */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Coin Image (Optional)
+            Coin Image <span className="text-red-500">*</span>
           </label>
           <div className="space-y-3">
             <div className="flex items-center space-x-4">
@@ -399,6 +344,7 @@ const EssayCoinForm: React.FC<EssayCoinFormProps> = ({
                 onChange={handleImageChange}
                 className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                 disabled={isDisabled}
+                required
               />
               {imagePreview && (
                 <img 
@@ -415,6 +361,9 @@ const EssayCoinForm: React.FC<EssayCoinFormProps> = ({
                   <p className="text-green-600">✓ Will be uploaded to IPFS via Pinata</p>
                 )}
               </div>
+            )}
+            {!imageFile && (
+              <div className="text-sm text-red-500">Coin image is required</div>
             )}
           </div>
         </div>
@@ -512,14 +461,6 @@ const EssayCoinForm: React.FC<EssayCoinFormProps> = ({
         {/* Action Buttons */}
         <div className="flex space-x-3 pt-4">
           <button
-            onClick={saveConfiguration}
-            disabled={isDisabled || isLoading}
-            className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Save Configuration
-          </button>
-          
-          <button
             onClick={createCoin}
             disabled={isDisabled || isLoading || !isSaved || essayId === 0}
             className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -555,6 +496,6 @@ const EssayCoinForm: React.FC<EssayCoinFormProps> = ({
       </div>
     </div>
   );
-};
+});
 
 export default EssayCoinForm; 

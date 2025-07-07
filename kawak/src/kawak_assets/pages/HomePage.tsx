@@ -919,37 +919,22 @@ export default function Page() {
               alt=""
             />
           </div> */}
-          <div className="relative mt-[3.9rem">
-            <video
-              id="forgeVid"
-              className="relative h-auto w-40% m-auto"
-              /* autoPlay  muted */ playsInline
-              loop
-              controls
-            >
-              <source src={`onboarding-videos/Forge.mp4`} type="video/mp4" />
-              <source src={`onboarding-videos/Forge.ogg`} type="video/ogg" />
-              Your browser does not support the video tag.
-            </video>
+          <div className="relative mt-[3.9rem]">
+            <img
+              src="forge.png"
+              alt="Forge illustration"
+              className="w-full h-auto rounded-lg shadow-md"
+            />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-[4rem] mt-[10rem] ">
           <div className="relative mt-[3.9rem] ">
-            <video
-              id="anvilVid"
-              className="relative h-auto w-40% m-auto"
-              /* autoPlay  muted */ playsInline
-              loop
-              controls
-            >
-              <source
-                /* className="w-[30%]" */ src={`onboarding-videos/Anvil.mp4`}
-                type="video/mp4"
-              />
-              <source src={`onboarding-videos/Anvil.ogg`} type="video/ogg" />
-              Your browser does not support the video tag.
-            </video>
+            <img
+              src="amico.png"
+              alt="Creative collaboration illustration"
+              className="w-full h-auto rounded-lg shadow-md mt-8"
+            />
           </div>
 
           <div className="flex flex-col anvil2 order-first md:order-last">
@@ -1198,9 +1183,8 @@ const faqs = [
     answer: "No. The barrier of entry is your effort alone. ",
   },
   {
-    question: "What is NFID?",
-    answer:
-      "The fastest way to securely and pirvately authenticate with full stack blockchain applications.",
+    question: "What is Zora?",
+    answer: "Zora is a protocol and platform for minting, trading, and managing tokens and NFTs on Ethereum and Layer 2 networks. It enables creators and communities to launch and trade their own coins and collectibles in a decentralized way.",
   },
   {
     question: "What about plagiarism? ",

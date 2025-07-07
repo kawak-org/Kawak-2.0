@@ -9,6 +9,7 @@ dist
 dist/kawak_assets
 src/declarations
 
+../.env.local
 #unknown
 .idea
 .history

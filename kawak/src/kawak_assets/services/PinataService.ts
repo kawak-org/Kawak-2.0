@@ -47,23 +47,22 @@ class PinataService {
       });
       formData.append('pinataMetadata', metadata);
 
-      const response = await axios.post(
-        'https://api.pinata.cloud/pinning/pinFileToIPFS',
-        formData,
-        {
-          headers: {
-            'Authorization': `Bearer ${this.config.apiKey}`,
-            ...formData.getHeaders()
-          },
-          maxContentLength: Infinity,
-          maxBodyLength: Infinity
-        }
-      );
+      // Use fetch for browser compatibility
+      const response = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
+        method: 'POST',
+        headers: {
+          // Pinata requires API key and secret as headers for file upload
+          'pinata_api_key': this.config.apiKey,
+          'pinata_secret_api_key': this.config.secretApiKey
+          // Do NOT set Content-Type; browser will set it with boundary
+        },
+        body: formData,
+      });
 
-      if (response.data && response.data.IpfsHash) {
-        const ipfsHash = response.data.IpfsHash;
+      const data = await response.json();
+      if (response.ok && data.IpfsHash) {
+        const ipfsHash = data.IpfsHash;
         const ipfsUrl = `${this.gatewayUrl}${ipfsHash}`;
-        
         return {
           success: true,
           ipfsHash,
@@ -72,80 +71,41 @@ class PinataService {
       } else {
         return {
           success: false,
-          error: 'Failed to get IPFS hash from Pinata response'
+          error: data.error || 'Failed to get IPFS hash from Pinata response'
         };
       }
     } catch (error: any) {
       console.error('Error uploading to Pinata:', error);
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Failed to upload to IPFS'
+        error: error.message || 'Failed to upload to IPFS'
       };
     }
   }
 
-  async uploadJSON(metadata: any, name: string): Promise<PinataUploadResult> {
-    if (!this.config) {
-      return {
-        success: false,
-        error: 'Pinata service not initialized. Please provide API credentials.'
-      };
-    }
-
+  async uploadJSON(metadata: any, name: string) {
     try {
-      const formData = new FormData();
-      
-      // Create a JSON blob
-      const jsonBlob = new Blob([JSON.stringify(metadata, null, 2)], {
-        type: 'application/json'
+      const url = 'https://api.pinata.cloud/pinning/pinJSONToIPFS';
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          pinata_api_key: '55adb1794d0519a83ee6',
+          pinata_secret_api_key: '9e867e4d7dbb6c2075122115a17bffb3412653315d5235ff45605899957b00e5',
+        },
+        body: JSON.stringify({
+          pinataMetadata: { name },
+          pinataContent: metadata,
+        }),
       });
-      
-      formData.append('file', jsonBlob, `${name}.json`);
-
-      // Add metadata
-      const pinataMetadata = JSON.stringify({
-        name: `${name}.json`,
-        description: `EssayCoin metadata for ${name}`,
-        attributes: {
-          platform: 'Kawak',
-          type: 'essay-coin-metadata',
-          timestamp: new Date().toISOString()
-        }
-      });
-      formData.append('pinataMetadata', pinataMetadata);
-
-      const response = await axios.post(
-        'https://api.pinata.cloud/pinning/pinFileToIPFS',
-        formData,
-        {
-          headers: {
-            'Authorization': `Bearer ${this.config.apiKey}`,
-            ...formData.getHeaders()
-          }
-        }
-      );
-
-      if (response.data && response.data.IpfsHash) {
-        const ipfsHash = response.data.IpfsHash;
-        const ipfsUrl = `${this.gatewayUrl}${ipfsHash}`;
-        
-        return {
-          success: true,
-          ipfsHash,
-          ipfsUrl
-        };
+      const data = await response.json();
+      if (response.ok && data.IpfsHash) {
+        return { success: true, ipfsUrl: `ipfs://${data.IpfsHash}` };
       } else {
-        return {
-          success: false,
-          error: 'Failed to get IPFS hash from Pinata response'
-        };
+        return { success: false, error: data.error || 'Unknown error' };
       }
-    } catch (error: any) {
-      console.error('Error uploading JSON to Pinata:', error);
-      return {
-        success: false,
-        error: error.response?.data?.error || error.message || 'Failed to upload JSON to IPFS'
-      };
+    } catch (error) {
+      return { success: false, error: error.message || 'Unknown error' };
     }
   }
 

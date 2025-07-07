@@ -4,7 +4,7 @@ import EssayCard from "../essay/EssayCard";
 import EssayBar from "../shared/essay/EssayBar";
 import { ShepherdTourContext } from "react-shepherd";
 import { useAppSelector } from "../../redux/hooks";
-import {  useGetRecentForge ,useGetPaginatedForge, useGetAllEssays, useForgeLength} from "../../functions/contract";
+import {  useGetRecentForge ,useGetPaginatedForge, useGetAllEssays, useForgeLength, useGetAllEssayCoins, useEssayIsCoin } from "../../functions/contract";
 import ReactPaginate from "react-paginate";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -23,11 +23,29 @@ const DashboardViewLayout = ({ heading }: Props) => {
   // const { fetchData, loading } = useGetAllEssays();
   const { fetchData, loading } = useGetPaginatedForge();
   const { fetchData: updateData, loading: updating } = useGetRecentForge();
-
-  const {countForge} = useForgeLength()
+  const {countForge} = useForgeLength();
+  const { getAllEssayCoins } = useGetAllEssayCoins();
+  const { essayIsCoin } = useEssayIsCoin();
+  const [essayCoinStatus, setEssayCoinStatus] = useState<{ [id: number]: boolean }>({});
   const [pageNumber, setPageNumber] = useState(0);
   const essaysPerPage: number = 8;
   const essaysViewed: number = pageNumber * essaysPerPage;
+
+  useEffect(() => {
+    // Fetch coin status for all essays
+    const fetchCoinStatus = async () => {
+      if (!essays || essays.length === 0) return;
+      const statusMap: { [id: number]: boolean } = {};
+      await Promise.all(
+        essays.map(async (d: any) => {
+          const isCoin = await essayIsCoin(Number(d.id) + 1);
+          statusMap[Number(d.id)] = isCoin;
+        })
+      );
+      setEssayCoinStatus(statusMap);
+    };
+    fetchCoinStatus();
+  }, [essays]);
 
   const displayEssays = essays
     ?.slice(essaysViewed, essaysViewed + essaysPerPage)
@@ -64,6 +82,7 @@ const DashboardViewLayout = ({ heading }: Props) => {
             reviewed={d.reviewed}
             avatar={d.avatar}
             tags={d.tags}
+            isCoin={!!essayCoinStatus[Number(d.id)]}
           />
         </Link>
       )

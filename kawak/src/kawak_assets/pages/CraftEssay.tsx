@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useMatomo } from "@datapunt/matomo-tracker-react";
 import EssayEditor from "../components/essay/EssayEditor";
 // import { SearchOptionProps } from "../components/common/Search";
@@ -46,6 +46,7 @@ const CraftEssay = () => {
   const [createdEssayId, setCreatedEssayId] = useState<number>(0);
   const [essayCoinConfig, setEssayCoinConfig] = useState<any>(null);
   const [coinCreationStatus, setCoinCreationStatus] = useState<string>('');
+  const coinFormRef = useRef<any>(null);
 
   // const [modalIsOpen, setModalIsOpen] = useState(false);
   const user = useAppSelector((state) => state.profile);
@@ -109,6 +110,17 @@ const CraftEssay = () => {
       return;
     }
 
+    // 1. Get coin config from EssayCoinForm
+    if (!coinFormRef.current || !coinFormRef.current.getConfig) {
+      toast.error("Coin configuration is not available");
+      return;
+    }
+    const coinConfig = coinFormRef.current.getConfig();
+    if (!coinConfig) {
+      toast.error("Please fill out the coin configuration");
+      return;
+    }
+
     setIsLoading(true);
     setCoinCreationStatus('Submitting essay...');
     
@@ -163,37 +175,16 @@ const CraftEssay = () => {
         }
         dispatch(addToMyEssay({ ...dispatchField, id: essayId - 1 }));
 
-        // Check if we have saved coin configuration
-        const savedConfig = localStorage.getItem(`essayCoinConfig_${essayId}`);
-        if (savedConfig) {
-          console.log("🪙 Found saved coin configuration, proceeding with coin creation");
-          try {
-            const coinConfig = JSON.parse(savedConfig);
-            console.log("Coin configuration:", coinConfig);
-            
-            // Trigger coin creation through the form
-            setEssayCoinConfig(coinConfig);
-            setCoinCreationStatus('Coin configuration loaded, creating coin...');
-            
-            // Small delay to ensure state updates
-            setTimeout(() => {
-              console.log("🪙 Triggering coin creation...");
-              // The coin creation will be handled by the EssayCoinForm component
-              // We'll wait for the onCoinCreated callback
-            }, 1000);
-            
-          } catch (error) {
-            console.error("❌ Error parsing saved coin configuration:", error);
-            setCoinCreationStatus('Error loading coin configuration');
-          }
+        // 2. Immediately create the coin with the config and essayId
+        setCoinCreationStatus('Creating coin...');
+        if (coinFormRef.current && coinFormRef.current.createCoinWithEssayId) {
+          await coinFormRef.current.createCoinWithEssayId(essayId);
         } else {
-          console.log("ℹ️ No saved coin configuration found, essay submitted without coin");
-          setCoinCreationStatus('Essay submitted successfully!');
+          toast.error("Coin creation function not available");
         }
-
-        // Clean up
+        setCoinCreationStatus('Essay and coin created successfully!');
         setStateEmpty();
-        toast.success("Essay Created Successfully!");
+        toast.success("Essay and Coin Created Successfully!");
         dispatch(resetCount());
         localStorage.removeItem("last_essay");
         
@@ -444,10 +435,11 @@ const handleSetVisibility = (e:any) => {
                 </div>
               )}
               <EssayCoinForm 
+                ref={coinFormRef}
                 essayId={createdEssayId}
                 essayTitle={title}
                 onCoinCreated={handleCoinCreated}
-                isDisabled={false} // Allow configuration before essay submission
+                isDisabled={false}
                 pinataConfig={getPinataConfig()}
               />
             </div>

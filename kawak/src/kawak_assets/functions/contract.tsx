@@ -709,3 +709,23 @@ export const useGetOwnerEssayCoins = () => {
 
   return { getOwnerEssayCoins, loading };
 };
+
+export const useEssayIsCoin = () => {
+  const { actor } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
+
+  const essayIsCoin = async (essayID: number): Promise<boolean> => {
+    setLoading(true);
+    try {
+      const result = await actor?.essayIsCoin(BigInt(essayID));
+      setLoading(false);
+      return !!result;
+    } catch (error) {
+      console.error("Error checking if essay is coin:", error);
+      setLoading(false);
+      return false;
+    }
+  };
+
+  return { essayIsCoin, loading };
+};

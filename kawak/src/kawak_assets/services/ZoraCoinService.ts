@@ -13,10 +13,17 @@ import {
   createPublicClient, 
   http, 
   Address,
-  parseEther
+  parseEther,
+  custom
 } from "viem";
 import { base, baseSepolia } from "viem/chains";
 import { pinataService, PinataConfig } from './PinataService';
+
+declare global {
+  interface Window {
+    ZORA_API_KEY?: string;
+  }
+}
 
 export interface ZoraCoinConfig {
   name: string;
@@ -58,17 +65,25 @@ class ZoraCoinService {
         transport: http(rpcEndpoint),
       });
 
+      // Use MetaMask (window.ethereum) for signing if available
+      const hasMetaMask = typeof window !== 'undefined' && (window as any).ethereum;
       this.walletClient = createWalletClient({
         account: accountAddress as Hex,
         chain,
-        transport: http(rpcEndpoint),
+        transport: hasMetaMask
+          ? custom((window as any).ethereum)
+          : http(rpcEndpoint),
       });
 
-      // Initialize Pinata if config provided
-      if (pinataConfig) {
-        pinataService.initialize(pinataConfig);
-        this.pinataInitialized = true;
-      }
+      // Hardcode Pinata API credentials for testing
+      const pinataConfig = {
+        apiKey: '55adb1794d0519a83ee6',
+        secretApiKey: '9e867e4d7dbb6c2075122115a17bffb3412653315d5235ff45605899957b00e5',
+      };
+      console.log('[ZoraCoinService] Pinata config for initialization (hardcoded):', pinataConfig);
+      pinataService.initialize(pinataConfig);
+      this.pinataInitialized = true;
+      console.log('[ZoraCoinService] Pinata initialized successfully.');
 
       this.isInitialized = true;
       return true;
@@ -80,61 +95,55 @@ class ZoraCoinService {
 
   async createMetadata(config: ZoraCoinConfig): Promise<ValidMetadataURI> {
     try {
-      const creatorAddress = config.payoutRecipient as Address;
-      
       let imageUrl: string | undefined;
-      
-      // Handle image upload to IPFS if Pinata is available
+
+      // 1. Upload image to IPFS via Pinata
       if (config.image && this.pinataInitialized) {
-        try {
-          // Validate file first
-          const validation = pinataService.validateFile(config.image);
-          if (!validation.valid) {
-            throw new Error(validation.error);
-          }
-
-          // Upload image to IPFS
-          const uploadResult = await pinataService.uploadFile(
-            config.image, 
-            `${config.symbol.toLowerCase()}-coin-image`
-          );
-
-          if (uploadResult.success && uploadResult.ipfsUrl) {
-            imageUrl = uploadResult.ipfsUrl;
-            console.log('Image uploaded to IPFS:', imageUrl);
-          } else {
-            console.warn('Failed to upload image to IPFS:', uploadResult.error);
-          }
-        } catch (ipfsError) {
-          console.warn('IPFS upload failed:', ipfsError);
+        console.log('[ZoraCoinService] Validating image file for IPFS upload...');
+        const validation = pinataService.validateFile(config.image);
+        if (!validation.valid) {
+          console.error('[ZoraCoinService] Image validation failed:', validation.error);
+          throw new Error(validation.error);
         }
+        console.log('[ZoraCoinService] Uploading image to IPFS via Pinata...');
+        const uploadResult = await pinataService.uploadFile(
+          config.image,
+          `${config.symbol.toLowerCase()}-coin-image`
+        );
+        if (uploadResult.success && uploadResult.ipfsUrl) {
+          imageUrl = uploadResult.ipfsUrl;
+          console.log('[ZoraCoinService] Image uploaded to IPFS:', imageUrl);
+        } else {
+          console.error('[ZoraCoinService] Failed to upload image to IPFS:', uploadResult.error);
+          throw new Error(uploadResult.error || "Failed to upload image to IPFS");
+        }
+      } else {
+        console.log('[ZoraCoinService] No image provided or Pinata not initialized, skipping image upload.');
       }
 
-      // Create metadata with image URL in description if available
-      let description = config.description;
-      if (imageUrl) {
-        description += `\n\nImage: ${imageUrl}`;
+      // 2. Build metadata object
+      const metadata = {
+        name: config.name,
+        symbol: config.symbol,
+        description: config.description,
+        image: imageUrl,
+      };
+      console.log('[ZoraCoinService] Built metadata object:', metadata);
+
+      // 3. Upload metadata JSON to IPFS via Pinata
+      console.log('[ZoraCoinService] Uploading metadata JSON to IPFS via Pinata...');
+      const metadataUpload = await pinataService.uploadJSON(metadata, `${config.symbol.toLowerCase()}-coin-metadata`);
+      if (!metadataUpload.success || !metadataUpload.ipfsUrl) {
+        console.error('[ZoraCoinService] Failed to upload metadata to IPFS:', metadataUpload.error);
+        throw new Error(metadataUpload.error || "Failed to upload metadata to IPFS");
       }
+      console.log('[ZoraCoinService] Metadata uploaded to IPFS:', metadataUpload.ipfsUrl);
 
-      const metadataBuilder = createMetadataBuilder()
-        .withName(config.name)
-        .withSymbol(config.symbol)
-        .withDescription(description);
-
-      // Add image file to metadata if available (Zora will handle the upload)
-      if (config.image) {
-        metadataBuilder.withImage(config.image);
-      }
-
-      const uploader = createZoraUploaderForCreator(creatorAddress);
-      const { createMetadataParameters } = await metadataBuilder.upload(uploader);
-
-      // Validate the metadata
-      await validateMetadataURIContent(createMetadataParameters.uri);
-
-      return createMetadataParameters.uri;
+      // 4. Return the IPFS URI
+      console.log('[ZoraCoinService] Returning metadata IPFS URI:', metadataUpload.ipfsUrl);
+      return metadataUpload.ipfsUrl as ValidMetadataURI;
     } catch (error) {
-      console.error('Error creating metadata:', error);
+      console.error('[ZoraCoinService] Error creating metadata:', error);
       throw new Error('Failed to create metadata');
     }
   }
