@@ -1,3 +1,23 @@
+/**
+ * EssayCoinForm
+ * -------------
+ * This React component provides a form UI for users to configure and create a custom Zora coin (ERC-20 token) for their essay.
+ * It integrates with ZoraCoinService to:
+ *   - Collect coin details (name, symbol, description, image, payout recipient, etc.)
+ *   - Validate user input and image uploads
+ *   - Initialize ZoraCoinService and trigger coin creation on the Zora network
+ *   - Upload metadata and images to IPFS via Pinata
+ *   - Expose imperative methods for parent components (e.g., CraftEssay) to trigger coin creation
+ *
+ * Integration Points:
+ *   - Used in CraftEssay.tsx to allow users to mint a coin when submitting an essay
+ *   - Coin creation results are displayed and can be tracked in MarketPlace.tsx
+ *
+ * Related files:
+ *   - kawak/src/kawak_assets/services/ZoraCoinService.ts
+ *   - kawak/src/kawak_assets/pages/CraftEssay.tsx
+ *   - kawak/src/kawak_assets/pages/MarketPlace.tsx
+ */
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { toast } from 'react-hot-toast';
 import { zoraCoinService, ZoraCoinConfig } from '../../services/ZoraCoinService';

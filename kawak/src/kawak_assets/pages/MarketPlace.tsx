@@ -1,3 +1,18 @@
+/**
+ * MarketPlace Page
+ * ----------------
+ * This page displays all coins created in the platform, including those minted via ZoraCoinService (through EssayCoinForm and CraftEssay).
+ *
+ * ZoraCoin Integration:
+ *   - Fetches and lists all essay coins, including their metadata, contract address, and owner.
+ *   - Allows users to view details of each coin, including a link to view the coin on Zora.
+ *   - Coins shown here are created using the workflow in CraftEssay.tsx and EssayCoinForm.tsx, which use ZoraCoinService for deployment.
+ *
+ * Related files:
+ *   - kawak/src/kawak_assets/services/ZoraCoinService.ts
+ *   - kawak/src/kawak_assets/components/essay/EssayCoinForm.tsx
+ *   - kawak/src/kawak_assets/pages/CraftEssay.tsx
+ */
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/shared/navbar/Navbar";
 import { AiOutlineSearch } from "react-icons/ai";

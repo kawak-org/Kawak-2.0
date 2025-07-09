@@ -1,3 +1,27 @@
+/**
+ * ZoraCoinService
+ * ----------------
+ * This service provides integration with the Zora protocol for creating and managing custom coins (ERC-20 tokens) on the Zora network.
+ * It handles:
+ *   - Initialization of Zora and Pinata (for IPFS image/metadata uploads)
+ *   - Metadata creation and upload to IPFS
+ *   - Coin deployment to the Zora blockchain
+ *
+ * Integration Points in the Codebase:
+ *   - EssayCoinForm.tsx: Provides the UI and logic for users to configure and create a Zora coin for their essay.
+ *   - CraftEssay.tsx: Handles the workflow for essay submission and triggers coin creation via EssayCoinForm.
+ *   - MarketPlace.tsx: Displays all created coins, including those deployed via ZoraCoinService.
+ *
+ * Main API:
+ *   - initialize(accountAddress, rpcUrl?, pinataConfig?)
+ *   - createMetadata(config)
+ *   - createCoin(config)
+ *
+ * Related files:
+ *   - kawak/src/kawak_assets/components/essay/EssayCoinForm.tsx
+ *   - kawak/src/kawak_assets/pages/CraftEssay.tsx
+ *   - kawak/src/kawak_assets/pages/MarketPlace.tsx
+ */
 import { 
   createCoin, 
   DeployCurrency, 

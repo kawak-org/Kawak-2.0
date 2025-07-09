@@ -60,6 +60,7 @@ const EssayDetails = () => {
   const { getEssayCoin } = useGetEssayCoin();
   const [hasCoin, setHasCoin] = useState<boolean>(false);
   const [coinAddress, setCoinAddress] = useState<string | null>(null);
+  const [coinSymbol, setCoinSymbol] = useState<string | null>(null);
 
   const changeSection = () => {
     setReviewSection(true);
@@ -136,12 +137,13 @@ const EssayDetails = () => {
   useEffect(() => {
     const checkCoin = async () => {
       if (!id) return;
-      const isCoin = await essayIsCoin(Number(id));
+      const isCoin = await essayIsCoin(Number(id) + 1);
       setHasCoin(isCoin);
       if (isCoin) {
-        const coin = await getEssayCoin(Number(id));
+        const coin = await getEssayCoin(Number(id) + 1);
         if (coin && coin[0] && coin[0].contract_address) {
           setCoinAddress(coin[0].contract_address);
+          setCoinSymbol(coin[0].symbol || null);
         }
       }
     };
@@ -194,43 +196,20 @@ const EssayDetails = () => {
                       {essay[0].title}
                     </h2>
                     <div className="border-b-[1px] bg-gray-400 mt-3 mb-7" />
-                    {/* Coin Interaction Section */}
-                    {hasCoin && coinAddress && (
-                      <div className="my-6 p-4 bg-green-50 border border-green-200 rounded-lg flex flex-col items-center">
-                        <span className="text-green-700 font-semibold mb-2">This essay has a coin!</span>
-                        <button
-                          className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-                          onClick={() => {
-                            navigate('/marketplace', { state: { coinAddress } });
-                            // Optionally, scroll to the coin in the marketplace page
-                          }}
-                        >
-                          View Coin & Trade
-                        </button>
-                        <a
-                          href={`https://testnet.zora.co/coin/bsep:${coinAddress}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-2 text-blue-600 underline text-xs"
-                        >
-                          View on Zora
-                        </a>
-                      </div>
-                    )}
+                    {/* Essay Content - only once */}
+                    <LexicalRichTextEditor essay={essay[0].text} />
+                    {/* Review/Annotation UI */}
                     {annotations?.length < 1 ? (
-                      <div>
-                        <LexicalRichTextEditor essay={essay[0].text} />
-                        <div className="w-full flex justify-center items-center">
-                          <button
-                            onClick={changeSection}
-                            className="mt-4 py-2 px-14 text-white bg-[#F98E2D] dark:bg-[#627D98] dark:hover:text-white dark:hover:bg-[#9AA5B1] hover:bg-[#F98E2D]/30 hover:text-black"
-                          >
-                            {isLoading3 ? "just a sec..." : "Review Essay"}
-                          </button>
-                        </div>
+                      <div className="w-full flex justify-center items-center mt-4">
+                        <button
+                          onClick={changeSection}
+                          className="py-2 px-14 text-white bg-[#F98E2D] dark:bg-[#627D98] dark:hover:text-white dark:hover:bg-[#9AA5B1] hover:bg-[#F98E2D]/30 hover:text-black"
+                        >
+                          {isLoading3 ? "just a sec..." : "Add Review"}
+                        </button>
                       </div>
                     ) : (
-                      <div>
+                      <div className="mt-4">
                         <Carousel
                           showArrows={true}
                           onChange={(e) => handleCarouselChange(e)}
@@ -239,7 +218,7 @@ const EssayDetails = () => {
                             <ReviewCommentEditor review={review_.comments} />
                           ))}
                         </Carousel>
-                        <div className="w-full flex justify-center items-center">
+                        <div className="w-full flex justify-center items-center mt-4">
                           <button
                             onClick={changeSection}
                             className="py-2 px-14 text-white bg-[#F98E2D] dark:bg-[#627D98] dark:hover:text-white dark:hover:bg-[#9AA5B1] hover:bg-[#F98E2D]/30 hover:text-black"
@@ -247,6 +226,56 @@ const EssayDetails = () => {
                             {isLoading3 ? "just a sec..." : "Add Review"}
                           </button>
                         </div>
+                      </div>
+                    )}
+                    {/* Coin Interaction Section - only once, always below review UI */}
+                    {hasCoin && coinAddress ? (
+                      <>
+                        <div className="my-6 p-4 bg-green-50 border border-green-200 rounded-lg flex flex-col items-center">
+                          <span className="text-green-700 font-semibold mb-2">This essay has a coin!</span>
+                          <button
+                            className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                            onClick={() => {
+                              navigate('/marketplace', { state: { coinAddress } });
+                            }}
+                          >
+                            View Coin & Trade
+                          </button>
+                          <a
+                            href={`https://testnet.zora.co/coin/bsep:${coinAddress}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-2 text-blue-600 underline text-xs"
+                          >
+                            View on Zora
+                          </a>
+                        </div>
+                        <div className="my-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex flex-col items-center shadow-md">
+                          <div className="flex items-center mb-2">
+                            <img
+                              src={essay[0]?.metadata && essay[0]?.metadata.startsWith('http') ? essay[0].metadata : 'kawak_coin.svg'}
+                              alt="Coin visual"
+                              className="w-14 h-14 rounded-full border-2 border-blue-500 bg-white object-cover mr-3 shadow"
+                              onError={e => (e.currentTarget.src = 'kawak_coin.svg')}
+                            />
+                            <div>
+                              <span className="text-blue-700 font-bold text-lg">Reward Pool</span>
+                              <span className="ml-2 text-xs text-gray-500" title="Total rewards available for this essay">(info)</span>
+                              <div className="text-2xl font-bold text-green-600 mt-1">42 {coinSymbol || ''}</div>
+                            </div>
+                          </div>
+                          <button
+                            className="mt-3 px-6 py-2 bg-green-400 text-white rounded font-semibold shadow cursor-not-allowed opacity-60"
+                            disabled
+                          >
+                            Claim Rewards
+                          </button>
+                          <div className="mt-2 text-xs text-gray-500">Rewards are distributed to contributors and reviewers.</div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="my-6 p-4 bg-red-50 border border-red-200 rounded-lg flex flex-col items-center">
+                        <span className="text-red-700 font-semibold">This essay does not have a coin.</span>
                       </div>
                     )}
                   </div>

@@ -1,3 +1,19 @@
+/**
+ * CraftEssay Page
+ * ---------------
+ * This page allows users to write, preview, and submit essays, and integrates with ZoraCoinService (via EssayCoinForm) to mint a custom Zora coin for each essay.
+ *
+ * ZoraCoin Integration Workflow:
+ *   - Renders EssayCoinForm for users to configure coin details alongside their essay.
+ *   - On essay submission, retrieves coin configuration from EssayCoinForm and triggers coin creation using ZoraCoinService.
+ *   - Handles combined workflow: essay is created on the blockchain, then a Zora coin is minted and associated with the essay.
+ *   - Coin creation status and results are displayed to the user.
+ *
+ * Related files:
+ *   - kawak/src/kawak_assets/services/ZoraCoinService.ts
+ *   - kawak/src/kawak_assets/components/essay/EssayCoinForm.tsx
+ *   - kawak/src/kawak_assets/pages/MarketPlace.tsx
+ */
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { useMatomo } from "@datapunt/matomo-tracker-react";
 import EssayEditor from "../components/essay/EssayEditor";
