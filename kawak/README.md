@@ -6,13 +6,13 @@ KawaK is an open source platform that provides access to peer-to-peer human feed
 
 In it's current state users earn the Wood token by providing feedback to others, which they can then spend to highlight work of their own. 
 
-Built on the [Internet Computer](https://internetcomputer.org/) in Motoko  
 
 ## What's next? 🏗️
 
 - Feedback functionality for larger sections of code. 
 - Marketplace for Authors to publish their work
 - Conversion into a DAO 
+
 
 ## ZoraCoin Integration 🚀
 
