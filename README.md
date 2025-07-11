@@ -2,16 +2,32 @@
 
 ![Layer 1 (2)](https://github.com/kawak-org/Kawak-2.0/assets/33438220/272fc5cf-b714-4304-b800-c3e338fb6665)
 
-KawaK is an open source platform that provides access to peer-to-peer human feedback. [Check it out!](https://3ysab-rqaaa-aaaan-qaewq-cai.ic0.app)
+KawaK is a free meritocratic tool where good feedback on peers’ articles  is rewarded by matching writers with others who provide the same quality of feedback. KawaK hopes to y that values the development of thought, writing and expression by providing a tool that is accessible to anyone.
+We aim to leverage NFTs so that writers have proof of ownership of their work, should plagiarism issues arise. Tokenization will also play a key role and thanks to the Zora protocol we are able to use ERC standards and design an  ERC‑20 social token for KawaK posts alongside the zora ecosystem. 
+[Check it out!](https://3ysab-rqaaa-aaaan-qaewq-cai.ic0.app)
 
 In it's current state users earn the Wood token by providing feedback to others, which they can then spend to highlight work of their own. 
+
+## feature set
+- Rewarded feedback: Crafts written by all will be displayed on The Forge. Providing kawak wood (built on zora protocol) will unlock feedback and interaction. Test your writing in the heat of criticism.
+- Tribunal: Settle Disagreements 
+Pillars of the community
+- Article as Coin: Sell as traditional 
+book/article.
+Auction as singular copy
+
 
 
 ## What's next? 🏗️
 
 - Feedback functionality for larger sections of code. 
 - Marketplace for Authors to publish their work
-- Conversion into a DAO 
+- Conversion into a DAO
+- Tribunal metrics: Meritocratic calculated average linked to User in order to determine the range of features that are accessible to them + reward 
+- Referral: Referral mechanism rewarding those who have invited good actors.
+- NFT marketplace: Nft marketplace for minted articles
+- Restricted article/books: Essay’s coins can be used as requirements to view the written piece of works.
+
 
 
 ## ZoraCoin Integration 🚀
